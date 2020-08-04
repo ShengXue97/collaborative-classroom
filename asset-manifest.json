@@ -1,0 +1,12 @@
+{
+  "files": {
+    "main.css": "/collaborative-classroom/static/css/main.7bf8dbe1.chunk.css",
+    "main.js": "/collaborative-classroom/static/js/main.ac94c5d2.chunk.js",
+    "runtime~main.js": "/collaborative-classroom/static/js/runtime~main.11770b0d.js",
+    "static/css/2.e08d151d.chunk.css": "/collaborative-classroom/static/css/2.e08d151d.chunk.css",
+    "static/js/2.61460c1e.chunk.js": "/collaborative-classroom/static/js/2.61460c1e.chunk.js",
+    "index.html": "/collaborative-classroom/index.html",
+    "precache-manifest.31f4dadd9fe1a319c9b42a8e2ea36113.js": "/collaborative-classroom/precache-manifest.31f4dadd9fe1a319c9b42a8e2ea36113.js",
+    "service-worker.js": "/collaborative-classroom/service-worker.js"
+  }
+}
