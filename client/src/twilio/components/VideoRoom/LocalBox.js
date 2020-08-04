@@ -41,32 +41,12 @@ class VideoRoom extends PureComponent {
         eventEmitterObject={videoRoom}
         onUpdate={this.update}
       >
-        <Columns>
-          <Columns.Column>
-            <Panel>
-              <Panel.Header>Local Participant</Panel.Header>
-              <Panel.Block paddingless>
-                <LocalParticipant participant={videoRoom.localParticipant} />
-              </Panel.Block>
-            </Panel>
-          </Columns.Column>
-
-          <Columns.Column>
-            <Panel>
-              <Panel.Header>Remote Participants</Panel.Header>
-              <Panel.Block paddingless={!isEmpty(remoteParticipants)}>
-                {!isEmpty(remoteParticipants)
-                  ? remoteParticipants.map(participant => (
-                      <Participant
-                        key={participant.sid}
-                        participant={participant}
-                      />
-                    ))
-                  : "No connected participants"}
-              </Panel.Block>
-            </Panel>
-          </Columns.Column>
-        </Columns>
+        <Panel>
+          <Panel.Header>Local Participant</Panel.Header>
+          <Panel.Block paddingless>
+            <LocalParticipant participant={videoRoom.localParticipant} />
+          </Panel.Block>
+        </Panel>
       </EventSubscriber>
     );
   }

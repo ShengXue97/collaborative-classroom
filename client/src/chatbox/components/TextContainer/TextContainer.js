@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 
 import onlineIcon from '../icons/onlineIcon.png';
 
@@ -6,8 +6,31 @@ import './TextContainer.css';
 
 import Iframe from 'react-iframe'
 
-const TextContainer = ({ users, room }) => {
-  const myurl = "https://wbo.ophir.dev/boards/snow" + room;
+export default class TextContainer extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      "width": (4 * 92.9) + "px",
+      "height": (4 * 153) + "px",
+    }
+  }
+
+  componentDidMount() {
+    this.props.onRef(this)
+  }
+  componentWillUnmount() {
+    this.props.onRef(undefined)
+  }
+  resize(width,height) {
+    console.log(width, height)
+    this.setState({
+      "width": (width * 92.9) + "px",
+      "height": (height * 153) + "px",
+    })
+  }
+
+ render() {
+  const myurl = "https://wbo.ophir.dev/boards/snow" + this.props.room;
 
   return(
     <div className="textContainer">
@@ -17,13 +40,13 @@ const TextContainer = ({ users, room }) => {
         <h2>Try it out right now! <span role="img" aria-label="emoji">⬅️</span></h2>
       </div> */}
       {
-        users
+        true
           ? (
             <div>
               <Iframe url={myurl}
                 style="background: #FF5733;"
-                width="450px"
-                height="450px"
+                width={this.state.width}
+                height={this.state.height}
                 id="myId"
                 className="myClassname"
                 display="initial"
@@ -46,7 +69,5 @@ const TextContainer = ({ users, room }) => {
           : null
       }
     </div>
-  );
+  );}
 };
-
-export default TextContainer;

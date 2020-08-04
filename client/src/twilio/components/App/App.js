@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
 import "react-bulma-components/dist/react-bulma-components.min.css";
@@ -12,11 +12,19 @@ import {
 } from "react-bulma-components";
 
 import videoRoomPropType from "../../propTypes/videoRoom";
-import VideoRoom from "../VideoRoom/VideoRoom";
+import LocalBox from "../VideoRoom/LocalBox";
+import RemoteBox from "../VideoRoom/RemoteBox";
 import FieldInput from "../Fields/FieldInput";
 
 import AppContainer from "./AppContainer";
 import Chat from '../../../chatbox/components/Chat/Chat.js';
+import TextContainer from '../../../chatbox/components/TextContainer/TextContainer';
+
+import 'react-resizable/css/styles.css';
+import 'react-grid-layout/css/styles.css';
+import RGL, { WidthProvider } from "react-grid-layout";
+
+const ReactGridLayout = WidthProvider(RGL);
 
 const App = ({
   videoRoom,
@@ -36,14 +44,41 @@ const App = ({
   onErrorMessageHide
 }) => {
   let content = null;
+  const [child, setChild] = useState('');
 
   if (!isVideoSupported) {
     content = <div>Video is not supported</div>;
   } else {
     content = videoRoom ? (
       <>
-        {<VideoRoom videoRoom={videoRoom} />}
-        <Chat name={userName} room={roomName}></Chat>
+        <ReactGridLayout
+          autoSize="true"
+          className="layout"
+          onResize={e => {
+            const width = e[0]['w'];
+            const height = e[0]['h'];
+            child.resize(width, height)
+          }}
+        >
+          <div style = {{backgroundColor:"blue"}} key="1" data-grid={{ x: 0, y: 0, w: 4, h: 4 }}>
+            <TextContainer  onRef={ref => setChild(ref)} room={roomName}/>
+          </div>
+
+          <div style = {{backgroundColor:"blue"}} key="2" data-grid={{ x: 4, y: 0, w: 4, h: 2 }}>
+            <LocalBox videoRoom={videoRoom} />
+          </div>
+
+          <div style = {{backgroundColor:"blue"}} key="3" data-grid={{ x: 4, y: 2, w: 4, h: 2 }}>
+            <RemoteBox videoRoom={videoRoom} />
+          </div>
+
+          <div style = {{backgroundColor:"blue"}} key="4" data-grid={{ x: 8, y: 0, w: 4, h: 4 }}>
+            <Chat name={userName} room={roomName}></Chat>
+          </div>
+
+        </ReactGridLayout>
+
+        
 
         <Form.Field kind="group" align="centered">
           <Form.Control>
