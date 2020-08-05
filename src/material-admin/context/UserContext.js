@@ -49,7 +49,7 @@ export { UserProvider, useUserState, useUserDispatch, loginUser, signOut };
 
 // ###########################################################
 
-function loginUser(dispatch, login, password, history, setIsLoading, setError) {
+function loginUser(dispatch, login, password, room, history, setIsLoading, setError) {
   setError(false);
   setIsLoading(true);
 

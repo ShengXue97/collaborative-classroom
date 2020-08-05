@@ -1,0 +1,58 @@
+
+#whiteboard{
+  overflow:show
+}
+
+#localBox{
+  overflow:hidden
+}
+
+#remoteBox{
+  overflow:hidden
+}
+
+#chat{
+  overflow:hidden
+}
+
+.delete-btn {
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+  font-size: 14px;
+  line-height: 10px;
+  border-radius: 50%;
+}
+
+.delete-btn:hover {
+  color: grey;
+}
+
+.infoBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #2979FF;
+  height: 35px;
+  width: 100%;
+}
+
+.leftInnerContainer {
+  flex: 0.5;
+  display: flex;
+  align-items: center;
+  margin-left: 5%;
+  color: white;
+}
+
+.rightInnerContainer {
+  display: flex;
+  flex: 0.5;
+  justify-content: flex-end;
+  margin-right: 5%;
+}
+
+.onlineIcon {
+  margin-right: 5%;
+}

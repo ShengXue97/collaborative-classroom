@@ -35,6 +35,7 @@ function Login(props) {
   var [nameValue, setNameValue] = useState("");
   var [loginValue, setLoginValue] = useState("");
   var [passwordValue, setPasswordValue] = useState("");
+  var [roomValue, setRoomValue] = useState("Default Room");
 
   return (
     <Grid container className={classes.container}>
@@ -103,6 +104,21 @@ function Login(props) {
                 type="password"
                 fullWidth
               />
+              <TextField
+                id="room"
+                InputProps={{
+                  classes: {
+                    underline: classes.textFieldUnderline,
+                    input: classes.textField,
+                  },
+                }}
+                value={roomValue}
+                onChange={e => setRoomValue(e.target.value)}
+                margin="normal"
+                placeholder="Room"
+                type="room"
+                fullWidth
+              />
               <div className={classes.formButtons}>
                 {isLoading ? (
                   <CircularProgress size={26} className={classes.loginLoader} />
@@ -116,6 +132,7 @@ function Login(props) {
                         userDispatch,
                         loginValue,
                         passwordValue,
+                        roomValue,
                         props.history,
                         setIsLoading,
                         setError,
@@ -206,6 +223,7 @@ function Login(props) {
                         userDispatch,
                         loginValue,
                         passwordValue,
+                        roomValue,
                         props.history,
                         setIsLoading,
                         setError,
