@@ -85,7 +85,6 @@ const App = ({
   const [whiteboardChild, setWhiteboardChild] = useState('');
   const [whiteboardCoords, setWhiteboardCoords] = useState('');
   const [localBoxCoords, setLocalBoxCoords] = useState('');
-  const [gridElements, setGridElements] = useState([]);
   const [noOfElements, setNoOfElements] = useState(4);
   
   const [whiteboardActive, setWhiteboardActive] = useState(true);
@@ -114,11 +113,8 @@ const App = ({
 
   const addElement = (name) => {
     var elementToBeAdded = null;
-    var newRemovedElements = []
-    if (window.removedElements == undefined){
-      return;
-    }
-    window.removedElements.map((e) => {
+    console.log(name);
+    window.defaultGridElements.map((e) => {
       if (name == e.props.id){
         elementToBeAdded = e;
         if (name == "whiteboard"){
@@ -130,23 +126,17 @@ const App = ({
         } else if (name == "chat"){
           setChatActive(true);
         }
-
-      } else {
-        newRemovedElements.push(elementToBeAdded);
       }
     })
 
     if (elementToBeAdded != null){
       setNoOfElements(noOfElements + 1);
       window.gridElements.push(elementToBeAdded);
-      console.log(newRemovedElements);
-      window.removedElements = newRemovedElements;
     }
   }
 
   const removeElement = (name) => {
     const newGridElements = []
-    const newRemovedElements = []
     window.gridElements.map((e) => {
       if (name == e.props.id){
         if (name == "whiteboard"){
@@ -158,22 +148,20 @@ const App = ({
         } else if (name == "chat"){
           setChatActive(false);
         }
-        newRemovedElements.push(e);
       } else {
         newGridElements.push(e);
       }
     })
     window.gridElements = newGridElements;
-    window.removedElements = newRemovedElements;
-    setGridElements(window.gridElements);
   }
 
 
   const getJSX = () => {
+    var defaultGrid = window.gridElements;
     if (init == 0){
       setInit(1);
       setNoOfElements(5);
-      window.gridElements = (numbers.map((number) => {
+      defaultGrid = (numbers.map((number) => {
           if (number == 1){
             return <div id = "whiteboard" style = {{background:"#FFD5B8"}} key="1" data-grid={{ x: 0, y: 0, w: 4, h: 4}}>
               <Whiteboard  removeElement = {() => removeElement("whiteboard")} onRef={ref => setWhiteboardChild(ref)} room={roomName}/>
@@ -192,9 +180,11 @@ const App = ({
             </div>
           }
         }));
+      window.defaultGridElements = defaultGrid;
+      window.gridElements = defaultGrid;
     }
 
-    const jsx = window.gridElements.map((e) => {
+    const jsx = defaultGrid.map((e) => {
       return e
     })
     return jsx
