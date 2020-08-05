@@ -1,4 +1,9 @@
 
+#bgdiv {
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
 #whiteboard{
   overflow:show
 }
@@ -33,7 +38,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #2979FF;
+  background: #ff7043 ;
   height: 35px;
   width: 100%;
 }

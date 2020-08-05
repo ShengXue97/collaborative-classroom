@@ -8,16 +8,12 @@ import closeIcon from '../icons/closeIcon.png';
 import './Whiteboard.css';
 
 import Iframe from 'react-iframe'
+import { MDBCard, MDBCardBody, MDBCardTitle, MDBCardText, MDBCardHeader, MDBContainer } from "mdbreact";
+
 
 import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardImg,
-  CardBody,
-  CardFooter,
   Button
-} from "shards-react";
+} from "react-bulma-components";
 
 export default class Whiteboard extends Component {
   constructor(props) {
@@ -73,7 +69,6 @@ export default class Whiteboard extends Component {
 
   return(
     <div style={{"background": "#FFF9AA"}}>
-
       {/* <div>
         <h1>Realtime Chat Application <span role="img" aria-label="emoji">💬</span></h1>
         <h2>Created with React, Express, Node and Socket.IO <span role="img" aria-label="emoji">❤️</span></h2>
@@ -83,31 +78,41 @@ export default class Whiteboard extends Component {
         true
           ? (
             <div>
-              <Card>
-                <CardHeader>Card header</CardHeader>
-                <CardBody>
-                  <Iframe url={myurl}
-                  style="background: #FFF9AA;"
-                  width={this.state.width}
-                  height={this.state.height}
-                  id="myId"
-                  className="myClassname"
-                  display="initial"
-                  position="relative"/>
+              
+              <div className="infoBar">
+                <div className="leftInnerContainer">
+                  <p style = {{paddingTop: "15px", paddingLeft: "10px", fontSize : "20px", color : "white"}}>
+                      Whiteboard
+                  </p>
+                </div>
+                <div className="rightInnerContainer">
+                  <span className={"delete-btn"}
+                        onClick={() => this.props.removeElement()}>
+                      X
+                  </span>
+                </div>
+              </div>
 
-                  {/* <h4>People currently chatting:</h4>
-                  <div className="activeContainer">
-                    <h5>
-                      {users.map(({name}) => (
-                        <div key={name} className="activeItem">
-                          {name}
-                          <img alt="Online Icon" src={onlineIcon}/>
-                        </div>
-                      ))}
-                    </h5>
-                  </div> */}
-                </CardBody>
-              </Card>
+              <Iframe url={myurl}
+                style="background: #FFF9AA;"
+                width={this.state.width}
+                height={this.state.height}
+                id="myId"
+                className="myClassname"
+                display="initial"
+                position="relative"/>
+
+                {/* <h4>People currently chatting:</h4>
+                <div className="activeContainer">
+                  <h5>
+                    {users.map(({name}) => (
+                      <div key={name} className="activeItem">
+                        {name}
+                        <img alt="Online Icon" src={onlineIcon}/>
+                      </div>
+                    ))}
+                  </h5>
+                </div> */}
             </div>
             
           )

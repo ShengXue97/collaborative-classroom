@@ -49,7 +49,7 @@ export { UserProvider, useUserState, useUserDispatch, loginUser, signOut };
 
 // ###########################################################
 
-function loginUser(dispatch, login, password, room, history, setIsLoading, setError) {
+function loginUser(dispatch, login, password, history, setIsLoading, setError) {
   setError(false);
   setIsLoading(true);
 
@@ -60,6 +60,7 @@ function loginUser(dispatch, login, password, room, history, setIsLoading, setEr
       setIsLoading(false)
       dispatch({ type: 'LOGIN_SUCCESS' })
 
+      window.username = login;
       history.push('/app/dashboard')
     }, 2000);
   } else {

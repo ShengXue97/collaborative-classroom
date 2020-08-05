@@ -8,6 +8,8 @@ import App from "./material-admin/components/App";
 import * as serviceWorker from "./serviceWorker";
 import { LayoutProvider } from "./material-admin/context/LayoutContext";
 import { UserProvider } from "./material-admin/context/UserContext";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import "./assets/scss/mdb-free.scss"
 
 ReactDOM.render(
   <LayoutProvider>

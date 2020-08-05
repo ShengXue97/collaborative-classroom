@@ -6,6 +6,10 @@ import { isEmpty, first } from "lodash";
 
 import { getToken } from "../../api";
 
+import io from "socket.io-client";
+let socket;
+const ENDPOINT = 'https://collaborative-classroom-server.herokuapp.com/';
+
 class AppContainer extends PureComponent {
   static propTypes = {
     render: PropTypes.func.isRequired
@@ -14,7 +18,7 @@ class AppContainer extends PureComponent {
   state = {
     videoRoom: null,
     isJoining: false,
-    userName: "",
+    userName: "default",
     roomName: "",
     errorMessage: null
   };
@@ -35,7 +39,6 @@ class AppContainer extends PureComponent {
 
   joinRoom = async () => {
     const { roomName } = this.state;
-
     this.setState({ isJoining: true });
 
     try {
@@ -81,6 +84,8 @@ class AppContainer extends PureComponent {
 
   leaveRoom = async () => {
     const { videoRoom } = this.state;
+    socket = io(ENDPOINT);
+    socket.disconnect();
 
     if (videoRoom) {
       videoRoom.disconnect();
@@ -136,7 +141,10 @@ class AppContainer extends PureComponent {
 
   changeUserName = userName => this.setState({ userName });
 
-  changeRoomName = roomName => this.setState({ roomName });
+  changeRoomName = roomName => {
+    this.changeUserName(window.username);
+    this.setState({ roomName })
+  };
 
   render() {
     const { render } = this.props;

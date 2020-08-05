@@ -33,6 +33,8 @@ import Dot from "../../components/Sidebar/components/Dot";
 import Table from "./components/Table/Table";
 import BigStat from "./components/BigStat/BigStat";
 
+import App from "../../../twilio/components/App/App.js";
+
 const mainChartData = getMainChartData();
 const PieChartData = [
   { name: "Group A", value: 400, color: "primary" },
@@ -47,11 +49,13 @@ export default function Dashboard(props) {
 
   // local
   var [mainChartState, setMainChartState] = useState("monthly");
-
+  console.log(window.username)
+  console.log(window.roomname)
   return (
     <>
-      <PageTitle title="Dashboard" button="Latest Reports" />
-      <Grid container spacing={4}>
+      <PageTitle title="Dashboard" button="Room List" />
+      <App userName = {window.username}/>
+      {/* <Grid container spacing={4}>
         <Grid item lg={3} md={4} sm={6} xs={12}>
           <Widget
             title="Visits Today"
@@ -61,7 +65,7 @@ export default function Dashboard(props) {
           >
           </Widget>
         </Grid>
-      </Grid>
+      </Grid> */}
     </>
   );
 }

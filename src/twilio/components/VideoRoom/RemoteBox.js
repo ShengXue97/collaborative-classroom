@@ -45,7 +45,7 @@ class VideoRoom extends PureComponent {
       >
         <div className="infoBar">
           <div className="leftInnerContainer">
-            <p style = {{paddingLeft: "10px", fontSize : "20px", color : "white"}}>
+            <p style = {{paddingTop: "15px", paddingLeft: "10px", fontSize : "20px", color : "white"}}>
                 Remote Video
             </p>
           </div>

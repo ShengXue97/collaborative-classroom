@@ -20,7 +20,6 @@ import ToolboxLayout from "../ToolboxLayout/ToolboxLayout.js";
 import AppContainer from "./AppContainer";
 import Chat from '../../../chatbox/components/Chat/Chat.js';
 import Whiteboard from '../../../chatbox/components/Whiteboard/Whiteboard.js';
-import LoginPage from '../LoginPage/LoginPage.js';
 
 import 'react-resizable/css/styles.css';
 import 'react-grid-layout/css/styles.css';
@@ -30,6 +29,8 @@ import './App.css';
 
 import Dropdown from 'react-bootstrap/Dropdown'
 import { MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem } from "mdbreact";
+import CircularProgress from '@material-ui/core/CircularProgress';
+import TextField from '@material-ui/core/TextField';
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -220,10 +221,6 @@ const App = ({
           </Form.Control>
 
           <Form.Control>
-            <Button onClick={() => onLeave()}>Leave</Button>
-          </Form.Control>
-
-          <Form.Control>
             <Button
               onClick={() => onShare()}
               disabled={!isScreenSharingSupported}
@@ -272,13 +269,37 @@ const App = ({
         </ReactGridLayout>
       </>
     ) : (
-      <LoginPage/>
+      <Columns>
+        <Columns.Column size="half" offset="one-quarter">
+          <FieldInput
+            value={roomName}
+            name="roomName"
+            label="Room"
+            placeholder="The name of the room that you want to join"
+            onChange={onRoomNameChange}
+          />
+
+          <Form.Field kind="group" align="centered">
+            <Form.Control>
+              <Button
+                onClick={() => onJoin()}
+                loading={isJoining}
+                disabled={!canJoin}
+                color="primary"
+              >
+                Join
+              </Button>
+            </Form.Control>
+          </Form.Field>
+          
+        </Columns.Column>
+      </Columns>
+      
     );
   }
 
   return (
     <div id ="bgdiv">
-      <h1>Collaborative Classroom</h1>
       {errorMessage && (
         <Notification color="danger">
           Error: {errorMessage}
@@ -312,7 +333,7 @@ App.propTypes = {
 
 App.defaultProps = {
   videoRoom: null,
-  errorMessage: null
+  errorMessage: null,
 };
 
 const render = containerProps => <App {...containerProps} />;
