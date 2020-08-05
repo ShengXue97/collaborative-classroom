@@ -47,10 +47,14 @@ export default function Dashboard(props) {
   var classes = useStyles();
   var theme = useTheme();
 
+  const mustReload = localStorage.getItem('mustReload');
+  if (mustReload != null && mustReload == 1){
+    localStorage.setItem('mustReload', 0);
+    window.location.reload(false);
+  }
+
   // local
   var [mainChartState, setMainChartState] = useState("monthly");
-  console.log(window.username)
-  console.log(window.roomname)
   return (
     <>
       <PageTitle title="Dashboard" button="Room List" />

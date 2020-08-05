@@ -9,7 +9,10 @@ import './Chat.css';
 
 let socket;
 
-const Chat = ({ name, room, removeElement }) => {
+const Chat = ({ removeElement }) => {
+  const name = localStorage.getItem('user');
+  const room = localStorage.getItem('room');
+
   const [users, setUsers] = useState('');
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
@@ -20,6 +23,7 @@ const Chat = ({ name, room, removeElement }) => {
     socket.emit('join', { name, room }, (error) => {
       if(error) {
         alert(error);
+        window.location.reload(false);
       }
     });
   }, [ENDPOINT]);

@@ -18,7 +18,7 @@ class AppContainer extends PureComponent {
   state = {
     videoRoom: null,
     isJoining: false,
-    userName: "default",
+    userName: "",
     roomName: "",
     errorMessage: null
   };
@@ -30,7 +30,7 @@ class AppContainer extends PureComponent {
   }
 
   getToken = async () => {
-    const { userName } = this.state;
+    const userName = localStorage.getItem('user');
 
     const response = await getToken(userName);
 
@@ -38,7 +38,8 @@ class AppContainer extends PureComponent {
   };
 
   joinRoom = async () => {
-    const { roomName } = this.state;
+    const userName = localStorage.getItem('user');
+    const roomName = localStorage.getItem('room');
     this.setState({ isJoining: true });
 
     try {
@@ -149,7 +150,7 @@ class AppContainer extends PureComponent {
   changeUserName = userName => this.setState({ userName });
 
   changeRoomName = roomName => {
-    this.changeUserName(window.username);
+    localStorage.setItem('room', roomName);
     this.setState({ roomName })
   };
 
@@ -173,7 +174,7 @@ class AppContainer extends PureComponent {
         navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia
       ),
       isScreenSharingEnabled: Boolean(screenTrack),
-      canJoin: !isEmpty(userName) && !isEmpty(roomName),
+      canJoin: true,
       isJoining,
       onJoin: this.joinRoom,
       onLeave: this.leaveRoom,

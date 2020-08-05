@@ -176,7 +176,7 @@ const App = ({
             </div>
           } else if (number == 4){
             return <div id = "chat" style = {{background:"#FFD5B8"}} key="4" data-grid={{ x: 8, y: 0, w: 4, h: 4 }}>
-              <Chat removeElement = {() => removeElement("chat")} name={userName} room={roomName}></Chat>
+              <Chat removeElement = {() => removeElement("chat")}></Chat>
             </div>
           }
         }));
@@ -189,6 +189,13 @@ const App = ({
     })
     return jsx
   }
+
+  const myUser = localStorage.getItem('user');
+  const myRoom = localStorage.getItem('room');
+  onUserNameChange(myUser);
+  onRoomNameChange(myRoom);
+  
+  console.log(videoRoom);
 
   if (!isVideoSupported) {
     content = <div>Video is not supported</div>;
