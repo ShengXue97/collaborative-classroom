@@ -85,6 +85,13 @@ class AppContainer extends PureComponent {
   leaveRoom = async () => {
     const { videoRoom } = this.state;
     socket = io(ENDPOINT);
+    // Subscribe to disconnect event once you know you are connected
+    console.log("leave")
+    socket.emit('end', () => {
+        console.log("k");
+    });
+
+    // Now disconnect once you are connected 
     socket.disconnect();
 
     if (videoRoom) {

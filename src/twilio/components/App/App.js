@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-
+import { Link } from 'react-router-dom';
 import "react-bulma-components/dist/react-bulma-components.min.css";
 import {
   Section,
@@ -24,6 +24,7 @@ import Whiteboard from '../../../chatbox/components/Whiteboard/Whiteboard.js';
 import 'react-resizable/css/styles.css';
 import 'react-grid-layout/css/styles.css';
 import RGL, { WidthProvider } from "react-grid-layout";
+import leaveRoomIcon from '../../icons/leaveRoom.png';
 
 import './App.css';
 
@@ -228,6 +229,9 @@ const App = ({
               {isScreenSharingEnabled ? "Stop sharing" : "Start sharing"}
             </Button>
           </Form.Control>
+
+          <a href="/app/dashboard"><img src={leaveRoomIcon} alt="close icon" /></a>
+
         </Form.Field>
         
         <ReactGridLayout
