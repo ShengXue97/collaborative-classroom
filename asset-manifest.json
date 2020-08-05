@@ -1,12 +1,20 @@
 {
   "files": {
-    "main.css": "/collaborative-classroom/static/css/main.7bf8dbe1.chunk.css",
-    "main.js": "/collaborative-classroom/static/js/main.ac94c5d2.chunk.js",
-    "runtime~main.js": "/collaborative-classroom/static/js/runtime~main.11770b0d.js",
-    "static/css/2.e08d151d.chunk.css": "/collaborative-classroom/static/css/2.e08d151d.chunk.css",
-    "static/js/2.61460c1e.chunk.js": "/collaborative-classroom/static/js/2.61460c1e.chunk.js",
+    "main.css": "/collaborative-classroom/static/css/main.8ea148d3.chunk.css",
+    "main.js": "/collaborative-classroom/static/js/main.0efa349f.chunk.js",
+    "main.js.map": "/collaborative-classroom/static/js/main.0efa349f.chunk.js.map",
+    "runtime~main.js": "/collaborative-classroom/static/js/runtime~main.0ab5c060.js",
+    "runtime~main.js.map": "/collaborative-classroom/static/js/runtime~main.0ab5c060.js.map",
+    "static/css/2.03212283.chunk.css": "/collaborative-classroom/static/css/2.03212283.chunk.css",
+    "static/js/2.6b752a4a.chunk.js": "/collaborative-classroom/static/js/2.6b752a4a.chunk.js",
+    "static/js/2.6b752a4a.chunk.js.map": "/collaborative-classroom/static/js/2.6b752a4a.chunk.js.map",
     "index.html": "/collaborative-classroom/index.html",
-    "precache-manifest.31f4dadd9fe1a319c9b42a8e2ea36113.js": "/collaborative-classroom/precache-manifest.31f4dadd9fe1a319c9b42a8e2ea36113.js",
-    "service-worker.js": "/collaborative-classroom/service-worker.js"
+    "precache-manifest.141beb086bc548096d47debb86aa1741.js": "/collaborative-classroom/precache-manifest.141beb086bc548096d47debb86aa1741.js",
+    "service-worker.js": "/collaborative-classroom/service-worker.js",
+    "static/css/2.03212283.chunk.css.map": "/collaborative-classroom/static/css/2.03212283.chunk.css.map",
+    "static/css/main.8ea148d3.chunk.css.map": "/collaborative-classroom/static/css/main.8ea148d3.chunk.css.map",
+    "static/media/mdb-free.scss": "/collaborative-classroom/static/media/arrow_right.8ef6a08c.svg",
+    "static/media/google.svg": "/collaborative-classroom/static/media/google.695a3160.svg",
+    "static/media/logo.svg": "/collaborative-classroom/static/media/logo.a0185b04.svg"
   }
 }
