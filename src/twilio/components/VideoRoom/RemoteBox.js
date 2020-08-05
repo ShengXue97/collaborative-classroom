@@ -9,6 +9,7 @@ import EventSubscriber from "../EventSubscriber/EventSubscriber";
 import { mapToArray } from "../../utils";
 
 import closeIcon from '../../../chatbox/components/icons/closeIcon.png';
+import './RemoteBox.css';
 
 const EVENTS = [
   "dominantSpeakerChanged",

@@ -6,6 +6,8 @@ import Input from '../Input/Input';
 
 import onlineIcon from '../icons/onlineIcon.png';
 import './Chat.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 let socket;
 

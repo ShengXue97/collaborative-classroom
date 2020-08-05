@@ -29,7 +29,7 @@ import leaveRoomIcon from '../../icons/leaveRoom.png';
 import './App.css';
 
 import Dropdown from 'react-bootstrap/Dropdown'
-import { MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem } from "mdbreact";
+import { MDBBtn, MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem } from "mdbreact";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import TextField from '@material-ui/core/TextField';
 
@@ -219,12 +219,13 @@ const App = ({
           </Form.Control>
 
           <Form.Control>
-            <Button
+            <MDBBtn
               onClick={() => onShare()}
               disabled={!isScreenSharingSupported}
+              color="info"
             >
               {isScreenSharingEnabled ? "Stop sharing" : "Start sharing"}
-            </Button>
+            </MDBBtn>
           </Form.Control>
 
           <a href="/app/dashboard"><img src={leaveRoomIcon} alt="close icon" /></a>
