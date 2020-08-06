@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/collaborative-classroom/precache-manifest.a47f335943acc4bef9372375ed663d0f.js"
+  "/collaborative-classroom/precache-manifest.26df8f31f912ed42f54de16b61734ee7.js"
 );
 
 self.addEventListener('message', (event) => {
