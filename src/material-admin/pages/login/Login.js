@@ -20,7 +20,11 @@ import logo from "./logo.svg";
 import google from "../../images/google.svg";
 
 // context
-import { useUserDispatch, loginUser } from "../../context/UserContext";
+import {
+  useUserDispatch,
+  loginUser,
+  registerUser,
+} from "../../context/UserContext";
 
 import { GoogleLogin, useGoogleLogin } from "react-google-login";
 // refresh token
@@ -49,7 +53,6 @@ function Login(props) {
   const onSuccess = res => {
     localStorage.setItem("google_logged_in", 1);
     console.log("Login Success: currentUser:", res.profileObj);
-    alert(`Logged in successfully welcome ${res.profileObj.email} 😍.`);
     refreshTokenSetup(res);
 
     loginUser(
@@ -60,12 +63,12 @@ function Login(props) {
       props.history,
       setIsLoading,
       setError,
+      true,
     );
   };
 
   const onFailure = res => {
     console.log("Login failed: res:", res);
-    alert(`Failed to login. 😢`);
   };
 
   const { signIn } = useGoogleLogin({
@@ -82,7 +85,9 @@ function Login(props) {
     <Grid container className={classes.container}>
       <div className={classes.logotypeContainer}>
         <img src={logo} alt="logo" className={classes.logotypeImage} />
-        <Typography className={classes.logotypeText}>CC</Typography>
+        <Typography className={classes.logotypeText}>
+          Collab Classroom
+        </Typography>
       </div>
       <div className={classes.formContainer}>
         <div className={classes.form}>
@@ -182,6 +187,7 @@ function Login(props) {
                         props.history,
                         setIsLoading,
                         setError,
+                        false,
                       )
                     }
                     variant="contained"
@@ -265,11 +271,11 @@ function Login(props) {
                 ) : (
                   <Button
                     onClick={() =>
-                      loginUser(
+                      registerUser(
                         userDispatch,
                         loginValue,
                         passwordValue,
-                        roomValue,
+                        nameValue,
                         props.history,
                         setIsLoading,
                         setError,

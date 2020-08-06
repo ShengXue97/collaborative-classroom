@@ -116,7 +116,6 @@ export default function Header(props) {
     console.log("Logged out Success");
     localStorage.setItem("google_logged_in", 0);
     signOutOwn(userDispatch, props.history);
-    alert("Logged out Successfully ✌");
   };
 
   const onFailure = () => {
