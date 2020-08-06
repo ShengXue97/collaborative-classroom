@@ -31,7 +31,7 @@ import { GoogleLogin, useGoogleLogin } from "react-google-login";
 import { refreshTokenSetup } from "./refreshToken";
 
 const clientId =
-  "707788443358-u05p46nssla3l8tmn58tpo9r5sommgks.apps.googleusercontent.com";
+  "1095052158563-iteoskptpn9e4hemaf2br65nk3jibldl.apps.googleusercontent.com";
 // const clientId =
 //   "1095052158563-iteoskptpn9e4hemaf2br65nk3jibldl.apps.googleusercontent.com";
 

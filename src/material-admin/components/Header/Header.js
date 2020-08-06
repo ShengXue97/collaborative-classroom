@@ -39,7 +39,7 @@ import { useUserDispatch, signOutOwn } from "../../context/UserContext";
 import { useGoogleLogout } from "react-google-login";
 
 const clientId =
-  "707788443358-u05p46nssla3l8tmn58tpo9r5sommgks.apps.googleusercontent.com";
+  "1095052158563-iteoskptpn9e4hemaf2br65nk3jibldl.apps.googleusercontent.comm";
 
 const messages = [
   {
