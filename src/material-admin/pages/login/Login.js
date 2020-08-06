@@ -22,6 +22,15 @@ import google from "../../images/google.svg";
 // context
 import { useUserDispatch, loginUser } from "../../context/UserContext";
 
+import { GoogleLogin, useGoogleLogin } from "react-google-login";
+// refresh token
+import { refreshTokenSetup } from "./refreshToken";
+
+const clientId =
+  "707788443358-u05p46nssla3l8tmn58tpo9r5sommgks.apps.googleusercontent.com";
+// const clientId =
+//   "1095052158563-iteoskptpn9e4hemaf2br65nk3jibldl.apps.googleusercontent.com";
+
 function Login(props) {
   var classes = useStyles();
 
@@ -36,6 +45,38 @@ function Login(props) {
   var [loginValue, setLoginValue] = useState("");
   var [passwordValue, setPasswordValue] = useState("");
   var [roomValue, setRoomValue] = useState("");
+
+  const onSuccess = res => {
+    localStorage.setItem("google_logged_in", 1);
+    console.log("Login Success: currentUser:", res.profileObj);
+    alert(`Logged in successfully welcome ${res.profileObj.email} 😍.`);
+    refreshTokenSetup(res);
+
+    loginUser(
+      userDispatch,
+      res.profileObj.email,
+      "-",
+      roomValue,
+      props.history,
+      setIsLoading,
+      setError,
+    );
+  };
+
+  const onFailure = res => {
+    console.log("Login failed: res:", res);
+    alert(`Failed to login. 😢`);
+  };
+
+  const { signIn } = useGoogleLogin({
+    onSuccess,
+    onFailure,
+    clientId,
+    isSignedIn: true,
+    accessType: "offline",
+    // responseType: 'code',
+    // prompt: 'consent',
+  });
 
   return (
     <Grid container className={classes.container}>
@@ -60,7 +101,11 @@ function Login(props) {
               <Typography variant="h1" className={classes.greeting}>
                 Good Morning, User
               </Typography>
-              <Button size="large" className={classes.googleButton}>
+              <Button
+                onClick={signIn}
+                size="large"
+                className={classes.googleButton}
+              >
                 <img src={google} alt="google" className={classes.googleIcon} />
                 &nbsp;Sign in with Google
               </Button>
@@ -251,6 +296,7 @@ function Login(props) {
                 <div className={classes.formDivider} />
               </div>
               <Button
+                onClick={signIn}
                 size="large"
                 className={classnames(
                   classes.googleButton,

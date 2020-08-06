@@ -34,7 +34,12 @@ import {
   useLayoutDispatch,
   toggleSidebar,
 } from "../../context/LayoutContext";
-import { useUserDispatch, signOut } from "../../context/UserContext";
+import { useUserDispatch, signOutOwn } from "../../context/UserContext";
+
+import { useGoogleLogout } from "react-google-login";
+
+const clientId =
+  "707788443358-u05p46nssla3l8tmn58tpo9r5sommgks.apps.googleusercontent.com";
 
 const messages = [
   {
@@ -106,6 +111,51 @@ export default function Header(props) {
   var [isSearchOpen, setSearchOpen] = useState(false);
 
   const userName = localStorage.getItem("user");
+
+  const onLogoutSuccess = res => {
+    console.log("Logged out Success");
+    localStorage.setItem("google_logged_in", 0);
+    signOutOwn(userDispatch, props.history);
+    alert("Logged out Successfully ✌");
+  };
+
+  const onFailure = () => {
+    signOutOwn(userDispatch, props.history);
+    console.log("Handle failure cases");
+  };
+
+  const { signOut } = useGoogleLogout({
+    clientId,
+    onLogoutSuccess,
+    onFailure,
+  });
+
+  let content = null;
+  const google_var = localStorage.getItem("google_logged_in");
+  var google_logged_in = false;
+  if (google_var != null && google_var == 1) {
+    google_logged_in = true;
+  }
+
+  content = google_logged_in ? (
+    <Typography
+      className={classes.profileMenuLink}
+      color="secondary"
+      onClick={signOut}
+    >
+      Sign Out
+    </Typography>
+  ) : (
+    <Typography
+      className={classes.profileMenuLink}
+      color="primary"
+      onClick={() => {
+        signOutOwn(userDispatch, props.history);
+      }}
+    >
+      Sign Out
+    </Typography>
+  );
 
   return (
     <AppBar position="fixed" className={classes.appBar}>
@@ -317,15 +367,7 @@ export default function Header(props) {
           >
             <AccountIcon className={classes.profileMenuIcon} /> Messages
           </MenuItem>
-          <div className={classes.profileMenuUser}>
-            <Typography
-              className={classes.profileMenuLink}
-              color="primary"
-              onClick={() => signOut(userDispatch, props.history)}
-            >
-              Sign Out
-            </Typography>
-          </div>
+          <div className={classes.profileMenuUser}>{content}</div>
         </Menu>
       </Toolbar>
     </AppBar>
