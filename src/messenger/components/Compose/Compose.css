@@ -9,6 +9,10 @@
   bottom: 0px;
 }
 
+.ignore-css {
+  all: unset;
+}
+
 @supports (backdrop-filter: blur(20px)) {
   .compose {
     border: none;
@@ -19,14 +23,12 @@
 
 .compose-input {
   flex: 1;
-  border: none;
   font-size: 14px;
   height: 40px;
-  background: none;
 }
 
 .compose-input::placeholder {
-  opacity: 0.3;
+  opacity: 0.6;
 }
 
 .compose .toolbar-button {

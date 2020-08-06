@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import Compose from "../Compose/Compose.js";
 import Toolbar from "../Toolbar/Toolbar.js";
 import ToolbarButton from "../ToolbarButton/ToolbarButton.js";
@@ -11,22 +11,49 @@ const MY_USER_ID = localStorage.getItem("user");
 
 export default function MessageList(props) {
   const [messages, setMessages] = useState([]);
+  const divRef = useRef(null);
 
   useEffect(() => {
-    getMessages(MY_USER_ID);
+    const minTimestamp = new Date().getTime();
+    getMessages(MY_USER_ID, minTimestamp);
   }, []);
 
-  const getMessages = recipent => {
-    fetch("http://localhost:5000/singlechat?recipent=" + recipent, {
-      method: "GET",
-    })
+  useEffect(() => {
+    divRef.current.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  window.setInterval(function() {
+    getMessages(MY_USER_ID, 0);
+  }, 20 * 1000);
+
+  const getMessages = (recipent, minTimestamp) => {
+    fetch(
+      "http://localhost:5000/singlechat?recipent=" +
+        recipent +
+        "&minTimestamp=" +
+        minTimestamp,
+      {
+        method: "GET",
+      },
+    )
       .then(response => {
         return response.text();
       })
       .then(data => {
-        console.log(JSON.parse(data));
-        const newMessages = JSON.parse(data);
-        setMessages([...messages, ...newMessages]);
+        var newMessages = messages.concat(JSON.parse(data));
+
+        var seenIDs = {};
+
+        newMessages = newMessages.filter(function(currentObject) {
+          if (currentObject.id in seenIDs) {
+            return false;
+          } else {
+            seenIDs[currentObject.id] = true;
+            return true;
+          }
+        });
+
+        setMessages(newMessages);
       });
   };
 
@@ -46,7 +73,6 @@ export default function MessageList(props) {
       let startsSequence = true;
       let endsSequence = true;
       let showTimestamp = true;
-
       if (previous) {
         let previousMoment = moment(previous.timestamp);
         let previousDuration = moment.duration(
@@ -105,9 +131,11 @@ export default function MessageList(props) {
         ]}
       />
 
-      <div className="message-list-container">{renderMessages()}</div>
+      <div id="message-list-container">{renderMessages()}</div>
+      <div style={{ float: "left", clear: "both" }} ref={divRef}></div>
 
       <Compose
+        getMessages={getMessages}
         rightItems={[
           <ToolbarButton key="photo" icon="ion-ios-camera" />,
           <ToolbarButton key="image" icon="ion-ios-image" />,
