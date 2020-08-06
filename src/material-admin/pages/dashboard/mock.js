@@ -124,7 +124,7 @@ export default {
       icon: "bell",
       color: "info",
       content:
-        '15 <span className="fw-semi-bold">Notifications</span> from Social Apps',
+        '15 <span className="fw-semi-bold">Chats</span> from Social Apps',
     },
   ],
   table: [

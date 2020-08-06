@@ -12,7 +12,7 @@ import {
 import {
   Menu as MenuIcon,
   MailOutline as MailIcon,
-  NotificationsNone as NotificationsIcon,
+  ChatBubbleOutline as ChatIcon,
   Person as AccountIcon,
   Search as SearchIcon,
   Send as SendIcon,
@@ -22,7 +22,7 @@ import { fade } from "@material-ui/core/styles/colorManipulator";
 import classNames from "classnames";
 
 import { Badge, Typography } from "../Wrappers";
-import Notification from "../Notification";
+import Notification from "../Chats";
 import UserAvatar from "../UserAvatar";
 
 const messages = [

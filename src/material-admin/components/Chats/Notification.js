@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@material-ui/core";
 import {
-  NotificationsNone as NotificationsIcon,
+  ChatBubbleOutline as ChatIcon,
   ThumbUp as ThumbUpIcon,
   ShoppingCart as ShoppingCartIcon,
   LocalOffer as TicketIcon,
@@ -23,11 +23,11 @@ import tinycolor from "tinycolor2";
 import useStyles from "./styles";
 
 // components
-import { Typography } from "../Wrappers";
+import { Typography } from "../Wrappers/Wrappers";
 
 const typesIcons = {
   "e-commerce": <ShoppingCartIcon />,
-  notification: <NotificationsIcon />,
+  notification: <ChatIcon />,
   offer: <TicketIcon />,
   info: <ThumbUpIcon />,
   message: <MessageIcon />,

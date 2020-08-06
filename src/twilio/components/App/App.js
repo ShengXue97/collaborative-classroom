@@ -290,8 +290,7 @@ const App = ({
               {isScreenSharingEnabled ? "Stop sharing" : "Start sharing"}
             </MDBBtn>
           </Form.Control>
-
-          <a href="/app/dashboard">
+          <a href="/collaborative-classroom/#/app/dashboard">
             <img src={leaveRoomIcon} alt="close icon" />
           </a>
         </Form.Field>
