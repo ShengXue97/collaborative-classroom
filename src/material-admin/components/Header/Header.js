@@ -7,7 +7,7 @@ import {
   Menu,
   MenuItem,
   Fab,
-  Link
+  Link,
 } from "@material-ui/core";
 import {
   Menu as MenuIcon,
@@ -105,7 +105,7 @@ export default function Header(props) {
   var [profileMenu, setProfileMenu] = useState(null);
   var [isSearchOpen, setSearchOpen] = useState(false);
 
-  const userName = localStorage.getItem('user');
+  const userName = localStorage.getItem("user");
 
   return (
     <AppBar position="fixed" className={classes.appBar}>

@@ -13,7 +13,7 @@ var useStyles = makeStyles(theme => ({
   },
   dotSmall: {
     width: 5,
-    height: 5
+    height: 5,
   },
   dotLarge: {
     width: 11,

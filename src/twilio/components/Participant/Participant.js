@@ -15,13 +15,13 @@ const Participant = ({ participant }) => (
             key={trackPublication.track.name}
             track={trackPublication.track}
           />
-        )
+        ),
     )}
   </div>
 );
 
 Participant.propTypes = {
-  participant: participantPropType.isRequired
+  participant: participantPropType.isRequired,
 };
 
 export default Participant;

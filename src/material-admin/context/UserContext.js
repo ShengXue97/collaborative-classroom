@@ -49,24 +49,32 @@ export { UserProvider, useUserState, useUserDispatch, loginUser, signOut };
 
 // ###########################################################
 
-function loginUser(dispatch, login, password, room, history, setIsLoading, setError) {
+function loginUser(
+  dispatch,
+  login,
+  password,
+  room,
+  history,
+  setIsLoading,
+  setError,
+) {
   setError(false);
   setIsLoading(true);
 
   if (!!login && !!password) {
-    if (!!room){
-      localStorage.setItem( 'room', room );
+    if (!!room) {
+      localStorage.setItem("room", room);
     }
-    localStorage.setItem( 'user', login );
-    
+    localStorage.setItem("user", login);
+
     setTimeout(() => {
-      localStorage.setItem('id_token', 1)
-      setError(null)
-      setIsLoading(false)
-      dispatch({ type: 'LOGIN_SUCCESS' })
+      localStorage.setItem("id_token", 1);
+      setError(null);
+      setIsLoading(false);
+      dispatch({ type: "LOGIN_SUCCESS" });
 
       window.username = login;
-      history.push('/app/dashboard')
+      history.push("/app/dashboard");
     }, 2000);
   } else {
     dispatch({ type: "LOGIN_FAILURE" });

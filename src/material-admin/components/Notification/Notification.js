@@ -45,7 +45,7 @@ export default function Notification({ variant, ...props }) {
   var classes = useStyles();
   var theme = useTheme();
 
-  localStorage.setItem('mustReload', 1);
+  localStorage.setItem("mustReload", 1);
 
   const icon = getIconByType(props.type);
   const iconWithStyles = React.cloneElement(icon, {

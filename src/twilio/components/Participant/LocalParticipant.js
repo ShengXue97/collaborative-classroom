@@ -8,7 +8,7 @@ const EVENTS = ["trackPublished", "trackPublicationFailed"];
 
 class LocalParticipant extends PureComponent {
   static propTypes = {
-    participant: participantPropType.isRequired
+    participant: participantPropType.isRequired,
   };
 
   update = () => this.forceUpdate();

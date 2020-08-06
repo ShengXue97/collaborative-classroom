@@ -8,8 +8,8 @@ import LocalParticipant from "../Participant/LocalParticipant";
 import EventSubscriber from "../EventSubscriber/EventSubscriber";
 import { mapToArray } from "../../utils";
 
-import closeIcon from '../../../chatbox/components/icons/closeIcon.png';
-import './RemoteBox.css';
+import closeIcon from "../../../chatbox/components/icons/closeIcon.png";
+import "./RemoteBox.css";
 
 const EVENTS = [
   "dominantSpeakerChanged",
@@ -24,12 +24,12 @@ const EVENTS = [
   "trackStarted",
   "trackSubscribed",
   "trackUnpublished",
-  "trackUnsubscribed"
+  "trackUnsubscribed",
 ];
 
 class VideoRoom extends PureComponent {
   static propTypes = {
-    videoRoom: videoRoomPropType.isRequired
+    videoRoom: videoRoomPropType.isRequired,
   };
 
   update = () => this.forceUpdate();
@@ -46,14 +46,23 @@ class VideoRoom extends PureComponent {
       >
         <div className="infoBar">
           <div className="leftInnerContainer">
-            <p style = {{paddingTop: "15px", paddingLeft: "10px", fontSize : "20px", color : "white"}}>
-                Remote Video
+            <p
+              style={{
+                paddingTop: "15px",
+                paddingLeft: "10px",
+                fontSize: "20px",
+                color: "white",
+              }}
+            >
+              Remote Video
             </p>
           </div>
           <div className="rightInnerContainer">
-            <span className={"delete-btn"}
-                  onClick={() => this.props.removeElement()}>
-                X
+            <span
+              className={"delete-btn"}
+              onClick={() => this.props.removeElement()}
+            >
+              X
             </span>
           </div>
         </div>

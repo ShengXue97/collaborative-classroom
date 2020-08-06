@@ -47,9 +47,9 @@ export default function Dashboard(props) {
   var classes = useStyles();
   var theme = useTheme();
 
-  const mustReload = localStorage.getItem('mustReload');
-  if (mustReload != null && mustReload == 1){
-    localStorage.setItem('mustReload', 0);
+  const mustReload = localStorage.getItem("mustReload");
+  if (mustReload != null && mustReload == 1) {
+    localStorage.setItem("mustReload", 0);
     window.location.reload(false);
   }
 
@@ -58,7 +58,7 @@ export default function Dashboard(props) {
   return (
     <>
       <PageTitle title="Dashboard" button="Room List" />
-      <App userName = {window.username}/>
+      <App userName={window.username} />
       {/* <Grid container spacing={4}>
         <Grid item lg={3} md={4} sm={6} xs={12}>
           <Widget

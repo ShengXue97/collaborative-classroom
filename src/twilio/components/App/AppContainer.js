@@ -8,11 +8,11 @@ import { getToken } from "../../api";
 
 import io from "socket.io-client";
 let socket;
-const ENDPOINT = 'https://collaborative-classroom-server.herokuapp.com/';
+const ENDPOINT = "https://collaborative-classroom-server.herokuapp.com/";
 
 class AppContainer extends PureComponent {
   static propTypes = {
-    render: PropTypes.func.isRequired
+    render: PropTypes.func.isRequired,
   };
 
   state = {
@@ -20,7 +20,7 @@ class AppContainer extends PureComponent {
     isJoining: false,
     userName: "",
     roomName: "",
-    errorMessage: null
+    errorMessage: null,
   };
 
   componentDidMount() {
@@ -30,7 +30,7 @@ class AppContainer extends PureComponent {
   }
 
   getToken = async () => {
-    const userName = localStorage.getItem('user');
+    const userName = localStorage.getItem("user");
 
     const response = await getToken(userName);
 
@@ -38,8 +38,8 @@ class AppContainer extends PureComponent {
   };
 
   joinRoom = async () => {
-    const userName = localStorage.getItem('user');
-    const roomName = localStorage.getItem('room');
+    const userName = localStorage.getItem("user");
+    const roomName = localStorage.getItem("room");
     this.setState({ isJoining: true });
 
     try {
@@ -51,14 +51,11 @@ class AppContainer extends PureComponent {
       const localAudioTrack = await TwilioVideo.createLocalAudioTrack();
       this.setState({ localAudioTrack });
 
-      const videoRoom = await TwilioVideo.connect(
-        token,
-        {
-          name: roomName,
-          tracks: [localVideoTrack, localAudioTrack],
-          insights: false
-        }
-      );
+      const videoRoom = await TwilioVideo.connect(token, {
+        name: roomName,
+        tracks: [localVideoTrack, localAudioTrack],
+        insights: false,
+      });
 
       videoRoom.on("disconnected", () => {
         this.stopVideoTrack();
@@ -66,7 +63,7 @@ class AppContainer extends PureComponent {
         this.stopScreenTrack();
 
         this.setState({
-          videoRoom: null
+          videoRoom: null,
         });
       });
 
@@ -76,7 +73,7 @@ class AppContainer extends PureComponent {
       this.stopAudioTrack();
 
       this.setState({
-        errorMessage: error.message
+        errorMessage: error.message,
       });
     }
 
@@ -87,12 +84,12 @@ class AppContainer extends PureComponent {
     const { videoRoom } = this.state;
     socket = io(ENDPOINT);
     // Subscribe to disconnect event once you know you are connected
-    console.log("leave")
-    socket.emit('end', () => {
-        console.log("k");
+    console.log("leave");
+    socket.emit("end", () => {
+      console.log("k");
     });
 
-    // Now disconnect once you are connected 
+    // Now disconnect once you are connected
     socket.disconnect();
 
     if (videoRoom) {
@@ -121,12 +118,12 @@ class AppContainer extends PureComponent {
 
       if (!screenTrack) {
         const stream = await navigator.mediaDevices.getDisplayMedia({
-          video: true
+          video: true,
         });
         const newScreenTrack = first(stream.getVideoTracks());
 
         this.setState({
-          screenTrack: new TwilioVideo.LocalVideoTrack(newScreenTrack)
+          screenTrack: new TwilioVideo.LocalVideoTrack(newScreenTrack),
         });
 
         videoRoom.localParticipant.publishTrack(newScreenTrack);
@@ -140,7 +137,7 @@ class AppContainer extends PureComponent {
       this.stopScreenTrack();
 
       this.setState({
-        errorMessage: error.message
+        errorMessage: error.message,
       });
     }
   };
@@ -150,8 +147,8 @@ class AppContainer extends PureComponent {
   changeUserName = userName => this.setState({ userName });
 
   changeRoomName = roomName => {
-    localStorage.setItem('room', roomName);
-    this.setState({ roomName })
+    localStorage.setItem("room", roomName);
+    this.setState({ roomName });
   };
 
   render() {
@@ -162,7 +159,7 @@ class AppContainer extends PureComponent {
       userName,
       roomName,
       errorMessage,
-      screenTrack
+      screenTrack,
     } = this.state;
 
     return render({
@@ -171,7 +168,7 @@ class AppContainer extends PureComponent {
       roomName,
       isVideoSupported: TwilioVideo.isSupported,
       isScreenSharingSupported: Boolean(
-        navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia
+        navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia,
       ),
       isScreenSharingEnabled: Boolean(screenTrack),
       canJoin: true,
@@ -182,7 +179,7 @@ class AppContainer extends PureComponent {
       onRoomNameChange: this.changeRoomName,
       onUserNameChange: this.changeUserName,
       errorMessage,
-      onErrorMessageHide: this.hideErrorMessage
+      onErrorMessageHide: this.hideErrorMessage,
     });
   }
 }

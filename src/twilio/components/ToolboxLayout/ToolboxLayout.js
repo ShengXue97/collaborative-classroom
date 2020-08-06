@@ -10,7 +10,7 @@ export default class AddRemoveLayout extends React.PureComponent {
   static defaultProps = {
     className: "layout",
     cols: { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 },
-    rowHeight: 100
+    rowHeight: 100,
   };
 
   constructor(props) {
@@ -18,7 +18,7 @@ export default class AddRemoveLayout extends React.PureComponent {
 
     this.state = {
       items: this.props.items,
-      newCounter: 0
+      newCounter: 0,
     };
 
     this.onAddItem = this.onAddItem.bind(this);
@@ -30,9 +30,9 @@ export default class AddRemoveLayout extends React.PureComponent {
       position: "absolute",
       right: "2px",
       top: 0,
-      cursor: "pointer"
+      cursor: "pointer",
     };
-    const i = el.i
+    const i = el.i;
     return (
       <div key={i} data-grid={el}>
         {this.props.elements[i]}
@@ -57,10 +57,10 @@ export default class AddRemoveLayout extends React.PureComponent {
         x: (this.state.items.length * 2) % (this.state.cols || 12),
         y: Infinity, // puts it at the bottom
         w: 2,
-        h: 2
+        h: 2,
       }),
       // Increment the counter to ensure key is always unique.
-      newCounter: this.state.newCounter + 1
+      newCounter: this.state.newCounter + 1,
     });
   }
 
@@ -68,7 +68,7 @@ export default class AddRemoveLayout extends React.PureComponent {
   onBreakpointChange(breakpoint, cols) {
     this.setState({
       breakpoint: breakpoint,
-      cols: cols
+      cols: cols,
     });
   }
 

@@ -1,23 +1,22 @@
-
 #bgdiv {
   max-width: 100% !important;
   max-height: 100% !important;
 }
 
-#whiteboard{
-  overflow:show
+#whiteboard {
+  overflow: show;
 }
 
-#localBox{
-  overflow:hidden
+#localBox {
+  overflow: hidden;
 }
 
-#remoteBox{
-  overflow:hidden
+#remoteBox {
+  overflow: hidden;
 }
 
-#chat{
-  overflow:hidden
+#chat {
+  overflow: hidden;
 }
 
 .delete-btn {
@@ -38,7 +37,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #ff7043 ;
+  background: #ff7043;
   height: 35px;
   width: 100%;
 }

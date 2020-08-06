@@ -6,7 +6,7 @@ class Track extends PureComponent {
   media = React.createRef();
 
   static propTypes = {
-    track: trackPropType.isRequired
+    track: trackPropType.isRequired,
   };
 
   componentDidMount() {

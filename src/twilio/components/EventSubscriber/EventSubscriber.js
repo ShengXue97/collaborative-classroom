@@ -6,11 +6,11 @@ export default class EventSubscriber extends PureComponent {
     events: PropTypes.arrayOf(PropTypes.string).isRequired,
     eventEmitterObject: PropTypes.shape({}),
     onUpdate: PropTypes.func.isRequired,
-    children: PropTypes.node.isRequired
+    children: PropTypes.node.isRequired,
   };
 
   static defaultProps = {
-    eventEmitterObject: null
+    eventEmitterObject: null,
   };
 
   componentDidMount() {
