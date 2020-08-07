@@ -65,9 +65,15 @@ export default function MessageList(props) {
         if (otherParty in fullMessagesRef.current) {
           //This conversation exists in my list
           fullMessagesRef.current[otherParty].push(message);
+          message.isNew = false;
+          message.otherParty = otherParty;
+          props.updateConversation(message);
         } else {
-          //This is a new conversation! Someone new messaged me._1f-Ay
+          //This is a new conversation! Someone new messaged me, or I messafed someone new.
           fullMessagesRef.current[otherParty] = [message];
+          message.isNew = true;
+          message.otherParty = otherParty;
+          props.updateConversation(message);
         }
       }
     });
