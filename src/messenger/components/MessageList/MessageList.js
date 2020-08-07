@@ -36,64 +36,27 @@ export default function MessageList(props) {
   const divRef = useRef(null);
   const messagesRef = useRef([]);
 
-  const addMessage = message => {
-    var newMessages = [message];
-    setMessages([...messages, ...newMessages]);
-  };
-
   useInterval(() => {
     setMessages(JSON.parse(JSON.stringify(messagesRef.current)));
   }, 1000);
 
   useEffect(() => {
-    getMessages(MY_USER_ID, 0);
-
     socket.on("newMessage", message => {
       messagesRef.current.push(message);
     });
   }, []);
 
   useEffect(() => {
+    setMessages(props.filteredMessages);
+    messagesRef.current = props.filteredMessages;
+  }, [props.filteredMessages]);
+
+  useEffect(() => {
     divRef.current.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // window.setInterval(function() {
-  //   getMessages(MY_USER_ID, 0);
-  // }, 20 * 1000);
-
-  const getMessages = (recipent, minTimestamp) => {
-    fetch(
-      "http://localhost:5000/singlechat?recipent=" +
-        recipent +
-        "&minTimestamp=" +
-        minTimestamp,
-      {
-        method: "GET",
-      },
-    )
-      .then(response => {
-        return response.text();
-      })
-      .then(data => {
-        var newMessages = messages.concat(JSON.parse(data));
-
-        var seenIDs = {};
-
-        newMessages = newMessages.filter(function(currentObject) {
-          if (currentObject.id in seenIDs) {
-            return false;
-          } else {
-            seenIDs[currentObject.id] = true;
-            return true;
-          }
-        });
-
-        messagesRef.current = newMessages;
-        setMessages(newMessages);
-      });
-  };
-
   const renderMessages = () => {
+    console.log(messages);
     let i = 0;
     let messageCount = messages.length;
     let tempMessages = [];
@@ -171,7 +134,6 @@ export default function MessageList(props) {
       <div style={{ float: "left", clear: "both" }} ref={divRef}></div>
 
       <Compose
-        addMessage={addMessage}
         rightItems={[
           <ToolbarButton key="photo" icon="ion-ios-camera" />,
           <ToolbarButton key="image" icon="ion-ios-image" />,

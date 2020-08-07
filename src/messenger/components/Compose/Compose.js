@@ -20,8 +20,6 @@ export default function Compose(props) {
       groupname: groupname,
     };
 
-    // props.addMessage(newMessage);
-
     fetch(
       "http://localhost:5000/sendmessage?author=" +
         author +
@@ -51,7 +49,6 @@ export default function Compose(props) {
           groupname,
         );
 
-        // props.addMessage(newMessage);
         inputBox.value = "";
       });
   };

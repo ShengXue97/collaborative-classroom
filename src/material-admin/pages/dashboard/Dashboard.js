@@ -8,9 +8,7 @@ import socket from "../../../websocket";
 export default function Dashboard(props) {
   useEffect(() => {
     const user = localStorage.getItem("user");
-    socket.emit("init", { user }, error => {
-      console.log(error);
-    });
+    socket.emit("init", { user }, error => {});
   }, []);
 
   const mustReload = localStorage.getItem("mustReload");
