@@ -238,8 +238,6 @@ const App = ({
   onUserNameChange(myUser);
   onRoomNameChange(myRoom);
 
-  console.log(videoRoom);
-
   if (!isVideoSupported) {
     content = <div>Video is not supported</div>;
   } else {

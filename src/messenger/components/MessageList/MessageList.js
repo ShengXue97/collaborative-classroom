@@ -42,8 +42,6 @@ export default function MessageList(props) {
   };
 
   useInterval(() => {
-    console.log(messages);
-    console.log(messagesRef.current);
     setMessages(JSON.parse(JSON.stringify(messagesRef.current)));
   }, 1000);
 
@@ -51,7 +49,6 @@ export default function MessageList(props) {
     getMessages(MY_USER_ID, 0);
 
     socket.on("newMessage", message => {
-      console.log(messages);
       messagesRef.current.push(message);
     });
   }, []);
@@ -97,7 +94,6 @@ export default function MessageList(props) {
   };
 
   const renderMessages = () => {
-    console.log(messages);
     let i = 0;
     let messageCount = messages.length;
     let tempMessages = [];
