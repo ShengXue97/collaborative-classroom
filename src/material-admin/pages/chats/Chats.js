@@ -7,8 +7,9 @@ import Messenger from "../../../messenger/components/Messenger/Messenger.js";
 export default function Chats(props) {
   return (
     <>
-      <PageTitle title="Chats" />
-      <Messenger />
+      <div style={{ height: "10px" }}>
+        <Messenger />
+      </div>
     </>
   );
 }
