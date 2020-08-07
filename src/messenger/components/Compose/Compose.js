@@ -51,7 +51,7 @@ export default function Compose(props) {
           groupname,
         );
 
-        props.addMessage(newMessage);
+        // props.addMessage(newMessage);
         inputBox.value = "";
       });
   };

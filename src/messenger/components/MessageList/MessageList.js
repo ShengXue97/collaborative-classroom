@@ -11,21 +11,48 @@ import allMessages from "../../../allMessages";
 
 const MY_USER_ID = localStorage.getItem("user");
 
+function useInterval(callback, delay) {
+  const savedCallback = useRef();
+
+  // Remember the latest callback.
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  // Set up the interval.
+  useEffect(() => {
+    function tick() {
+      savedCallback.current();
+    }
+    if (delay !== null) {
+      let id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
+}
+
 export default function MessageList(props) {
   const [messages, setMessages] = useState([]);
   const divRef = useRef(null);
+  const messagesRef = useRef([]);
 
   const addMessage = message => {
     var newMessages = [message];
     setMessages([...messages, ...newMessages]);
   };
 
+  useInterval(() => {
+    console.log(messages);
+    console.log(messagesRef.current);
+    setMessages(JSON.parse(JSON.stringify(messagesRef.current)));
+  }, 1000);
+
   useEffect(() => {
     getMessages(MY_USER_ID, 0);
 
     socket.on("newMessage", message => {
       console.log(messages);
-      // addMessage(message);
+      messagesRef.current.push(message);
     });
   }, []);
 
@@ -64,11 +91,13 @@ export default function MessageList(props) {
           }
         });
 
+        messagesRef.current = newMessages;
         setMessages(newMessages);
       });
   };
 
   const renderMessages = () => {
+    console.log(messages);
     let i = 0;
     let messageCount = messages.length;
     let tempMessages = [];
