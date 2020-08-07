@@ -13,6 +13,11 @@ export default function Messenger(props) {
     getAvatars();
   }, []);
 
+  const selectConversation = selectedUser => {
+    console.log("selected" + selectedUser);
+    setFilteredMessages(messages[selectedUser]);
+  };
+
   const getAvatars = () => {
     axios.get("https://randomuser.me/api/?results=20").then(response => {
       let avatars = response.data.results.map(result => {
@@ -54,7 +59,7 @@ export default function Messenger(props) {
             otherParty = element.author;
           }
 
-          if (otherParty != "") {
+          if (otherParty != "" && otherParty != user) {
             if (otherParty in newMessages) {
               newMessages[otherParty].push(element);
               newConversations[otherParty] = {
@@ -77,15 +82,24 @@ export default function Messenger(props) {
         //Map to required format for parsing
         setConversations(Object.values(newConversations));
 
+        const keyList = Object.keys(newConversations);
+        var filteredMessages = [];
+        if (keyList.length > 0) {
+          filteredMessages = newMessages[keyList[0]];
+        }
+
         setMessages(newMessages);
-        setFilteredMessages(newMessages["b@b.com"]);
+        setFilteredMessages(filteredMessages);
       });
   };
 
   return (
     <div className="messenger">
       <div className="scrollable sidebar">
-        <ConversationList conversations={conversations} />
+        <ConversationList
+          selectConversation={selectConversation}
+          conversations={conversations}
+        />
       </div>
 
       <div className="scrollable content">

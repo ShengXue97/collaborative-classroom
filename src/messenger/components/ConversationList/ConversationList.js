@@ -19,7 +19,11 @@ export default function ConversationList(props) {
       />
       <ConversationSearch />
       {props.conversations.map(conversation => (
-        <ConversationListItem key={conversation.name} data={conversation} />
+        <ConversationListItem
+          selectConversation={props.selectConversation}
+          key={conversation.name}
+          data={conversation}
+        />
       ))}
     </div>
   );
