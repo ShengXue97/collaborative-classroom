@@ -1,12 +1,26 @@
 import React from "react";
 import "./Compose.css";
+import socket from "../../../websocket";
 
 export default function Compose(props) {
   const sendMessage = (message, inputBox) => {
+    const id = -1;
     const author = localStorage.getItem("user");
     const recipent = "a@a.com";
-    const groupname = "none";
     const minTimestamp = new Date().getTime();
+    const groupname = "none";
+
+    const newMessage = {
+      id: id,
+      author: author,
+      message: message,
+      recipent: recipent,
+      message: message,
+      timestamp: minTimestamp,
+      groupname: groupname,
+    };
+
+    // props.addMessage(newMessage);
 
     fetch(
       "http://localhost:5000/sendmessage?author=" +
@@ -25,8 +39,19 @@ export default function Compose(props) {
         console.log(response);
       })
       .then(data => {
-        console.log(data);
-        props.getMessages(recipent, minTimestamp);
+        const user = localStorage.getItem("user");
+        const timestamp = new Date().getTime();
+        socket.emit(
+          "publishMessage",
+          id,
+          author,
+          recipent,
+          message,
+          minTimestamp,
+          groupname,
+        );
+
+        props.addMessage(newMessage);
         inputBox.value = "";
       });
   };

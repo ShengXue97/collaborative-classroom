@@ -6,6 +6,8 @@ import Message from "../Message/Message.js";
 import moment from "moment";
 
 import "./MessageList.css";
+import socket from "../../../websocket";
+import allMessages from "../../../allMessages";
 
 const MY_USER_ID = localStorage.getItem("user");
 
@@ -13,18 +15,27 @@ export default function MessageList(props) {
   const [messages, setMessages] = useState([]);
   const divRef = useRef(null);
 
+  const addMessage = message => {
+    var newMessages = [message];
+    setMessages([...messages, ...newMessages]);
+  };
+
   useEffect(() => {
-    const minTimestamp = new Date().getTime();
-    getMessages(MY_USER_ID, minTimestamp);
+    getMessages(MY_USER_ID, 0);
+
+    socket.on("newMessage", message => {
+      console.log(messages);
+      // addMessage(message);
+    });
   }, []);
 
   useEffect(() => {
     divRef.current.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  window.setInterval(function() {
-    getMessages(MY_USER_ID, 0);
-  }, 20 * 1000);
+  // window.setInterval(function() {
+  //   getMessages(MY_USER_ID, 0);
+  // }, 20 * 1000);
 
   const getMessages = (recipent, minTimestamp) => {
     fetch(
@@ -135,7 +146,7 @@ export default function MessageList(props) {
       <div style={{ float: "left", clear: "both" }} ref={divRef}></div>
 
       <Compose
-        getMessages={getMessages}
+        addMessage={addMessage}
         rightItems={[
           <ToolbarButton key="photo" icon="ion-ios-camera" />,
           <ToolbarButton key="image" icon="ion-ios-image" />,

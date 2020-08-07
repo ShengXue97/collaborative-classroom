@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ConversationList from "../ConversationList/ConversationList.js";
 import MessageList from "../MessageList/MessageList.js";
 import "./Messenger.css";
 
 export default function Messenger(props) {
+
   return (
     <div className="messenger">
       {/* <Toolbar
@@ -30,7 +31,7 @@ export default function Messenger(props) {
       </div>
 
       <div className="scrollable content">
-        <MessageList />
+        <MessageList/>
       </div>
     </div>
   );

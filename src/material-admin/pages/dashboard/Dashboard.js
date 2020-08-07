@@ -1,10 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 // components
 import PageTitle from "../../components/PageTitle";
 
 import App from "../../../twilio/components/App/App.js";
+import socket from "../../../websocket";
 
 export default function Dashboard(props) {
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    socket.emit("init", { user }, error => {
+      console.log(error);
+    });
+  }, []);
 
   const mustReload = localStorage.getItem("mustReload");
   if (mustReload != null && mustReload == 1) {
