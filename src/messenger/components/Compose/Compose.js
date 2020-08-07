@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Compose.css";
 import socket from "../../../websocket";
 
 export default function Compose(props) {
+  const [activeConversation, setActiveConversation] = useState("");
+
+  useEffect(() => {
+    setActiveConversation(props.activeConversation);
+  }, [props.activeConversation]);
+
   const sendMessage = (message, inputBox) => {
     const id = -1;
     const author = localStorage.getItem("user");
-    const recipent = "a@a.com";
+    const recipent = activeConversation;
     const minTimestamp = new Date().getTime();
     const groupname = "none";
 
@@ -34,7 +40,6 @@ export default function Compose(props) {
       },
     )
       .then(response => {
-        console.log(response);
       })
       .then(data => {
         const user = localStorage.getItem("user");

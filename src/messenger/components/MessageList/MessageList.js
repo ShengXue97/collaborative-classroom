@@ -9,8 +9,6 @@ import "./MessageList.css";
 import socket from "../../../websocket";
 import allMessages from "../../../allMessages";
 
-const MY_USER_ID = localStorage.getItem("user");
-
 function useInterval(callback, delay) {
   const savedCallback = useRef();
 
@@ -33,8 +31,11 @@ function useInterval(callback, delay) {
 
 export default function MessageList(props) {
   const [messages, setMessages] = useState([]);
+  const [activeConversation, setActiveConversation] = useState("");
   const divRef = useRef(null);
   const messagesRef = useRef([]);
+  const fullMessagesRef = useRef([]);
+  const activeConversationRef = useRef("");
 
   useInterval(() => {
     setMessages(JSON.parse(JSON.stringify(messagesRef.current)));
@@ -42,7 +43,33 @@ export default function MessageList(props) {
 
   useEffect(() => {
     socket.on("newMessage", message => {
-      messagesRef.current.push(message);
+      //IMPORTANT: State is not kept inside here(socket.on), only Ref.
+      const user = localStorage.getItem("user");
+      console.log(
+        user,
+        message.recipent,
+        activeConversationRef.current,
+        message.author,
+      );
+
+      var otherParty = "";
+      if (message.author == user) {
+        otherParty = message.recipent;
+      } else if (message.recipent == user) {
+        otherParty = message.author;
+      }
+
+      if (otherParty != "" && otherParty != user) {
+        // This message belongs to me
+
+        if (otherParty in fullMessagesRef.current) {
+          //This conversation exists in my list
+          fullMessagesRef.current[otherParty].push(message);
+        } else {
+          //This is a new conversation! Someone new messaged me._1f-Ay
+          fullMessagesRef.current[otherParty] = [message];
+        }
+      }
     });
   }, []);
 
@@ -52,14 +79,23 @@ export default function MessageList(props) {
   }, [props.filteredMessages]);
 
   useEffect(() => {
+    fullMessagesRef.current = props.fullMessages;
+  }, [props.fullMessages]);
+
+  useEffect(() => {
     divRef.current.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  useEffect(() => {
+    setActiveConversation(props.activeConversation);
+    activeConversationRef.current = props.activeConversation;
+  }, [props.activeConversation]);
+
   const renderMessages = () => {
-    console.log(messages);
     let i = 0;
     let messageCount = messages.length;
     let tempMessages = [];
+    const MY_USER_ID = localStorage.getItem("user");
 
     while (i < messageCount) {
       let previous = messages[i - 1];
@@ -119,7 +155,7 @@ export default function MessageList(props) {
   return (
     <div className="message-list">
       <Toolbar
-        title="Conversation Title"
+        title={activeConversation}
         rightItems={[
           <ToolbarButton
             key="info"
@@ -134,6 +170,7 @@ export default function MessageList(props) {
       <div style={{ float: "left", clear: "both" }} ref={divRef}></div>
 
       <Compose
+        activeConversation={activeConversation}
         rightItems={[
           <ToolbarButton key="photo" icon="ion-ios-camera" />,
           <ToolbarButton key="image" icon="ion-ios-image" />,

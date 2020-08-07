@@ -86,7 +86,6 @@ class AppContainer extends PureComponent {
     // Subscribe to disconnect event once you know you are connected
     console.log("leave");
     socket.emit("end", () => {
-      console.log("k");
     });
 
     // Now disconnect once you are connected

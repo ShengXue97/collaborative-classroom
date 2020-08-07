@@ -8,13 +8,14 @@ export default function Messenger(props) {
   const [conversations, setConversations] = useState([]);
   const [messages, setMessages] = useState([]);
   const [filteredMessages, setFilteredMessages] = useState([]);
+  const [activeConversation, setActiveConversation] = useState([]);
 
   useEffect(() => {
     getAvatars();
   }, []);
 
   const selectConversation = selectedUser => {
-    console.log("selected" + selectedUser);
+    setActiveConversation(selectedUser);
     setFilteredMessages(messages[selectedUser]);
   };
 
@@ -49,7 +50,6 @@ export default function Messenger(props) {
       })
       .then(data => {
         const dataParsed = JSON.parse(data);
-        console.log(dataParsed);
         dataParsed.map((element, index) => {
           var otherParty = "";
 
@@ -86,8 +86,9 @@ export default function Messenger(props) {
         var filteredMessages = [];
         if (keyList.length > 0) {
           filteredMessages = newMessages[keyList[0]];
+          setActiveConversation(keyList[0]);
         }
-
+        console.log(filteredMessages);
         setMessages(newMessages);
         setFilteredMessages(filteredMessages);
       });
@@ -103,7 +104,11 @@ export default function Messenger(props) {
       </div>
 
       <div className="scrollable content">
-        <MessageList filteredMessages={filteredMessages} />
+        <MessageList
+          activeConversation={activeConversation}
+          filteredMessages={filteredMessages}
+          fullMessages={messages}
+        />
       </div>
     </div>
   );

@@ -119,7 +119,6 @@ const App = ({
 
   const addElement = name => {
     var elementToBeAdded = null;
-    console.log(name);
     window.defaultGridElements.map(e => {
       if (name == e.props.id) {
         elementToBeAdded = e;
