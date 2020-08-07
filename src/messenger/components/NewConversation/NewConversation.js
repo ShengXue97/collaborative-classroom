@@ -74,7 +74,7 @@ class NewConversation extends Component {
     console.log(newMessage);
 
     fetch(
-      "http://localhost:5000/sendmessage?author=" +
+      "https://collaborative-classroom-server.herokuapp.com/sendmessage?author=" +
         author +
         "&recipent=" +
         recipent +

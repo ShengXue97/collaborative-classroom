@@ -57,18 +57,20 @@ export default function Messenger(props) {
       });
     } else {
       let firstConversation = {};
-      let newConversations = conversationsRef.current.filter((element, index) => {
-        if (element.name != otherParty) {
-          return true;
-        } else {
-          firstConversation = {
-            photo: element.photo,
-            name: element.name,
-            text: message.message,
-          };
-          return false;
-        }
-      });
+      let newConversations = conversationsRef.current.filter(
+        (element, index) => {
+          if (element.name != otherParty) {
+            return true;
+          } else {
+            firstConversation = {
+              photo: element.photo,
+              name: element.name,
+              text: message.message,
+            };
+            return false;
+          }
+        },
+      );
 
       newConversations.unshift(firstConversation);
 
@@ -99,7 +101,7 @@ export default function Messenger(props) {
     var count = 0;
 
     fetch(
-      "http://localhost:5000/singlechat?recipent=" +
+      "https://collaborative-classroom-server.herokuapp.com/singlechat?recipent=" +
         user +
         "&minTimestamp=" +
         minTimestamp,

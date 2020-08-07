@@ -27,7 +27,7 @@ export default function Compose(props) {
     };
 
     fetch(
-      "http://localhost:5000/sendmessage?author=" +
+      "https://collaborative-classroom-server.herokuapp.com/sendmessage?author=" +
         author +
         "&recipent=" +
         recipent +
@@ -39,8 +39,7 @@ export default function Compose(props) {
         method: "GET",
       },
     )
-      .then(response => {
-      })
+      .then(response => {})
       .then(data => {
         const user = localStorage.getItem("user");
         const timestamp = new Date().getTime();
