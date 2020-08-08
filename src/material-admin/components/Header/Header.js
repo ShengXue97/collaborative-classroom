@@ -41,6 +41,8 @@ import { useGoogleLogout } from "react-google-login";
 import socket from "../../../websocket";
 
 import NewConversation from "../../../messenger/components/NewConversation/NewConversation";
+import NotfSound from "./notf-sound.ogg";
+var Sound = require("react-sound").default;
 
 const clientId =
   "1095052158563-iteoskptpn9e4hemaf2br65nk3jibldl.apps.googleusercontent.comm";
@@ -81,6 +83,7 @@ export default function Header(props) {
   var [isNotificationsUnread, setIsNotificationsUnread] = useState(true);
   var [profileMenu, setProfileMenu] = useState(null);
   var [isSearchOpen, setSearchOpen] = useState(false);
+  var isPlaying = useRef(Sound.status.STOPPED);
 
   var messageCountRef = useRef(0);
 
@@ -93,6 +96,7 @@ export default function Header(props) {
       if (message.author == userName || message.recipent != userName) {
         return;
       }
+      isPlaying.current = Sound.status.PLAYING;
       //IMPORTANT: State is not kept inside here(socket.on), only Ref.
       const dateObject = new Date(JSON.parse(message.timestamp));
       const adjustedDateObject = new Date(
@@ -265,6 +269,19 @@ export default function Header(props) {
 
   return (
     <AppBar position="fixed" className={classes.appBar}>
+      <Sound
+        url={NotfSound}
+        playStatus={isPlaying.current}
+        autoLoad={true}
+        onError={e => {
+          console.log("err");
+        }}
+        onFinishedPlaying={e => {
+          isPlaying.current = Sound.status.STOPPED;
+        }}
+        playFromPosition={0 /* in milliseconds */}
+      />
+
       <Toolbar className={classes.toolbar}>
         <IconButton
           color="inherit"
