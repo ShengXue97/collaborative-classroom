@@ -379,6 +379,7 @@ const App = ({
   );
 };
 
+
 App.propTypes = {
   videoRoom: videoRoomPropType,
   userName: PropTypes.string.isRequired,
