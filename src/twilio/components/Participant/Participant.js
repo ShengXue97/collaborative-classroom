@@ -7,7 +7,8 @@ import { mapToArray } from "../../utils";
 import styles from "./Participant.module.scss";
 
 const Participant = ({ participant }) => (
-  <div className={styles.participant}>
+  (participant != null)?
+  (<div className={styles.participant}>
     {mapToArray(participant.tracks).map(
       trackPublication =>
         trackPublication.track && (
@@ -17,7 +18,7 @@ const Participant = ({ participant }) => (
           />
         ),
     )}
-  </div>
+  </div>) : (<div/>)
 );
 
 Participant.propTypes = {

@@ -190,6 +190,7 @@ const App = ({
               data-grid={{ x: 4, y: 0, w: 4, h: 2 }}
             >
               <LocalBox
+                showVideo = {false}
                 removeElement={() => removeElement("localBox")}
                 videoRoom={videoRoom}
               />
@@ -204,6 +205,7 @@ const App = ({
               data-grid={{ x: 4, y: 2, w: 4, h: 2 }}
             >
               <RemoteBox
+              showVideo = {false}
                 removeElement={() => removeElement("remoteBox")}
                 videoRoom={videoRoom}
               />
@@ -240,7 +242,7 @@ const App = ({
   if (!isVideoSupported) {
     content = <div>Video is not supported</div>;
   } else {
-    content = videoRoom ? (
+    content = (videoRoom != null) ? (
       <>
         <Form.Field kind="group" align="centered">
           <Form.Control>
