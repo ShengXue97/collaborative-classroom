@@ -242,6 +242,10 @@ const App = ({
   if (!isVideoSupported) {
     content = <div>Video is not supported</div>;
   } else {
+    if (videoRoom != null) {
+      console.log(videoRoom);
+      console.log(videoRoom.props)
+    }
     content = (videoRoom != null) ? (
       <>
         <Form.Field kind="group" align="centered">
@@ -250,7 +254,7 @@ const App = ({
               <Dropdown.Toggle variant="success" id="dropdown-basic">
                 Tools
               </Dropdown.Toggle>
-
+``
               <Dropdown.Menu>
                 <Dropdown.Item
                   active={whiteboardActive}

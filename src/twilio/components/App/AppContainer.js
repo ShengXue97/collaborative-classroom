@@ -71,16 +71,21 @@ class AppContainer extends PureComponent {
 
       this.setState({ videoRoom });
     } catch (error) {
-
       this.stopVideoTrack();
       this.stopAudioTrack();
       this.setState({
-        videoRoom: 0
+        //videoRoom: 0
+        videoRoom : await TwilioVideo.connect(token, {
+          name: roomName,
+          tracks: [],
+          insights: false,
+        })
+
       });
-      console.log("hi");
       /*this.setState({
         errorMessage: error.message,
       });*/
+      
     }
 
     this.setState({ isJoining: false });

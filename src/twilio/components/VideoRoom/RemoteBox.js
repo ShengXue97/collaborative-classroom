@@ -36,10 +36,8 @@ class VideoRoom extends PureComponent {
 
   render() {
     const { videoRoom } = this.props;
-    var remoteParticipants = [];
-    if (this.props.showVideo != 0) {
-      remoteParticipants = mapToArray(videoRoom.participants);;
-    } 
+    const remoteParticipants = mapToArray(videoRoom.participants);
+
     return (
       <EventSubscriber
         events={EVENTS}
