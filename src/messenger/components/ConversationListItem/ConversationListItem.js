@@ -33,7 +33,7 @@ export default function ConversationListItem(props) {
     }
   }, [unreadNumber]);
 
-  const { photo, name, text } = props.data;
+  const { photo, name, text, textSnippet } = props.data;
 
   const handleClick = () => {
     setUnreadNumber(0);

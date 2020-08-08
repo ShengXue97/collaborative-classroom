@@ -8,15 +8,21 @@ import {
   ListItemText,
   Typography,
 } from "@material-ui/core";
-import { Inbox as InboxIcon } from "@material-ui/icons";
+import {
+  Inbox as InboxIcon,
+  MailOutline as MailIcon,
+} from "@material-ui/icons";
 import { Link } from "react-router-dom";
 import classnames from "classnames";
+import { Badge } from "../../../Wrappers";
 
 // styles
 import useStyles from "./styles";
 
 // components
 import Dot from "../Dot";
+
+import { MDBBadge, MDBContainer, MDBBtn } from "mdbreact";
 
 export default function SidebarLink({
   link,

@@ -189,10 +189,18 @@ export default function Messenger(props) {
                 isUnread = isUnread + element.isunread;
               }
               newMessages[otherParty] = [element];
+              var textSnippet = "";
+              if (element.message.length <= 20) {
+                textSnippet = element.message;
+              } else {
+                textSnippet = element.message.substring(0, 20) + "...";
+              }
+
               newConversations[otherParty] = {
                 photo: avatars[count],
                 name: otherParty,
                 text: element.message,
+                textSnippet: textSnippet,
                 timestamp: parseInt(element.timestamp),
                 unreadNumber: parseInt(isUnread),
               };
@@ -210,7 +218,6 @@ export default function Messenger(props) {
           if (keyA > keyB) return -1;
           return 0;
         });
-        console.log(newConversations);
         //Map to required format for parsing
         conversationsRef.current = newConversationsValues;
         setConversations(newConversationsValues);
