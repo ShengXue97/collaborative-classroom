@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/collaborative-classroom/static/css/main.d5514d38.chunk.css",
+    "main.css": "/collaborative-classroom/static/css/main.693476cd.chunk.css",
     "main.js": "/collaborative-classroom/static/js/main.8faed660.chunk.js",
     "main.js.map": "/collaborative-classroom/static/js/main.8faed660.chunk.js.map",
     "runtime~main.js": "/collaborative-classroom/static/js/runtime~main.0ab5c060.js",
@@ -9,10 +9,10 @@
     "static/js/2.0a3bc3a6.chunk.js": "/collaborative-classroom/static/js/2.0a3bc3a6.chunk.js",
     "static/js/2.0a3bc3a6.chunk.js.map": "/collaborative-classroom/static/js/2.0a3bc3a6.chunk.js.map",
     "index.html": "/collaborative-classroom/index.html",
-    "precache-manifest.a4c40c053c59142f78d2554488545bb9.js": "/collaborative-classroom/precache-manifest.a4c40c053c59142f78d2554488545bb9.js",
+    "precache-manifest.5196ce03fe2b0a97933f6d24d9d6ec2b.js": "/collaborative-classroom/precache-manifest.5196ce03fe2b0a97933f6d24d9d6ec2b.js",
     "service-worker.js": "/collaborative-classroom/service-worker.js",
     "static/css/2.d2948499.chunk.css.map": "/collaborative-classroom/static/css/2.d2948499.chunk.css.map",
-    "static/css/main.d5514d38.chunk.css.map": "/collaborative-classroom/static/css/main.d5514d38.chunk.css.map",
+    "static/css/main.693476cd.chunk.css.map": "/collaborative-classroom/static/css/main.693476cd.chunk.css.map",
     "static/media/mdb-free.scss": "/collaborative-classroom/static/media/arrow_right.8ef6a08c.svg",
     "static/media/google.svg": "/collaborative-classroom/static/media/google.695a3160.svg",
     "static/media/logo.svg": "/collaborative-classroom/static/media/logo.a0185b04.svg"
