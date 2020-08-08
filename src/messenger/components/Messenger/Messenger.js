@@ -237,6 +237,7 @@ export default function Messenger(props) {
     <div className="messenger">
       <div className="scrollable sidebar">
         <ConversationList
+          updateSmallMessagesFiltered={props.updateSmallMessagesFiltered}
           selectConversation={selectConversation}
           conversations={conversations}
         />

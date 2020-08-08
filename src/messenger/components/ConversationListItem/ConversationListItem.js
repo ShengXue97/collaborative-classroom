@@ -37,6 +37,7 @@ export default function ConversationListItem(props) {
 
   const handleClick = () => {
     setUnreadNumber(0);
+    props.updateSmallMessagesFiltered(name);
     props.selectConversation(name);
   };
   return (

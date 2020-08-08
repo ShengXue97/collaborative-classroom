@@ -23,7 +23,7 @@ import socket from "../../../websocket";
 import IconButton from "@material-ui/core/IconButton";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 
-export default function Header(props) {
+export default function NewConversation(props) {
   var [message, setMessage] = useState("");
 
   const toggle = () => {
@@ -45,7 +45,7 @@ export default function Header(props) {
 
     const id = -1;
     const author = localStorage.getItem("user");
-    const minTimestamp = new Date().getTime();
+    const timestamp = new Date().getTime();
     const groupname = "none";
 
     const newMessage = {
@@ -53,7 +53,7 @@ export default function Header(props) {
       author: author,
       message: props.messageBox,
       recipent: props.recipentBox,
-      timestamp: minTimestamp,
+      timestamp: timestamp,
       groupname: groupname,
     };
     if (props.messageBox.length <= 0 || props.recipentBox.length <= 0) {
@@ -67,6 +67,8 @@ export default function Header(props) {
         props.recipentBox +
         "&message=" +
         props.messageBox +
+        "&timestamp=" +
+        timestamp +
         "&groupname=" +
         groupname,
       {
@@ -75,13 +77,14 @@ export default function Header(props) {
     )
       .then(response => {})
       .then(data => {
+        console.log(data);
         socket.emit(
           "publishMessage",
           id,
           author,
           props.recipentBox,
           props.messageBox,
-          minTimestamp,
+          timestamp,
           groupname,
         );
       })

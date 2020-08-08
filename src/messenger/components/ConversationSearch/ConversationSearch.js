@@ -1,5 +1,5 @@
 import React from "react";
-import NewConversation from "../NewConversation/NewConversation";
+import ComposeConversation from "../ComposeConversation/ComposeConversation";
 import "./ConversationSearch.css";
 
 export default function ConversationSearch() {
@@ -13,7 +13,7 @@ export default function ConversationSearch() {
         />
       </div>
       <div style={{ flex: 1 }}>
-        <NewConversation />
+        <ComposeConversation />
       </div>
     </div>
   );

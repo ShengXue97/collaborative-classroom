@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   AppBar,
   Toolbar,
@@ -77,17 +77,17 @@ export default function Header(props) {
 
   // local
   var [mailMenu, setMailMenu] = useState(null);
-  var [badgeContent, setBadgeContent] = useState(null);
-  var [messagesNo, setMessagesNo] = useState([]);
   var [notificationsMenu, setNotificationsMenu] = useState(null);
   var [isNotificationsUnread, setIsNotificationsUnread] = useState(true);
   var [profileMenu, setProfileMenu] = useState(null);
   var [isSearchOpen, setSearchOpen] = useState(false);
-  var [messages, setMessages] = useState([]);
+
+  var messageCountRef = useRef(0);
 
   const userName = localStorage.getItem("user");
 
   useEffect(() => {
+    getConversations();
     socket.on("newMessage", message => {
       const userName = localStorage.getItem("user");
       if (message.author == userName || message.recipent != userName) {
@@ -106,23 +106,118 @@ export default function Header(props) {
         .fromNow();
 
       const newMessage = {
+        internalCount: messageCountRef.current,
         id: message.id,
         variant: "primary",
         name: message.author,
         message: message.message,
         time: friendlyTimestamp,
+        internalTime: message.timestamp,
       };
+      messageCountRef.current = messageCountRef.current + 1;
 
-      messages.push(newMessage);
-      if (messagesNo.length == 0) {
-        messagesNo.push(1);
+      props.addSmallMessage(newMessage);
+
+      if (props.messagesNo.length == 0) {
+        props.messagesNo.push(1);
       } else {
-        messagesNo[0] = messagesNo[0] + 1;
+        props.messagesNo[0] = props.messagesNo[0] + 1;
       }
 
-      setBadgeContent(messagesNo[0]);
+      props.updateBadgeContent(props.messagesNo[0]);
     });
   }, []);
+
+  const setAsRead = (author, message, timestamp) => {
+    const recipent = localStorage.getItem("user");
+    //Tell server that I read all of these
+    fetch(
+      "https://collaborative-classroom-server.herokuapp.com/setasreadsingle?author=" +
+        author +
+        "&recipent=" +
+        recipent +
+        "&message=" +
+        message +
+        "&timestamp=" +
+        timestamp,
+      {
+        method: "GET",
+      },
+    ).catch(error => {
+      alert("Error occured!");
+      console.log(error);
+    });
+  };
+
+  const getConversations = avatars => {
+    var newMessages = {};
+
+    const user = localStorage.getItem("user");
+    const minTimestamp = 0;
+    var count = 0;
+
+    fetch(
+      "https://collaborative-classroom-server.herokuapp.com/singlechat?recipent=" +
+        user +
+        "&minTimestamp=" +
+        minTimestamp,
+      {
+        method: "GET",
+      },
+    )
+      .then(response => {
+        return response.text();
+      })
+      .then(data => {
+        const dataParsed = JSON.parse(data);
+        const newMessages = [];
+
+        dataParsed.map((element, index) => {
+          if (element.recipent == user && element.isunread == 1) {
+            const dateObject = new Date(JSON.parse(element.timestamp));
+            const adjustedDateObject = new Date(
+              dateObject.toLocaleString("en-US", {
+                timeZone: "Asia/Singapore",
+              }),
+            );
+
+            const friendlyTimestamp = moment(adjustedDateObject)
+              .startOf("hour")
+              .fromNow();
+
+            const newMessage = {
+              internalCount: messageCountRef.current,
+              id: element.id,
+              variant: "primary",
+              name: element.author,
+              message: element.message,
+              time: friendlyTimestamp,
+              internalTime: element.timestamp,
+            };
+            newMessages.push(newMessage);
+
+            messageCountRef.current = messageCountRef.current + 1;
+            props.messagesNo[0] = props.messagesNo[0] + 1;
+            props.updateBadgeContent(props.messagesNo[0]);
+          }
+        });
+        props.updateSmallMessages(newMessages);
+      });
+  };
+
+  const removeMessage = internalCount => {
+    var newMessages = [];
+    props.smallMessages.current.map((element, index) => {
+      console.log(element.internalCount, internalCount);
+      if (element.internalCount != internalCount) {
+        newMessages.push(element);
+      }
+    });
+    props.messagesNo[0] = props.messagesNo[0] - 1;
+    props.updateBadgeContent(props.messagesNo[0]);
+
+    props.removeSmallMessage(newMessages);
+  };
 
   const onLogoutSuccess = res => {
     console.log("Logged out Success");
@@ -247,12 +342,10 @@ export default function Header(props) {
           aria-controls="mail-menu"
           onClick={e => {
             setMailMenu(e.currentTarget);
-            setBadgeContent(null);
-            setMessagesNo([0]);
           }}
           className={classes.headerMenuButton}
         >
-          <Badge badgeContent={badgeContent} color="secondary">
+          <Badge badgeContent={props.badgeContent} color="secondary">
             <MailIcon classes={{ root: classes.headerIcon }} />
           </Badge>
         </IconButton>
@@ -286,15 +379,22 @@ export default function Header(props) {
               component="a"
               color="secondary"
             >
-              {messages.length} New Messages
+              {props.smallMessages.current.length} New Messages
             </Typography>
           </div>
-          {messages.map(message => (
+          {props.smallMessages.current.map(message => (
             <MenuItem
               onClick={() => {
                 props.toggleModal();
                 props.updateRecipentBox(message.name);
                 props.updateMessageBox("");
+                console.log(
+                  message.name,
+                  message.message,
+                  message.internalTime,
+                );
+                setAsRead(message.name, message.message, message.internalTime);
+                removeMessage(message.internalCount);
               }}
               key={message.id}
               className={classes.messageNotification}

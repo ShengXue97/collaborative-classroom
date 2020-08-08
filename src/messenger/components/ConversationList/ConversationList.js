@@ -20,6 +20,7 @@ export default function ConversationList(props) {
       <ConversationSearch />
       {props.conversations.map(conversation => (
         <ConversationListItem
+          updateSmallMessagesFiltered={props.updateSmallMessagesFiltered}
           selectConversation={props.selectConversation}
           key={conversation.name}
           data={conversation}
