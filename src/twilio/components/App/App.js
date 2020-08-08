@@ -360,7 +360,6 @@ const App = ({
               </Button>
             </Form.Control>
           </Form.Field>
-          
         </Columns.Column>
       </Columns>
     );
@@ -379,6 +378,7 @@ const App = ({
     </div>
   );
 };
+
 
 App.propTypes = {
   videoRoom: videoRoomPropType,
