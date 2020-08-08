@@ -41,12 +41,11 @@ class AppContainer extends PureComponent {
     const userName = localStorage.getItem("user");
     const roomName = localStorage.getItem("room");
     this.setState({ isJoining: true });
-    var token = null;
+
     try {
-      //console.log("hi");
-      token = await this.getToken();
+      const token = await this.getToken();
+
       const localVideoTrack = await TwilioVideo.createLocalVideoTrack();
-      console.log(localVideoTrack);
       this.setState({ localVideoTrack });
 
       const localAudioTrack = await TwilioVideo.createLocalAudioTrack();
@@ -57,7 +56,6 @@ class AppContainer extends PureComponent {
         tracks: [localVideoTrack, localAudioTrack],
         insights: false,
       });
-      
 
       videoRoom.on("disconnected", () => {
         this.stopVideoTrack();
@@ -65,22 +63,18 @@ class AppContainer extends PureComponent {
         this.stopScreenTrack();
 
         this.setState({
-          videoRoom: null
+          videoRoom: null,
         });
       });
 
       this.setState({ videoRoom });
     } catch (error) {
-
       this.stopVideoTrack();
       this.stopAudioTrack();
+
       this.setState({
-        videoRoom: 0
-      });
-      console.log("hi");
-      /*this.setState({
         errorMessage: error.message,
-      });*/
+      });
     }
 
     this.setState({ isJoining: false });
@@ -91,8 +85,7 @@ class AppContainer extends PureComponent {
     socket = io(ENDPOINT);
     // Subscribe to disconnect event once you know you are connected
     console.log("leave");
-    socket.emit("end", () => {
-    });
+    socket.emit("end", () => {});
 
     // Now disconnect once you are connected
     socket.disconnect();
