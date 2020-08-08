@@ -36,8 +36,10 @@ class VideoRoom extends PureComponent {
 
   render() {
     const { videoRoom } = this.props;
-    const remoteParticipants = mapToArray(videoRoom.participants);
-
+    var localParticipants = null
+    if (this.props.showVideo != 0) {
+      localParticipants = mapToArray(videoRoom.participants);
+    }
     return (
       <EventSubscriber
         events={EVENTS}
@@ -69,7 +71,7 @@ class VideoRoom extends PureComponent {
 
         <Panel>
           <Panel.Block paddingless>
-            <LocalParticipant participant={videoRoom.localParticipant} />
+            <LocalParticipant participant={localParticipants} />
           </Panel.Block>
         </Panel>
       </EventSubscriber>
