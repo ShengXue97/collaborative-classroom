@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Route, Switch, Redirect, withRouter } from "react-router-dom";
 import classnames from "classnames";
 
@@ -18,14 +18,36 @@ import { useLayoutState } from "../../context/LayoutContext";
 
 function Layout(props) {
   var classes = useStyles();
-
+  var [modal, setModal] = useState(false);
+  var [messageBox, setMessageBox] = useState("");
+  var [recipentBox, setRecipentBox] = useState("");
   // global
   var layoutState = useLayoutState();
+
+  const toggleModal = () => {
+    setModal(!modal);
+  };
+
+  const updateMessageBox = message => {
+    setMessageBox(message);
+  };
+
+  const updateRecipentBox = recipent => {
+    setRecipentBox(recipent);
+  };
 
   return (
     <div className={classes.root}>
       <>
-        <Header history={props.history} />
+        <Header
+          updateRecipentBox={updateRecipentBox}
+          recipentBox={recipentBox}
+          toggleModal={toggleModal}
+          updateMessageBox={updateMessageBox}
+          messageBox={messageBox}
+          modal={modal}
+          history={props.history}
+        />
         <Sidebar />
         <div
           className={classnames(classes.content, {
