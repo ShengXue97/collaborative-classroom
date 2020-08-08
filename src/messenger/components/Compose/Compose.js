@@ -26,6 +26,11 @@ export default function Compose(props) {
       groupname: groupname,
     };
 
+    if (message.length <= 0 || recipent.length <= 0) {
+      return;
+    }
+    console.log(message);
+
     fetch(
       "https://collaborative-classroom-server.herokuapp.com/sendmessage?author=" +
         author +
@@ -54,6 +59,10 @@ export default function Compose(props) {
         );
 
         inputBox.value = "";
+      })
+      .catch(error => {
+        alert("Error occured!");
+        console.log(error);
       });
   };
 

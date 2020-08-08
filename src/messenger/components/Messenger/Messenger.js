@@ -43,17 +43,26 @@ export default function Messenger(props) {
     //IMPORTANT: State is not kept inside here(socket.on), only Ref.
     const isNew = message.isNew;
     const otherParty = message.otherParty;
+    const user = localStorage.getItem("user");
     if (isNew) {
       axios.get("https://randomuser.me/api/?results=1").then(response => {
         const photo = response.data.results[0].picture.large;
         const name = otherParty;
         const text = message.message;
+        const timestamp = -1;
+        var unreadNumber = 1;
+        //Only messages where you're the recipent(not the author) should be counted
+        //as unread messages
+        if (message.author == user) {
+          unreadNumber = 0;
+        }
         conversationsRef.current.push({
           photo: photo,
           name: name,
           text: text,
+          timestamp: timestamp,
+          unreadNumber: unreadNumber,
         });
-        console.log(conversations);
       });
     } else {
       let firstConversation = {};
@@ -62,10 +71,19 @@ export default function Messenger(props) {
           if (element.name != otherParty) {
             return true;
           } else {
+            var unreadNumber = 1;
+            //Only messages where you're the recipent(not the author) should be counted
+            //as unread messages
+            if (message.author == user) {
+              unreadNumber = 0;
+            }
+
             firstConversation = {
               photo: element.photo,
               name: element.name,
               text: message.message,
+              timestamp: element.timestamp,
+              unreadNumber: element.unreadNumber + unreadNumber,
             };
             return false;
           }
@@ -79,6 +97,28 @@ export default function Messenger(props) {
   };
 
   const selectConversation = selectedUser => {
+    conversationsRef.current.map((element, index) => {
+      if (element.name == selectedUser) {
+        element.unreadNumber = 0;
+      }
+    });
+
+    //Tell server that I read all of these
+    const author = selectedUser;
+    const recipent = localStorage.getItem("user");
+    fetch(
+      "https://collaborative-classroom-server.herokuapp.com/setasread?author=" +
+        author +
+        "&recipent=" +
+        recipent,
+      {
+        method: "GET",
+      },
+    ).catch(error => {
+      alert("Error occured!");
+      console.log(error);
+    });
+
     setActiveConversation(selectedUser);
     setFilteredMessages(messages[selectedUser]);
   };
@@ -125,35 +165,62 @@ export default function Messenger(props) {
 
           if (otherParty != "" && otherParty != user) {
             if (otherParty in newMessages) {
+              var isUnread = 0;
+              //Only messages where you're the recipent(not the author) should be counted
+              //as unread messages
+              if (element.recipent == user) {
+                isUnread = isUnread + element.isunread;
+              }
               newMessages[otherParty].push(element);
               newConversations[otherParty] = {
                 photo: newConversations[otherParty].photo,
                 name: otherParty,
                 text: element.message,
+                timestamp: parseInt(element.timestamp),
+                unreadNumber:
+                  newConversations[otherParty].unreadNumber +
+                  parseInt(isUnread),
               };
             } else {
+              var isUnread = 0;
+              //Only messages where you're the recipent(not the author) should be counted
+              //as unread messages
+              if (element.recipent == user) {
+                isUnread = isUnread + element.isunread;
+              }
               newMessages[otherParty] = [element];
               newConversations[otherParty] = {
                 photo: avatars[count],
                 name: otherParty,
                 text: element.message,
+                timestamp: parseInt(element.timestamp),
+                unreadNumber: parseInt(isUnread),
               };
               count = count + 1;
             }
           }
         });
 
+        const newConversationsValues = Object.values(newConversations);
+        newConversationsValues.sort(function(a, b) {
+          var keyA = new Date(a.timestamp),
+            keyB = new Date(b.timestamp);
+          // Compare the 2 dates
+          if (keyA < keyB) return 1;
+          if (keyA > keyB) return -1;
+          return 0;
+        });
+        console.log(newConversations);
         //Map to required format for parsing
-        conversationsRef.current = Object.values(newConversations);
-        setConversations(Object.values(newConversations));
+        conversationsRef.current = newConversationsValues;
+        setConversations(newConversationsValues);
 
-        const keyList = Object.keys(newConversations);
+        const keyList = newConversations;
         var filteredMessages = [];
         if (keyList.length > 0) {
           filteredMessages = newMessages[keyList[0]];
           setActiveConversation(keyList[0]);
         }
-        console.log(filteredMessages);
         setMessages(newMessages);
         setFilteredMessages(filteredMessages);
       });

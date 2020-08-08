@@ -144,6 +144,10 @@ function registerUser(
               history.push("/app/dashboard");
             }, 2000);
           }
+        })
+        .catch(error => {
+          alert("Error occured!");
+          console.log(error);
         });
     }
   } else {
@@ -238,6 +242,10 @@ function loginUser(
           setError(true);
           setIsLoading(false);
         }
+      })
+      .catch(error => {
+        alert("Error occured!");
+        console.log(error);
       });
   } else {
     dispatch({ type: "LOGIN_FAILURE" });

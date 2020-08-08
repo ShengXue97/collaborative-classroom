@@ -4,6 +4,7 @@ import PageTitle from "../../components/PageTitle";
 
 import App from "../../../twilio/components/App/App.js";
 import socket from "../../../websocket";
+import Iframe from "react-iframe";
 
 export default function Dashboard(props) {
   useEffect(() => {
@@ -20,7 +21,7 @@ export default function Dashboard(props) {
   return (
     <>
       <PageTitle title="Dashboard" button="Room List" />
-      <App userName={window.username} />
+      <App />
     </>
   );
 }

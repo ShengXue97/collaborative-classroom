@@ -23,6 +23,7 @@ export default function ConversationList(props) {
           selectConversation={props.selectConversation}
           key={conversation.name}
           data={conversation}
+          unreadNumber={conversation.unreadNumber}
         />
       ))}
     </div>

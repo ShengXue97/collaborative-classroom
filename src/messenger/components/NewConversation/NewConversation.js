@@ -70,7 +70,9 @@ class NewConversation extends Component {
       timestamp: minTimestamp,
       groupname: groupname,
     };
-
+    if (message.length <= 0 || recipent.length <= 0) {
+      return;
+    }
     console.log(newMessage);
 
     fetch(
@@ -97,6 +99,10 @@ class NewConversation extends Component {
           minTimestamp,
           groupname,
         );
+      })
+      .catch(error => {
+        alert("Error occured!");
+        console.log(error);
       });
   };
 

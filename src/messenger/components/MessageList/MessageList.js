@@ -121,11 +121,11 @@ export default function MessageList(props) {
         );
         prevBySameAuthor = previous.author === current.author;
 
-        if (prevBySameAuthor && previousDuration.as("hours") < 1) {
+        if (prevBySameAuthor && previousDuration.as("hours") < 1 / 60) {
           startsSequence = false;
         }
 
-        if (previousDuration.as("hours") < 1) {
+        if (previousDuration.as("hours") < 1 / 60) {
           showTimestamp = false;
         }
       }
