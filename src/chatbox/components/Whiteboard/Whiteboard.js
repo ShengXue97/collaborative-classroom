@@ -77,7 +77,9 @@ export default class Whiteboard extends Component {
   }
 
   render() {
-    const myurl = "https://wbo.ophir.dev/boards/snow" + this.props.room;
+    const myurl =
+      "https://collaborative-classroom-board.herokuapp.com/boards/" +
+      this.props.room;
 
     return (
       <div style={{ background: "#FFF9AA" }}>
