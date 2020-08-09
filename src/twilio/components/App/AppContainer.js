@@ -80,6 +80,8 @@ class AppContainer extends PureComponent {
         insights: false,
       });
 
+      console.log(videoRoom);
+
       videoRoom.on("disconnected", () => {
         this.stopVideoTrack();
         this.stopAudioTrack();
@@ -175,48 +177,26 @@ class AppContainer extends PureComponent {
   onAudioCheckedChange = async () => {
     try {
       if (this.state.audioChecked) {
-        const localAudioTrack = await TwilioVideo.createLocalAudioTrack();
-        this.state.tracks.push(localAudioTrack);
+        this.state.localAudioTrack.disable();
       } else {
-        var localVideoTrack = null;
-        while (this.state.tracks.length > 0) {
-          const element = this.state.tracks.pop();
-          if (element.kind == "video") {
-            localVideoTrack = element;
-          }
-        }
-        if (localVideoTrack != null) {
-          this.state.tracks.push(localVideoTrack);
-        }
+        this.state.localAudioTrack.enable();
       }
     } catch (e) {
       console.log(e);
     }
-    console.log(this.state.tracks);
     this.setState({ audioChecked: !this.state.audioChecked });
   };
 
   onVideoCheckedChange = async () => {
     try {
-      if (!this.state.videoChecked) {
-        const localVideoTrack = await TwilioVideo.createLocalVideoTrack();
-        this.state.tracks.push(localVideoTrack);
+      if (this.state.videoChecked) {
+        this.state.localVideoTrack.disable();
       } else {
-        var localAudioTrack = null;
-        while (this.state.tracks.length > 0) {
-          const element = this.state.tracks.pop();
-          if (element.kind == "audio") {
-            localAudioTrack = element;
-          }
-        }
-        if (localAudioTrack != null) {
-          this.state.tracks.push(localAudioTrack);
-        }
+        this.state.localVideoTrack.enable();
       }
     } catch (e) {
       console.log(e);
     }
-    console.log(this.state.tracks);
     this.setState({ videoChecked: !this.state.videoChecked });
   };
 
