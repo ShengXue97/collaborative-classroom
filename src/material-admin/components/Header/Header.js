@@ -154,7 +154,7 @@ export default function Header(props) {
     });
   };
 
-  const getConversations = avatars => {
+  const getConversations = () => {
     var newMessages = {};
 
     const user = localStorage.getItem("user");

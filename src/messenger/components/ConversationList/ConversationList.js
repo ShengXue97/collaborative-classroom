@@ -3,7 +3,6 @@ import ConversationSearch from "../ConversationSearch/ConversationSearch.js";
 import ConversationListItem from "../ConversationListItem/ConversationListItem.js";
 import Toolbar from "../Toolbar/Toolbar.js";
 import ToolbarButton from "../ToolbarButton/ToolbarButton.js";
-import axios from "axios";
 
 import "./ConversationList.css";
 
