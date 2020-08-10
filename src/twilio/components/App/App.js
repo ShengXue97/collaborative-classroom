@@ -74,6 +74,7 @@ const isEquivalent = (a, b) => {
   return true;
 };
 
+
 const App = ({
   videoRoom,
   userName,
@@ -99,7 +100,6 @@ const App = ({
   const numbers = [1, 2, 3, 4, 5];
 
   const [init, setInit] = useState(0);
-  const [whiteboardChildList, setWhiteboardChildList] = useState([]);
   const [whiteboardCoordList, setWhiteboardCoordList] = useState([0, 0]);
   const [whiteboardChildList, setWhiteboardChildList] = useState([]);
   const [noOfElements, setNoOfElements] = useState(4);
@@ -196,6 +196,48 @@ const App = ({
     });
     window.gridElements = newGridElements;
   };
+
+  const DropdownPage = () => {
+    return (
+      <MDBDropdown>
+        <Dropdown.Toggle variant="success" id="dropdown-basic">
+          Tooks
+        </Dropdown.Toggle>
+        <Dropdown.Menu basic>
+          <Dropdown.Item
+            active={whiteboardActiveList}
+            onClick={() => checkElement("whiteboard_0")}
+          >
+            Private Whiteboard
+          </Dropdown.Item>
+          <Dropdown.Item
+            active={whiteboardActiveList}
+            onClick={() => checkElement("whiteboard_1")}
+          >
+            Class Whiteboard
+          </Dropdown.Item>
+          <Dropdown.Item
+            active={localBoxActive}
+            onClick={() => checkElement("localBox")}
+          >
+            Local Video
+          </Dropdown.Item>
+          <Dropdown.Item
+            active={remoteBoxActive}
+            onClick={() => checkElement("remoteBox")}
+          >
+            Remote Video
+          </Dropdown.Item>
+          <Dropdown.Item
+            active={chatActive}
+            onClick={() => checkElement("chat")}
+          >
+            Chatbox
+          </Dropdown.Item>
+        </Dropdown.Menu>
+      </MDBDropdown>
+    );
+  }
 
   const addWhiteBoard = () => {
     var jsx = (
@@ -395,44 +437,7 @@ const App = ({
       <>
         <Form.Field kind="group" align="centered">
           <Form.Control>
-            <Dropdown>
-              <Dropdown.Toggle variant="success" id="dropdown-basic">
-                Tools
-              </Dropdown.Toggle>
-
-              <Dropdown.Menu>
-                <Dropdown.Item
-                  active={whiteboardActiveList}
-                  onClick={() => checkElement("whiteboard_0")}
-                >
-                  Private Whiteboard
-                </Dropdown.Item>
-                <Dropdown.Item
-                  active={whiteboardActiveList}
-                  onClick={() => checkElement("whiteboard_1")}
-                >
-                  Class Whiteboard
-                </Dropdown.Item>
-                <Dropdown.Item
-                  active={localBoxActive}
-                  onClick={() => checkElement("localBox")}
-                >
-                  Local Video
-                </Dropdown.Item>
-                <Dropdown.Item
-                  active={remoteBoxActive}
-                  onClick={() => checkElement("remoteBox")}
-                >
-                  Remote Video
-                </Dropdown.Item>
-                <Dropdown.Item
-                  active={chatActive}
-                  onClick={() => checkElement("chat")}
-                >
-                  Chatbox
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+            <DropdownPage/>
           </Form.Control>
 
           <Form.Control>
