@@ -100,7 +100,7 @@ const App = ({
 
   const [init, setInit] = useState(0);
   const [whiteboardCoordList, setWhiteboardCoordList] = useState([0, 0]);
-
+  const [whiteboardChildList, setWhiteboardChildList] = useState([]);
   const [noOfElements, setNoOfElements] = useState(4);
 
   const [whiteBoardNum, setWhiteBoardNum] = useState(2);
@@ -109,6 +109,8 @@ const App = ({
     true,
     true,
   ]);
+  const [whiteboardRefresh, setWhiteboardRefresh] = useState(true);
+
   const [localBoxActive, setLocalBoxActive] = useState(true);
   const [remoteBoxActive, setRemoteBoxActive] = useState(true);
   const [chatActive, setChatActive] = useState(true);
@@ -154,6 +156,7 @@ const App = ({
           var whiteBoardNum = name.split("_")[1];
           console.log(whiteBoardNum);
           whiteboardActiveList[whiteBoardNum] = true;
+          setWhiteboardRefresh(!whiteboardRefresh);
         } else if (name == "localBox") {
           setLocalBoxActive(true);
         } else if (name == "remoteBox") {
@@ -178,6 +181,7 @@ const App = ({
           var whiteBoardNum = name.split("_")[1];
           console.log(whiteBoardNum);
           whiteboardActiveList[whiteBoardNum] = false;
+          setWhiteboardRefresh(!whiteboardRefresh);
         } else if (name == "localBox") {
           setLocalBoxActive(false);
         } else if (name == "remoteBox") {
