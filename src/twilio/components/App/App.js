@@ -234,20 +234,27 @@ const App = ({
       if (modules_json.hasOwnProperty(roomName)) {
         localStorage.setItem("room", roomName);
       } else {
-        fetch("http://localhost:5000/getmodules?user=" + myUser, {
-          method: "GET",
-        })
+        fetch(
+          "https://collaborative-classroom-server.herokuapp.com/getmodules?user=" +
+            myUser,
+          {
+            method: "GET",
+          },
+        )
           .then(response => {
             return response.text();
           })
           .then(data => {
-            var dataJSON = JSON.parse(data);
-
+            if (data == "No modules yet!") {
+              var dataJSON = JSON.parse(' {"m": [] }');
+            } else {
+              var dataJSON = JSON.parse(data);
+            }
             dataJSON["m"].push(roomName);
             var newmods = JSON.stringify(dataJSON);
             localStorage.setItem("modules", newmods);
             fetch(
-              "http://localhost:5000/updatemodules?modules=" +
+              "https://collaborative-classroom-server.herokuapp.com/updatemodules?modules=" +
                 newmods +
                 "&user=" +
                 myUser,
@@ -255,13 +262,13 @@ const App = ({
                 method: "GET",
               },
             ).catch(error => {
-              alert("Error occured! ID 7");
+              alert("Error occured!");
             });
           })
           .catch(error => {
-            alert("Error occured! ID 8");
-            console.log(error);
+            alert("Error occured!");
           });
+
         localStorage.setItem("room", roomName);
       }
     }
