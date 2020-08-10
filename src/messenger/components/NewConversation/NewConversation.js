@@ -89,7 +89,7 @@ export default function NewConversation(props) {
         );
       })
       .catch(error => {
-        alert("Error occured!");
+        alert("Error occured! ID 6");
         console.log(error);
       });
   };

@@ -149,7 +149,7 @@ export default function Header(props) {
         method: "GET",
       },
     ).catch(error => {
-      alert("Error occured!");
+      alert("Error occured! ID 1");
       console.log(error);
     });
   };

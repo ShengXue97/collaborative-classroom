@@ -87,7 +87,7 @@ function registerUser(
 ) {
   setError(false);
   setIsLoading(true);
-  var modules = ' {"m": [] }';
+  var modules = '{"m": [] }';
   if (!!name && !!login && !!password) {
     if (!isValidEmail(login)) {
       alert("Please enter a valid email address.");
@@ -148,7 +148,7 @@ function registerUser(
           }
         })
         .catch(error => {
-          alert("Error occured!");
+          alert("Error occured! ID 2");
           console.log(error);
         });
     }
@@ -237,7 +237,7 @@ function loginUser(
         }
       })
       .catch(error => {
-        alert("Error occured!");
+        alert("Error occured! ID 3");
         console.log(error);
       });
   } else {

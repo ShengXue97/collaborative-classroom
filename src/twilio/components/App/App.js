@@ -99,6 +99,7 @@ const App = ({
   const numbers = [1, 2, 3, 4, 5];
 
   const [init, setInit] = useState(0);
+  const [whiteboardChildList, setWhiteboardChildList] = useState([]);
   const [whiteboardCoordList, setWhiteboardCoordList] = useState([0, 0]);
 
   const [noOfElements, setNoOfElements] = useState(4);
@@ -233,13 +234,9 @@ const App = ({
       if (modules_json.hasOwnProperty(roomName)) {
         localStorage.setItem("room", roomName);
       } else {
-        fetch(
-          "https://collaborative-classroom-server.herokuapp.com/getmodules?user=" +
-            myUser,
-          {
-            method: "GET",
-          },
-        )
+        fetch("http://localhost:5000/getmodules?user=" + myUser, {
+          method: "GET",
+        })
           .then(response => {
             return response.text();
           })
@@ -250,7 +247,7 @@ const App = ({
             var newmods = JSON.stringify(dataJSON);
             localStorage.setItem("modules", newmods);
             fetch(
-              "https://collaborative-classroom-server.herokuapp.com/updatemodules?modules=" +
+              "http://localhost:5000/updatemodules?modules=" +
                 newmods +
                 "&user=" +
                 myUser,
@@ -258,11 +255,12 @@ const App = ({
                 method: "GET",
               },
             ).catch(error => {
-              alert("Error occured!");
+              alert("Error occured! ID 7");
             });
           })
           .catch(error => {
-            alert("Error occured!");
+            alert("Error occured! ID 8");
+            console.log(error);
           });
         localStorage.setItem("room", roomName);
       }

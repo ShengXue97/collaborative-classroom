@@ -110,7 +110,7 @@ export default function Messenger(props) {
         method: "GET",
       },
     ).catch(error => {
-      alert("Error occured!");
+      alert("Error occured! ID 5");
       console.log(error);
     });
 
