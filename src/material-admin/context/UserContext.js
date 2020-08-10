@@ -87,7 +87,7 @@ function registerUser(
 ) {
   setError(false);
   setIsLoading(true);
-
+  var modules = ' {"m": [] }';
   if (!!name && !!login && !!password) {
     if (!isValidEmail(login)) {
       alert("Please enter a valid email address.");
@@ -108,7 +108,7 @@ function registerUser(
       setIsLoading(false);
     } else {
       fetch(
-        "https://collaborative-classroom-server.herokuapp.com/register?name=" +
+        "http://localhost:5000/register?name=" +
           name +
           "&login=" +
           login +
@@ -117,7 +117,9 @@ function registerUser(
             .createHash("sha256")
             .update(password)
             .digest("hex")
-            .toString(),
+            .toString() +
+          "&modules=" +
+          modules,
         {
           method: "GET",
         },
@@ -133,7 +135,7 @@ function registerUser(
             setIsLoading(false);
           } else {
             localStorage.setItem("user", login);
-
+            localStorage.setItem("modules", modules);
             setTimeout(() => {
               localStorage.setItem("id_token", 1);
               setError(null);
@@ -174,7 +176,6 @@ function loginUser(
 
   if (isGoogle) {
     localStorage.setItem("user", login);
-
     setTimeout(() => {
       localStorage.setItem("id_token", 1);
       setError(null);
@@ -196,7 +197,7 @@ function loginUser(
     setIsLoading(false);
   } else if (!!login && !!password) {
     fetch(
-      "https://collaborative-classroom-server.herokuapp.com/login?login=" +
+      "http://localhost:5000/login?login=" +
         login +
         "&password=" +
         crypto
@@ -222,7 +223,7 @@ function loginUser(
           dispatch({ type: "LOGIN_FAILURE" });
           setError(true);
           setIsLoading(false);
-        } else if (data == "Correct Password") {
+        } else {
           localStorage.setItem("user", login);
 
           setTimeout(() => {
@@ -230,17 +231,9 @@ function loginUser(
             setError(null);
             setIsLoading(false);
             dispatch({ type: "LOGIN_SUCCESS" });
-
             window.username = login;
             history.push("/app/dashboard");
           }, 2000);
-        } else {
-          alert(
-            "Unknown error occured. Please contact system administractors.",
-          );
-          dispatch({ type: "LOGIN_FAILURE" });
-          setError(true);
-          setIsLoading(false);
         }
       })
       .catch(error => {

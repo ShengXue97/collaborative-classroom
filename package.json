@@ -7,8 +7,8 @@
     "websocket-extensions": "^0.1.4"
   },
   "dependencies": {
-    "@material-ui/core": "^4.3.0",
-    "@material-ui/icons": "^4.2.1",
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
     "@material-ui/styles": "^4.3.0",
     "apexcharts": "^3.8.3",
     "axios": "^0.18.0",
@@ -17,6 +17,7 @@
     "font-awesome": "^4.7.0",
     "iframe-resizer-react": "^1.0.4",
     "lodash": "^4.17.11",
+    "material-table": "^1.68.0",
     "mdbreact": "^4.27.0",
     "moment": "^2.23.0",
     "mui-datatables": "^2.6.4",

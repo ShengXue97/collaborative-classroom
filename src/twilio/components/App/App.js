@@ -1,21 +1,25 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
+import PropTypes, { string } from "prop-types";
 import { Link } from "react-router-dom";
 import "react-bulma-components/dist/react-bulma-components.min.css";
 import {
   Section,
   Container,
   Columns,
-  Button,
+  Button as AButton,
   Form,
   Notification,
 } from "react-bulma-components";
+
+import Button from "@material-ui/core/Button";
 
 import videoRoomPropType from "../../propTypes/videoRoom";
 import LocalBox from "../VideoRoom/LocalBox";
 import RemoteBox from "../VideoRoom/RemoteBox";
 import FieldInput from "../Fields/FieldInput";
 import ToolboxLayout from "../ToolboxLayout/ToolboxLayout.js";
+import MaterialTable from "material-table";
+//import Icon from "@material-ui/icons";
 
 import AppContainer from "./AppContainer";
 import Chat from "../../../chatbox/components/Chat/Chat.js";
@@ -105,13 +109,17 @@ const App = ({
   const [remoteBoxActive, setRemoteBoxActive] = useState(true);
   const [chatActive, setChatActive] = useState(true);
 
+  const dummyfunct = (param1, param2) => {
+    return;
+  };
+
   const checkElement = name => {
     var isDelete = false;
     if (name == "whiteboard" && whiteboardActive) {
       isDelete = true;
     } else if (name == "localBox" && localBoxActive) {
       isDelete = true;
-    } else if (name == "remoteBox" && remoteBoxActive) {
+    } else if (name == "remoteBosx" && remoteBoxActive) {
       isDelete = true;
     } else if (name == "chat" && chatActive) {
       isDelete = true;
@@ -166,6 +174,76 @@ const App = ({
     });
     window.gridElements = newGridElements;
   };
+
+  const myUser = localStorage.getItem("user");
+  const myRoom = localStorage.getItem("room");
+  onUserNameChange(myUser);
+  onRoomNameChange(myRoom);
+
+  const customJoin = customRoom => {
+    localStorage.setItem("room", customRoom);
+    onJoin();
+  };
+
+  const updateRoom = roomName => {
+    if (modules_json != null) {
+      if (modules_json.hasOwnProperty(roomName)) {
+        localStorage.setItem("room", roomName);
+      } else {
+        fetch(
+          "https://collaborative-classroom-server.herokuapp.com/getmodules?user=" +
+            myUser,
+          {
+            method: "GET",
+          },
+        )
+          .then(response => {
+            return response.text();
+          })
+          .then(data => {
+            var dataJSON = JSON.parse(data);
+
+            dataJSON["m"].push(roomName);
+            var newmods = JSON.stringify(dataJSON);
+            localStorage.setItem("modules", newmods);
+            fetch(
+              "https://collaborative-classroom-server.herokuapp.com/updatemodules?modules=" +
+                newmods +
+                "&user=" +
+                myUser,
+              {
+                method: "GET",
+              },
+            ).catch(error => {
+              alert("Error occured!");
+            });
+          })
+          .catch(error => {
+            alert("Error occured!");
+          });
+        localStorage.setItem("room", roomName);
+      }
+    }
+  };
+
+  const modules = localStorage.getItem("modules");
+  var buttonsJSX = null;
+
+  if (modules != null) {
+    var modules_json = JSON.parse(modules);
+
+    buttonsJSX = modules_json["m"].map((element, index) => {
+      //console.log(element.name);
+      return (
+        <AButton
+          name={modules_json["m"][index]}
+          onClick={() => customJoin(modules_json["m"][index])}
+        >
+          {modules_json["m"][index]}
+        </AButton>
+      );
+    });
+  }
 
   const getJSX = () => {
     var defaultGrid = window.gridElements;
@@ -238,11 +316,6 @@ const App = ({
     });
     return jsx;
   };
-
-  const myUser = localStorage.getItem("user");
-  const myRoom = localStorage.getItem("room");
-  onUserNameChange(myUser);
-  onRoomNameChange(myRoom);
 
   if (!isVideoSupported) {
     content = <div>Video is not supported</div>;
@@ -384,7 +457,10 @@ const App = ({
           <Form.Field kind="group" align="centered">
             <Form.Control>
               <Button
-                onClick={() => onJoin()}
+                onClick={() => {
+                  updateRoom(roomName);
+                  onJoin();
+                }}
                 loading={isJoining}
                 disabled={!canJoin}
                 color="primary"
@@ -425,6 +501,22 @@ const App = ({
             </Form.Control>
           </Form.Field>
         </Columns.Column>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+          }}
+        >
+          <Button
+            style={{ height: "100px" }}
+            variant="contained"
+            size="large"
+            color="primary"
+          >
+            Large
+          </Button>
+        </div>
       </Columns>
     );
   }
@@ -438,6 +530,7 @@ const App = ({
         </Notification>
       )}
       {content}
+      {buttonsJSX}
       <div style={{ paddingBottom: "1000px" }}></div>
     </div>
   );

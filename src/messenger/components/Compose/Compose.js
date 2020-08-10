@@ -29,7 +29,6 @@ export default function Compose(props) {
     if (message.length <= 0 || recipent.length <= 0) {
       return;
     }
-    console.log(message);
 
     fetch(
       "https://collaborative-classroom-server.herokuapp.com/sendmessage?author=" +
