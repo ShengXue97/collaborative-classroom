@@ -8,8 +8,7 @@ import onlineIcon from "../icons/onlineIcon.png";
 import "./Chat.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-let socket;
+import socket from "../../../websocket";
 
 const Chat = ({ removeElement }) => {
   const name = localStorage.getItem("user");
@@ -18,19 +17,15 @@ const Chat = ({ removeElement }) => {
   const [users, setUsers] = useState("");
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  const ENDPOINT = "https://collaborative-classroom-server.herokuapp.com/";
 
   useEffect(() => {
-    socket = io(ENDPOINT);
     socket.emit("join", { name, room }, error => {
       if (error) {
         alert(error);
         window.location.reload(false);
       }
     });
-  }, [ENDPOINT]);
 
-  useEffect(() => {
     socket.on("message", message => {
       setMessages(messages => [...messages, message]);
     });

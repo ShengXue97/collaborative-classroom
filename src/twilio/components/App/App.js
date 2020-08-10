@@ -33,6 +33,9 @@ import leaveRoomIcon from "../../icons/leaveRoom.png";
 import "./App.css";
 
 import Dropdown from "react-bootstrap/Dropdown";
+import Switch from "@material-ui/core/Switch";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+
 import {
   MDBBtn,
   MDBDropdown,
@@ -87,6 +90,10 @@ const App = ({
   onRoomNameChange,
   errorMessage,
   onErrorMessageHide,
+  audioChecked,
+  onAudioCheckedChange,
+  videoChecked,
+  onVideoCheckedChange,
 }) => {
   let content = null;
   const numbers = [1, 2, 3, 4];
@@ -360,9 +367,35 @@ const App = ({
               {isScreenSharingEnabled ? "Stop sharing" : "Start sharing"}
             </MDBBtn>
           </Form.Control>
-          <a href="/collaborative-classroom/#/app/dashboard">
-            <img src={leaveRoomIcon} alt="close icon" />
-          </a>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={audioChecked}
+                onChange={onAudioCheckedChange}
+                defaultChecked={audioChecked}
+                name="audiocheck"
+              />
+            }
+            label="Audio"
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={videoChecked}
+                onChange={onVideoCheckedChange}
+                defaultChecked={videoChecked}
+                name="videocheck"
+              />
+            }
+            label="Video"
+          />
+          <MDBBtn
+            onClick={() => {
+              window.location.reload(false);
+            }}
+          >
+            Leave Room
+          </MDBBtn>
         </Form.Field>
 
         <ReactGridLayout
@@ -436,6 +469,37 @@ const App = ({
               </Button>
             </Form.Control>
           </Form.Field>
+          <Form.Field kind="group" align="centered">
+            <Form.Control>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={audioChecked}
+                    onChange={onAudioCheckedChange}
+                    defaultChecked={audioChecked}
+                    name="checkedA"
+                  />
+                }
+                label="Audio"
+              />
+            </Form.Control>
+          </Form.Field>
+
+          <Form.Field kind="group" align="centered">
+            <Form.Control>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={videoChecked}
+                    onChange={onVideoCheckedChange}
+                    defaultChecked={videoChecked}
+                    name="checkedA"
+                  />
+                }
+                label="Video"
+              />
+            </Form.Control>
+          </Form.Field>
         </Columns.Column>
         <div
           style={{
@@ -488,6 +552,10 @@ App.propTypes = {
   onRoomNameChange: PropTypes.func.isRequired,
   errorMessage: PropTypes.string,
   onErrorMessageHide: PropTypes.func.isRequired,
+  audioChecked: PropTypes.func.isRequired,
+  videoChecked: PropTypes.func.isRequired,
+  onAudioCheckedChange: PropTypes.func.isRequired,
+  onVideoCheckedChange: PropTypes.func.isRequired,
 };
 
 App.defaultProps = {

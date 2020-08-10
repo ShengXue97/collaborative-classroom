@@ -13,7 +13,7 @@ export default function Compose(props) {
     const id = -1;
     const author = localStorage.getItem("user");
     const recipent = activeConversation;
-    const minTimestamp = new Date().getTime();
+    const timestamp = new Date().getTime();
     const groupname = "none";
 
     const newMessage = {
@@ -22,7 +22,7 @@ export default function Compose(props) {
       message: message,
       recipent: recipent,
       message: message,
-      timestamp: minTimestamp,
+      timestamp: timestamp,
       groupname: groupname,
     };
 
@@ -37,6 +37,8 @@ export default function Compose(props) {
         recipent +
         "&message=" +
         message +
+        "&timestamp=" +
+        timestamp +
         "&groupname=" +
         groupname,
       {
@@ -53,7 +55,7 @@ export default function Compose(props) {
           author,
           recipent,
           message,
-          minTimestamp,
+          timestamp,
           groupname,
         );
 

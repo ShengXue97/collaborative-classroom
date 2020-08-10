@@ -8,7 +8,9 @@ export default function Chats(props) {
   return (
     <>
       <div style={{ height: "10px" }}>
-        <Messenger />
+        <Messenger
+          updateSmallMessagesFiltered={props.updateSmallMessagesFiltered}
+        />
       </div>
     </>
   );

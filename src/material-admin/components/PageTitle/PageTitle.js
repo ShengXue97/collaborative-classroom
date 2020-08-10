@@ -5,7 +5,7 @@ import { Button } from "@material-ui/core";
 import useStyles from "./styles";
 
 // components
-import { Typography } from "../Wrappers";
+import { Typography } from "../Wrappers/Wrappers.js";
 
 export default function PageTitle(props) {
   var classes = useStyles();

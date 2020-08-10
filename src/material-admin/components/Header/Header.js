@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   AppBar,
   Toolbar,
@@ -27,7 +27,7 @@ import useStyles from "./styles";
 import { Badge, Typography, Button } from "../Wrappers/Wrappers";
 import Notification from "../Chats/Notification";
 import UserAvatar from "../UserAvatar/UserAvatar";
-
+import moment from "moment";
 // context
 import {
   useLayoutState,
@@ -38,39 +38,16 @@ import { useUserDispatch, signOutOwn } from "../../context/UserContext";
 
 import { useGoogleLogout } from "react-google-login";
 
+import socket from "../../../websocket";
+
+import NewConversation from "../../../messenger/components/NewConversation/NewConversation";
+import NotfSound from "./notf-sound.ogg";
+import UIfx from "uifx";
+
+const sound = new Audio(NotfSound);
+
 const clientId =
   "1095052158563-iteoskptpn9e4hemaf2br65nk3jibldl.apps.googleusercontent.comm";
-
-const messages = [
-  {
-    id: 0,
-    variant: "warning",
-    name: "Jane Hew",
-    message: "Hey! How is it going?",
-    time: "9:32",
-  },
-  {
-    id: 1,
-    variant: "success",
-    name: "Lloyd Brown",
-    message: "Check out my new Dashboard",
-    time: "9:18",
-  },
-  {
-    id: 2,
-    variant: "primary",
-    name: "Mark Winstein",
-    message: "I want rearrange the appointment",
-    time: "9:15",
-  },
-  {
-    id: 3,
-    variant: "secondary",
-    name: "Liana Dutti",
-    message: "Good news from sale department",
-    time: "9:09",
-  },
-];
 
 const notifications = [
   { id: 0, color: "warning", message: "Check out this awesome ticket" },
@@ -104,13 +81,148 @@ export default function Header(props) {
 
   // local
   var [mailMenu, setMailMenu] = useState(null);
-  var [isMailsUnread, setIsMailsUnread] = useState(true);
   var [notificationsMenu, setNotificationsMenu] = useState(null);
   var [isNotificationsUnread, setIsNotificationsUnread] = useState(true);
   var [profileMenu, setProfileMenu] = useState(null);
   var [isSearchOpen, setSearchOpen] = useState(false);
 
+  var messageCountRef = useRef(0);
+
   const userName = localStorage.getItem("user");
+
+  useEffect(() => {
+    getConversations();
+    socket.on("newMessage", message => {
+      const userName = localStorage.getItem("user");
+      if (message.author == userName || message.recipent != userName) {
+        return;
+      }
+      sound.play();
+      //IMPORTANT: State is not kept inside here(socket.on), only Ref.
+      const dateObject = new Date(JSON.parse(message.timestamp));
+      const adjustedDateObject = new Date(
+        dateObject.toLocaleString("en-US", {
+          timeZone: "Asia/Singapore",
+        }),
+      );
+
+      const friendlyTimestamp = moment(adjustedDateObject)
+        .startOf("hour")
+        .fromNow();
+
+      const newMessage = {
+        internalCount: messageCountRef.current,
+        id: message.id,
+        variant: "primary",
+        name: message.author,
+        message: message.message,
+        time: friendlyTimestamp,
+        internalTime: message.timestamp,
+      };
+      messageCountRef.current = messageCountRef.current + 1;
+
+      props.addSmallMessage(newMessage);
+
+      if (props.messagesNo.length == 0) {
+        props.messagesNo.push(1);
+      } else {
+        props.messagesNo[0] = props.messagesNo[0] + 1;
+      }
+
+      props.updateBadgeContent(props.messagesNo[0]);
+    });
+  }, []);
+
+  const setAsRead = (author, message, timestamp) => {
+    const recipent = localStorage.getItem("user");
+    //Tell server that I read all of these
+    fetch(
+      "https://collaborative-classroom-server.herokuapp.com/setasreadsingle?author=" +
+        author +
+        "&recipent=" +
+        recipent +
+        "&message=" +
+        message +
+        "&timestamp=" +
+        timestamp,
+      {
+        method: "GET",
+      },
+    ).catch(error => {
+      alert("Error occured!");
+      console.log(error);
+    });
+  };
+
+  const getConversations = () => {
+    var newMessages = {};
+
+    const user = localStorage.getItem("user");
+    const minTimestamp = 0;
+    var count = 0;
+
+    fetch(
+      "https://collaborative-classroom-server.herokuapp.com/singlechat?recipent=" +
+        user +
+        "&minTimestamp=" +
+        minTimestamp,
+      {
+        method: "GET",
+      },
+    )
+      .then(response => {
+        return response.text();
+      })
+      .then(data => {
+        const dataParsed = JSON.parse(data);
+        const newMessages = [];
+
+        dataParsed.map((element, index) => {
+          if (element.recipent == user && element.isunread == 1) {
+            const dateObject = new Date(JSON.parse(element.timestamp));
+            const adjustedDateObject = new Date(
+              dateObject.toLocaleString("en-US", {
+                timeZone: "Asia/Singapore",
+              }),
+            );
+
+            const friendlyTimestamp = moment(adjustedDateObject)
+              .startOf("hour")
+              .fromNow();
+
+            const newMessage = {
+              internalCount: messageCountRef.current,
+              id: element.id,
+              variant: "primary",
+              name: element.author,
+              message: element.message,
+              time: friendlyTimestamp,
+              internalTime: element.timestamp,
+            };
+            newMessages.push(newMessage);
+
+            messageCountRef.current = messageCountRef.current + 1;
+            props.messagesNo[0] = props.messagesNo[0] + 1;
+            props.updateBadgeContent(props.messagesNo[0]);
+          }
+        });
+        props.updateSmallMessages(newMessages);
+      });
+  };
+
+  const removeMessage = internalCount => {
+    var newMessages = [];
+    props.smallMessages.current.map((element, index) => {
+      console.log(element.internalCount, internalCount);
+      if (element.internalCount != internalCount) {
+        newMessages.push(element);
+      }
+    });
+    props.messagesNo[0] = props.messagesNo[0] - 1;
+    props.updateBadgeContent(props.messagesNo[0]);
+
+    props.removeSmallMessage(newMessages);
+  };
 
   const onLogoutSuccess = res => {
     console.log("Logged out Success");
@@ -235,14 +347,10 @@ export default function Header(props) {
           aria-controls="mail-menu"
           onClick={e => {
             setMailMenu(e.currentTarget);
-            setIsMailsUnread(false);
           }}
           className={classes.headerMenuButton}
         >
-          <Badge
-            badgeContent={isMailsUnread ? messages.length : null}
-            color="secondary"
-          >
+          <Badge badgeContent={props.badgeContent} color="secondary">
             <MailIcon classes={{ root: classes.headerIcon }} />
           </Badge>
         </IconButton>
@@ -259,7 +367,9 @@ export default function Header(props) {
           id="mail-menu"
           open={Boolean(mailMenu)}
           anchorEl={mailMenu}
-          onClose={() => setMailMenu(null)}
+          onClose={() => {
+            setMailMenu(null);
+          }}
           MenuListProps={{ className: classes.headerMenuList }}
           className={classes.headerMenu}
           classes={{ paper: classes.profileMenu }}
@@ -274,11 +384,26 @@ export default function Header(props) {
               component="a"
               color="secondary"
             >
-              {messages.length} New Messages
+              {props.smallMessages.current.length} New Messages
             </Typography>
           </div>
-          {messages.map(message => (
-            <MenuItem key={message.id} className={classes.messageNotification}>
+          {props.smallMessages.current.map(message => (
+            <MenuItem
+              onClick={() => {
+                props.toggleModal();
+                props.updateRecipentBox(message.name);
+                props.updateMessageBox("");
+                console.log(
+                  message.name,
+                  message.message,
+                  message.internalTime,
+                );
+                setAsRead(message.name, message.message, message.internalTime);
+                removeMessage(message.internalCount);
+              }}
+              key={message.id}
+              className={classes.messageNotification}
+            >
               <div className={classes.messageNotificationSide}>
                 <UserAvatar color={message.variant} name={message.name} />
                 <Typography size="sm" color="text" colorBrightness="secondary">
@@ -300,15 +425,14 @@ export default function Header(props) {
               </div>
             </MenuItem>
           ))}
-          <Fab
-            variant="extended"
-            color="primary"
-            aria-label="Add"
-            className={classes.sendMessageButton}
-          >
-            Send New Message
-            <SendIcon className={classes.sendButtonIcon} />
-          </Fab>
+          <NewConversation
+            recipentBox={props.recipentBox}
+            updateRecipentBox={props.updateRecipentBox}
+            messageBox={props.messageBox}
+            toggleModal={props.toggleModal}
+            updateMessageBox={props.updateMessageBox}
+            modal={props.modal}
+          />
         </Menu>
         <Menu
           id="notifications-menu"

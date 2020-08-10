@@ -21,6 +21,9 @@ class AppContainer extends PureComponent {
     userName: "",
     roomName: "",
     errorMessage: null,
+    audioChecked: true,
+    videoChecked: true,
+    tracks: [],
   };
 
   componentDidMount() {
@@ -44,18 +47,40 @@ class AppContainer extends PureComponent {
 
     try {
       const token = await this.getToken();
+      var localAudioTrack = null;
+      var localVideoTrack = null;
 
-      const localVideoTrack = await TwilioVideo.createLocalVideoTrack();
-      this.setState({ localVideoTrack });
+      if (this.state.audioChecked) {
+        try {
+          localAudioTrack = await TwilioVideo.createLocalAudioTrack();
+          this.setState({ localAudioTrack });
+        } catch {}
+      }
 
-      const localAudioTrack = await TwilioVideo.createLocalAudioTrack();
-      this.setState({ localAudioTrack });
+      if (this.state.videoChecked) {
+        try {
+          localVideoTrack = await TwilioVideo.createLocalVideoTrack();
+          this.setState({ localVideoTrack });
+        } catch {}
+      }
+
+      if (localAudioTrack != null) {
+        this.state.tracks.push(localAudioTrack);
+      }
+
+      if (localVideoTrack != null) {
+        this.state.tracks.push(localVideoTrack);
+      }
 
       const videoRoom = await TwilioVideo.connect(token, {
         name: roomName,
-        tracks: [localVideoTrack, localAudioTrack],
+        audio: false,
+        video: false,
+        tracks: this.state.tracks,
         insights: false,
       });
+
+      console.log(videoRoom);
 
       videoRoom.on("disconnected", () => {
         this.stopVideoTrack();
@@ -148,6 +173,32 @@ class AppContainer extends PureComponent {
     this.setState({ roomName });
   };
 
+  onAudioCheckedChange = async () => {
+    try {
+      if (this.state.audioChecked) {
+        this.state.localAudioTrack.disable();
+      } else {
+        this.state.localAudioTrack.enable();
+      }
+    } catch (e) {
+      console.log(e);
+    }
+    this.setState({ audioChecked: !this.state.audioChecked });
+  };
+
+  onVideoCheckedChange = async () => {
+    try {
+      if (this.state.videoChecked) {
+        this.state.localVideoTrack.disable();
+      } else {
+        this.state.localVideoTrack.enable();
+      }
+    } catch (e) {
+      console.log(e);
+    }
+    this.setState({ videoChecked: !this.state.videoChecked });
+  };
+
   render() {
     const { render } = this.props;
     const {
@@ -177,6 +228,10 @@ class AppContainer extends PureComponent {
       onUserNameChange: this.changeUserName,
       errorMessage,
       onErrorMessageHide: this.hideErrorMessage,
+      audioChecked: this.state.audioChecked,
+      videoChecked: this.state.videoChecked,
+      onAudioCheckedChange: this.onAudioCheckedChange,
+      onVideoCheckedChange: this.onVideoCheckedChange,
     });
   }
 }

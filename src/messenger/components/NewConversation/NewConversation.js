@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect, useState } from "react";
 import {
   MDBContainer,
   MDBBtn,
@@ -23,54 +23,40 @@ import socket from "../../../websocket";
 import IconButton from "@material-ui/core/IconButton";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 
-class NewConversation extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      recipent: "",
-      message: "",
-    };
-  }
-  state = {
-    modal: false,
+export default function NewConversation(props) {
+  var [message, setMessage] = useState("");
+
+  const toggle = () => {
+    props.toggleModal();
   };
 
-  toggle = () => {
-    this.setState({
-      modal: !this.state.modal,
-    });
+  const setRecipentValue = value => {
+    props.updateRecipentBox(value);
   };
 
-  setRecipentValue = value => {
-    this.setState({
-      recipent: value,
-    });
+  const setMessageValue = value => {
+    props.updateMessageBox(value);
   };
 
-  setMessageValue = value => {
-    this.setState({
-      message: value,
-    });
-  };
+  const sendMessage = () => {
+    toggle();
+    setRecipentValue("");
+    setMessageValue("");
 
-  sendMessage = () => {
-    this.toggle();
     const id = -1;
     const author = localStorage.getItem("user");
-    const message = this.state.message;
-    const recipent = this.state.recipent;
-    const minTimestamp = new Date().getTime();
+    const timestamp = new Date().getTime();
     const groupname = "none";
 
     const newMessage = {
       id: id,
       author: author,
-      message: message,
-      recipent: recipent,
-      timestamp: minTimestamp,
+      message: props.messageBox,
+      recipent: props.recipentBox,
+      timestamp: timestamp,
       groupname: groupname,
     };
-    if (message.length <= 0 || recipent.length <= 0) {
+    if (props.messageBox.length <= 0 || props.recipentBox.length <= 0) {
       return;
     }
 
@@ -78,9 +64,11 @@ class NewConversation extends Component {
       "https://collaborative-classroom-server.herokuapp.com/sendmessage?author=" +
         author +
         "&recipent=" +
-        recipent +
+        props.recipentBox +
         "&message=" +
-        message +
+        props.messageBox +
+        "&timestamp=" +
+        timestamp +
         "&groupname=" +
         groupname,
       {
@@ -89,13 +77,14 @@ class NewConversation extends Component {
     )
       .then(response => {})
       .then(data => {
+        console.log(data);
         socket.emit(
           "publishMessage",
           id,
           author,
-          recipent,
-          message,
-          minTimestamp,
+          props.recipentBox,
+          props.messageBox,
+          timestamp,
           groupname,
         );
       })
@@ -105,48 +94,46 @@ class NewConversation extends Component {
       });
   };
 
-  render() {
-    return (
-      <MDBContainer>
-        <Button onClick={this.toggle}>Compose</Button>
+  return (
+    <MDBContainer>
+      <MDBBtn onClick={toggle}>Compose</MDBBtn>
 
-        <MDBModal
-          side
-          position="bottom-right"
-          isOpen={this.state.modal}
-          toggle={this.toggle}
-        >
-          <MDBModalHeader>Send Message</MDBModalHeader>
-          <MDBModalBody>
-            <TextField
-              id="recipent"
-              onChange={e => this.setRecipentValue(e.target.value)}
-              margin="normal"
-              placeholder="recipent"
-              type="recipent"
-              fullWidth
-            />
-            <TextField
-              id="message"
-              onChange={e => this.setMessageValue(e.target.value)}
-              margin="normal"
-              placeholder="message"
-              type="message"
-              fullWidth
-            />
-          </MDBModalBody>
-          <MDBModalFooter>
-            <MDBBtn color="secondary" onClick={this.toggle}>
-              Cancel
-            </MDBBtn>
-            <MDBBtn color="primary" onClick={this.sendMessage}>
-              Send
-            </MDBBtn>
-          </MDBModalFooter>
-        </MDBModal>
-      </MDBContainer>
-    );
-  }
+      <MDBModal
+        side
+        position="bottom-right"
+        isOpen={props.modal}
+        toggle={toggle}
+      >
+        <MDBModalHeader>Send Message</MDBModalHeader>
+        <MDBModalBody>
+          <TextField
+            id="recipent"
+            onChange={e => props.updateRecipentBox(e.target.value)}
+            value={props.recipentBox}
+            margin="normal"
+            placeholder="recipent"
+            type="recipent"
+            fullWidth
+          />
+          <TextField
+            id="message"
+            onChange={e => props.updateMessageBox(e.target.value)}
+            value={props.messageBox}
+            margin="normal"
+            placeholder="message"
+            type="message"
+            fullWidth
+          />
+        </MDBModalBody>
+        <MDBModalFooter>
+          <MDBBtn color="secondary" onClick={toggle}>
+            Cancel
+          </MDBBtn>
+          <MDBBtn color="primary" onClick={sendMessage}>
+            Send
+          </MDBBtn>
+        </MDBModalFooter>
+      </MDBModal>
+    </MDBContainer>
+  );
 }
-
-export default NewConversation;

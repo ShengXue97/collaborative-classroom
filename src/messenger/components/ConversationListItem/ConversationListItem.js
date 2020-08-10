@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import shave from "shave";
 import { MDBBadge, MDBContainer, MDBBtn } from "mdbreact";
 import "./ConversationListItem.css";
+import UserAvatar from "../../../material-admin/components/UserAvatar/UserAvatar";
 
 export default function ConversationListItem(props) {
   const [badge, setBadge] = useState();
@@ -33,10 +34,11 @@ export default function ConversationListItem(props) {
     }
   }, [unreadNumber]);
 
-  const { photo, name, text, textSnippet } = props.data;
+  const { name, text, textSnippet } = props.data;
 
   const handleClick = () => {
     setUnreadNumber(0);
+    props.updateSmallMessagesFiltered(name);
     props.selectConversation(name);
   };
   return (
@@ -46,12 +48,7 @@ export default function ConversationListItem(props) {
       color={color}
     >
       <div style={{ display: "flex" }}>
-        <img
-          style={{ flex: "1" }}
-          className="conversation-photo"
-          src={photo}
-          alt="conversation"
-        />
+        <UserAvatar name={name} />
         <div
           style={{
             flex: "4",

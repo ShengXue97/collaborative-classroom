@@ -2,11 +2,10 @@ import React, { useRef, useState, useEffect } from "react";
 import ConversationList from "../ConversationList/ConversationList.js";
 import MessageList from "../MessageList/MessageList.js";
 import "./Messenger.css";
-import axios from "axios";
+
 
 function useInterval(callback, delay) {
   const savedCallback = useRef();
-
   // Remember the latest callback.
   useEffect(() => {
     savedCallback.current = callback;
@@ -29,10 +28,11 @@ export default function Messenger(props) {
   const [messages, setMessages] = useState([]);
   const [filteredMessages, setFilteredMessages] = useState([]);
   const [activeConversation, setActiveConversation] = useState([]);
+  const [init, setInit] = useState(0);
   const conversationsRef = useRef([]);
 
   useEffect(() => {
-    getAvatars();
+    getConversations();
   }, []);
 
   useInterval(() => {
@@ -45,24 +45,20 @@ export default function Messenger(props) {
     const otherParty = message.otherParty;
     const user = localStorage.getItem("user");
     if (isNew) {
-      axios.get("https://randomuser.me/api/?results=1").then(response => {
-        const photo = response.data.results[0].picture.large;
-        const name = otherParty;
-        const text = message.message;
-        const timestamp = -1;
-        var unreadNumber = 1;
-        //Only messages where you're the recipent(not the author) should be counted
-        //as unread messages
-        if (message.author == user) {
-          unreadNumber = 0;
-        }
-        conversationsRef.current.push({
-          photo: photo,
-          name: name,
-          text: text,
-          timestamp: timestamp,
-          unreadNumber: unreadNumber,
-        });
+      const name = otherParty;
+      const text = message.message;
+      const timestamp = -1;
+      var unreadNumber = 1;
+      //Only messages where you're the recipent(not the author) should be counted
+      //as unread messages
+      if (message.author == user) {
+        unreadNumber = 0;
+      }
+      conversationsRef.current.push({
+        name: name,
+        text: text,
+        timestamp: timestamp,
+        unreadNumber: unreadNumber,
       });
     } else {
       let firstConversation = {};
@@ -79,7 +75,6 @@ export default function Messenger(props) {
             }
 
             firstConversation = {
-              photo: element.photo,
               name: element.name,
               text: message.message,
               timestamp: element.timestamp,
@@ -123,16 +118,7 @@ export default function Messenger(props) {
     setFilteredMessages(messages[selectedUser]);
   };
 
-  const getAvatars = () => {
-    axios.get("https://randomuser.me/api/?results=20").then(response => {
-      let newAvatars = response.data.results.map(result => {
-        return result.picture.large;
-      });
-      getConversations(newAvatars);
-    });
-  };
-
-  const getConversations = avatars => {
+  const getConversations = () => {
     var newMessages = {};
     var newConversations = {};
 
@@ -173,7 +159,6 @@ export default function Messenger(props) {
               }
               newMessages[otherParty].push(element);
               newConversations[otherParty] = {
-                photo: newConversations[otherParty].photo,
                 name: otherParty,
                 text: element.message,
                 timestamp: parseInt(element.timestamp),
@@ -197,7 +182,6 @@ export default function Messenger(props) {
               }
 
               newConversations[otherParty] = {
-                photo: avatars[count],
                 name: otherParty,
                 text: element.message,
                 textSnippet: textSnippet,
@@ -230,6 +214,7 @@ export default function Messenger(props) {
         }
         setMessages(newMessages);
         setFilteredMessages(filteredMessages);
+        setInit(1);
       });
   };
 
@@ -237,6 +222,8 @@ export default function Messenger(props) {
     <div className="messenger">
       <div className="scrollable sidebar">
         <ConversationList
+          init={init}
+          updateSmallMessagesFiltered={props.updateSmallMessagesFiltered}
           selectConversation={selectConversation}
           conversations={conversations}
         />
@@ -244,6 +231,7 @@ export default function Messenger(props) {
 
       <div className="scrollable content">
         <MessageList
+          init={init}
           updateConversation={updateConversation}
           activeConversation={activeConversation}
           filteredMessages={filteredMessages}

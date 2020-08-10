@@ -14,7 +14,6 @@ import {
 } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 import classnames from "classnames";
-import { Badge } from "../../../Wrappers";
 
 // styles
 import useStyles from "./styles";

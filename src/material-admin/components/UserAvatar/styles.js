@@ -8,6 +8,7 @@ export default makeStyles(() => ({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: "50%",
+    textTransform: "uppercase",
   },
   text: {
     color: "white",
