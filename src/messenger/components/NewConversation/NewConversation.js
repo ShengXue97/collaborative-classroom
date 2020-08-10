@@ -73,7 +73,6 @@ class NewConversation extends Component {
     if (message.length <= 0 || recipent.length <= 0) {
       return;
     }
-    console.log(newMessage);
 
     fetch(
       "https://collaborative-classroom-server.herokuapp.com/sendmessage?author=" +

@@ -45,12 +45,6 @@ export default function MessageList(props) {
     socket.on("newMessage", message => {
       //IMPORTANT: State is not kept inside here(socket.on), only Ref.
       const user = localStorage.getItem("user");
-      console.log(
-        user,
-        message.recipent,
-        activeConversationRef.current,
-        message.author,
-      );
 
       var otherParty = "";
       if (message.author == user) {
