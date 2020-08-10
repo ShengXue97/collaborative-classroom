@@ -99,7 +99,6 @@ const App = ({
   const numbers = [1, 2, 3, 4, 5];
 
   const [init, setInit] = useState(0);
-  const [whiteboardChildList, setWhiteboardChildList] = useState([]);
   const [whiteboardCoordList, setWhiteboardCoordList] = useState([0, 0]);
 
   const [noOfElements, setNoOfElements] = useState(4);

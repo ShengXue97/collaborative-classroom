@@ -108,7 +108,7 @@ function registerUser(
       setIsLoading(false);
     } else {
       fetch(
-        "http://localhost:5000/register?name=" +
+        "https://collaborative-classroom-server.herokuapp.com/register?name=" +
           name +
           "&login=" +
           login +
@@ -197,7 +197,7 @@ function loginUser(
     setIsLoading(false);
   } else if (!!login && !!password) {
     fetch(
-      "http://localhost:5000/login?login=" +
+      "https://collaborative-classroom-server.herokuapp.com/login?login=" +
         login +
         "&password=" +
         crypto
