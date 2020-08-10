@@ -3,6 +3,7 @@ import ConversationList from "../ConversationList/ConversationList.js";
 import MessageList from "../MessageList/MessageList.js";
 import "./Messenger.css";
 
+
 function useInterval(callback, delay) {
   const savedCallback = useRef();
   // Remember the latest callback.
@@ -27,6 +28,7 @@ export default function Messenger(props) {
   const [messages, setMessages] = useState([]);
   const [filteredMessages, setFilteredMessages] = useState([]);
   const [activeConversation, setActiveConversation] = useState([]);
+  const [init, setInit] = useState(0);
   const conversationsRef = useRef([]);
 
   useEffect(() => {
@@ -212,6 +214,7 @@ export default function Messenger(props) {
         }
         setMessages(newMessages);
         setFilteredMessages(filteredMessages);
+        setInit(1);
       });
   };
 
@@ -219,6 +222,7 @@ export default function Messenger(props) {
     <div className="messenger">
       <div className="scrollable sidebar">
         <ConversationList
+          init={init}
           updateSmallMessagesFiltered={props.updateSmallMessagesFiltered}
           selectConversation={selectConversation}
           conversations={conversations}
@@ -227,6 +231,7 @@ export default function Messenger(props) {
 
       <div className="scrollable content">
         <MessageList
+          init={init}
           updateConversation={updateConversation}
           activeConversation={activeConversation}
           filteredMessages={filteredMessages}
