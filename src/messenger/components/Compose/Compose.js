@@ -62,7 +62,7 @@ export default function Compose(props) {
         inputBox.value = "";
       })
       .catch(error => {
-        alert("Error occured!");
+        alert("Error occured! ID 4");
         console.log(error);
       });
   };

@@ -99,6 +99,7 @@ const App = ({
   const numbers = [1, 2, 3, 4, 5];
 
   const [init, setInit] = useState(0);
+  const [whiteboardChildList, setWhiteboardChildList] = useState([]);
   const [whiteboardCoordList, setWhiteboardCoordList] = useState([0, 0]);
   const [whiteboardChildList, setWhiteboardChildList] = useState([]);
   const [noOfElements, setNoOfElements] = useState(4);
@@ -248,8 +249,11 @@ const App = ({
             return response.text();
           })
           .then(data => {
-            var dataJSON = JSON.parse(data);
-
+            if (data == "No modules yet!") {
+              var dataJSON = JSON.parse(' {"m": [] }');
+            } else {
+              var dataJSON = JSON.parse(data);
+            }
             dataJSON["m"].push(roomName);
             var newmods = JSON.stringify(dataJSON);
             localStorage.setItem("modules", newmods);
@@ -268,6 +272,7 @@ const App = ({
           .catch(error => {
             alert("Error occured!");
           });
+
         localStorage.setItem("room", roomName);
       }
     }
