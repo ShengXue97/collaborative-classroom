@@ -316,9 +316,13 @@ const App = ({
             }
             label="Video"
           />
-          <a href="/collaborative-classroom/#/app/dashboard">
-            <img src={leaveRoomIcon} alt="close icon" />
-          </a>
+          <MDBBtn
+            onClick={() => {
+              window.location.reload(false);
+            }}
+          >
+            Leave Room
+          </MDBBtn>
         </Form.Field>
 
         <ReactGridLayout
