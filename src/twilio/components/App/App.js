@@ -92,23 +92,36 @@ const App = ({
   onVideoCheckedChange,
 }) => {
   let content = null;
-  const numbers = [1, 2, 3, 4];
+  const numbers = [1, 2, 3, 4, 5];
 
   const [init, setInit] = useState(0);
-  const [whiteboardChild, setWhiteboardChild] = useState("");
-  const [whiteboardCoords, setWhiteboardCoords] = useState("");
-  const [localBoxCoords, setLocalBoxCoords] = useState("");
+  const [whiteboardChildList, setWhiteboardChildList] = useState([]);
+  const [whiteboardCoordList, setWhiteboardCoordList] = useState([0, 0]);
+
   const [noOfElements, setNoOfElements] = useState(4);
 
-  const [whiteboardActive, setWhiteboardActive] = useState(true);
+  const [whiteBoardNum, setWhiteBoardNum] = useState(2);
+
+  const [whiteboardActiveList, setWhiteboardActiveList] = useState([
+    true,
+    true,
+  ]);
   const [localBoxActive, setLocalBoxActive] = useState(true);
   const [remoteBoxActive, setRemoteBoxActive] = useState(true);
   const [chatActive, setChatActive] = useState(true);
 
   const checkElement = name => {
     var isDelete = false;
-    if (name == "whiteboard" && whiteboardActive) {
-      isDelete = true;
+    if (name.includes("whiteboard")) {
+      console.log(name);
+      var whiteBoardNum = name.split("_")[1];
+      if (
+        whiteboardActiveList.length - 1 >= whiteBoardNum &&
+        whiteboardActiveList[whiteBoardNum]
+      ) {
+        console.log("hi");
+        isDelete = true;
+      }
     } else if (name == "localBox" && localBoxActive) {
       isDelete = true;
     } else if (name == "remoteBox" && remoteBoxActive) {
@@ -129,8 +142,11 @@ const App = ({
     window.defaultGridElements.map(e => {
       if (name == e.props.id) {
         elementToBeAdded = e;
-        if (name == "whiteboard") {
-          setWhiteboardActive(true);
+        console.log(name);
+        if (name.includes("whiteboard")) {
+          var whiteBoardNum = name.split("_")[1];
+          console.log(whiteBoardNum);
+          whiteboardActiveList[whiteBoardNum] = true;
         } else if (name == "localBox") {
           setLocalBoxActive(true);
         } else if (name == "remoteBox") {
@@ -151,8 +167,10 @@ const App = ({
     const newGridElements = [];
     window.gridElements.map(e => {
       if (name == e.props.id) {
-        if (name == "whiteboard") {
-          setWhiteboardActive(false);
+        if (name.includes("whiteboard")) {
+          var whiteBoardNum = name.split("_")[1];
+          console.log(whiteBoardNum);
+          whiteboardActiveList[whiteBoardNum] = false;
         } else if (name == "localBox") {
           setLocalBoxActive(false);
         } else if (name == "remoteBox") {
@@ -167,6 +185,32 @@ const App = ({
     window.gridElements = newGridElements;
   };
 
+  const addWhiteBoard = () => {
+    var jsx = (
+      <div
+        class={"whiteboard"}
+        id={"whiteboard_".concat(whiteBoardNum)}
+        style={{ background: "#FFD5B8" }}
+        key={noOfElements + 1}
+        data-grid={{ x: 0, y: 8, w: 4, h: 4 }}
+      >
+        <Whiteboard
+          id={"whiteboard_".concat(whiteBoardNum)}
+          removeElement={() =>
+            removeElement("whiteboard_".concat(whiteBoardNum))
+          }
+          onRef={ref => whiteboardChildList.push(ref)}
+          room={roomName + whiteBoardNum}
+        />
+      </div>
+    );
+    setNoOfElements(noOfElements + 1);
+    setWhiteBoardNum(whiteBoardNum + 1);
+    whiteboardCoordList.push([0]);
+    whiteboardActiveList.push(true);
+    window.gridElements.push(jsx);
+  };
+
   const getJSX = () => {
     var defaultGrid = window.gridElements;
     if (init == 0) {
@@ -176,15 +220,17 @@ const App = ({
         if (number == 1) {
           return (
             <div
-              id="whiteboard"
+              class={"whiteboard"}
+              id={"whiteboard_0"}
               style={{ background: "#FFD5B8" }}
               key="1"
               data-grid={{ x: 0, y: 0, w: 4, h: 4 }}
             >
               <Whiteboard
-                removeElement={() => removeElement("whiteboard")}
-                onRef={ref => setWhiteboardChild(ref)}
-                room={roomName}
+                id="whiteboard_0"
+                removeElement={() => removeElement("whiteboard_0")}
+                onRef={ref => whiteboardChildList.push(ref)}
+                room={roomName + "0"}
               />
             </div>
           );
@@ -227,6 +273,23 @@ const App = ({
               <Chat removeElement={() => removeElement("chat")}></Chat>
             </div>
           );
+        } else if (number == 5) {
+          return (
+            <div
+              class={"whiteboard"}
+              id={"whiteboard_1"}
+              style={{ background: "#FFD5B8" }}
+              key="5"
+              data-grid={{ x: 0, y: 4, w: 4, h: 4 }}
+            >
+              <Whiteboard
+                id={"whiteboard_1"}
+                removeElement={() => removeElement("whiteboard_1")}
+                onRef={ref => whiteboardChildList.push(ref)}
+                room={roomName + "1"}
+              />
+            </div>
+          );
         }
       });
       window.defaultGridElements = defaultGrid;
@@ -258,10 +321,16 @@ const App = ({
 
               <Dropdown.Menu>
                 <Dropdown.Item
-                  active={whiteboardActive}
-                  onClick={() => checkElement("whiteboard")}
+                  active={whiteboardActiveList}
+                  onClick={() => checkElement("whiteboard_0")}
                 >
-                  Whiteboard
+                  Private Whiteboard
+                </Dropdown.Item>
+                <Dropdown.Item
+                  active={whiteboardActiveList}
+                  onClick={() => checkElement("whiteboard_1")}
+                >
+                  Class Whiteboard
                 </Dropdown.Item>
                 <Dropdown.Item
                   active={localBoxActive}
@@ -292,6 +361,9 @@ const App = ({
               color="info"
             >
               {isScreenSharingEnabled ? "Stop sharing" : "Start sharing"}
+            </MDBBtn>
+            <MDBBtn onClick={() => addWhiteBoard()} color="info">
+              {"Add Whiteboard"}
             </MDBBtn>
           </Form.Control>
           <FormControlLabel
@@ -329,42 +401,47 @@ const App = ({
           autoSize={true}
           className="layout"
           onResize={e => {
-            if (document.querySelector("#whiteboard") != null) {
-              var tempWidth = getComputedStyle(
-                document.querySelector("#whiteboard"),
-              ).width;
-              var tempHeight = getComputedStyle(
-                document.querySelector("#whiteboard"),
-              ).height;
-              var tempCoords = {
-                width: tempWidth,
-                height: tempHeight,
-              };
+            whiteboardChildList.map((whiteboardChild, index) => {
+              var element = document.querySelector(
+                "#".concat(whiteboardChild.props.id),
+              );
+              if (element != null) {
+                console.log("hi");
+                var tempWidth = getComputedStyle(element).width;
+                var tempHeight = getComputedStyle(element).height;
+                var tempCoords = {
+                  width: tempWidth,
+                  height: tempHeight,
+                };
 
-              if (!isEquivalent(tempCoords, whiteboardCoords)) {
-                whiteboardChild.resize(false);
+                if (!isEquivalent(tempCoords, whiteboardCoordList[index])) {
+                  whiteboardChildList[index].resize(false);
+                }
+                whiteboardCoordList[index] = tempCoords;
               }
-              setWhiteboardCoords(tempCoords);
-            }
+              return 1;
+            });
           }}
           onResizeStop={e => {
-            if (document.querySelector("#whiteboard") != null) {
-              var tempWidth = getComputedStyle(
-                document.querySelector("#whiteboard"),
-              ).width;
-              var tempHeight = getComputedStyle(
-                document.querySelector("#whiteboard"),
-              ).height;
-              var tempCoords = {
-                width: tempWidth,
-                height: tempHeight,
-              };
+            whiteboardChildList.map((whiteboardChild, index) => {
+              var element = document.querySelector(
+                "#".concat(whiteboardChild.props.id),
+              );
+              if (element != null) {
+                var tempWidth = getComputedStyle(element).width;
+                var tempHeight = getComputedStyle(element).height;
+                var tempCoords = {
+                  width: tempWidth,
+                  height: tempHeight,
+                };
 
-              if (!isEquivalent(tempCoords, whiteboardCoords)) {
-                whiteboardChild.resize(true);
+                if (!isEquivalent(tempCoords, whiteboardCoordList[index])) {
+                  whiteboardChildList[index].resize(true);
+                }
+                whiteboardCoordList[index] = tempCoords;
               }
-              setWhiteboardCoords(tempCoords);
-            }
+              return 1;
+            });
           }}
         >
           {getJSX()}

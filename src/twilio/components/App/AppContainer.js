@@ -182,7 +182,7 @@ class AppContainer extends PureComponent {
         this.state.localAudioTrack.enable();
       }
     } catch (e) {
-      console.log(e);
+      //console.log(e);
     }
     this.setState({ audioChecked: !this.state.audioChecked });
   };
@@ -195,7 +195,7 @@ class AppContainer extends PureComponent {
         this.state.localVideoTrack.enable();
       }
     } catch (e) {
-      console.log(e);
+      //console.log(e);
     }
     this.setState({ videoChecked: !this.state.videoChecked });
   };
