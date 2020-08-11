@@ -34,6 +34,7 @@ export default class Whiteboard extends Component {
 
   componentDidMount() {
     this.props.onRef(this);
+    console.log("Ee");
 
     const str = "#whiteboard";
 

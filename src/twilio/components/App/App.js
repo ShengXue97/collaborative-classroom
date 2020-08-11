@@ -149,8 +149,31 @@ const App = ({
 
     if (elementToBeAdded != null) {
       if (name.includes("whiteboard")) {
+        elementToBeAdded = (
+          <div
+            class={"whiteboard"}
+            id={"whiteboard_0"}
+            style={{ background: "#FFD5B8" }}
+            key="1"
+            data-grid={{ x: 0, y: 0, w: 4, h: 4 }}
+          >
+            <Whiteboard
+              whiteboardChildList={whiteboardChildList}
+              whiteboardCoordList={whiteboardCoordList}
+              id="whiteboard_0"
+              removeElement={() => removeElement("whiteboard_0")}
+              onRef={ref => {
+                whiteboardChildList.push(ref);
+                whiteboardCoordList.push(0);
+              }}
+              room={roomName + "0"}
+            />
+          </div>
+        );
+        console.log(elementToBeAdded);
         // elementToBeAdded.addWhiteboardChild();
       }
+      console.log(elementToBeAdded);
       setNoOfElements(noOfElements + 1);
       window.gridElements.push(elementToBeAdded);
     }
@@ -263,11 +286,11 @@ const App = ({
                 method: "GET",
               },
             ).catch(error => {
-              alert("Error occured!");
+              alert("Error occured! ID 7");
             });
           })
           .catch(error => {
-            alert("Error occured!");
+            alert("Error occured! ID 8");
           });
 
         localStorage.setItem("room", roomName);
@@ -478,6 +501,8 @@ const App = ({
             });
           }}
           onResizeStop={e => {
+            console.log(whiteboardChildList);
+            console.log(whiteboardCoordList);
             whiteboardChildList.map((whiteboardChild, index) => {
               if (
                 whiteboardChild == undefined ||
