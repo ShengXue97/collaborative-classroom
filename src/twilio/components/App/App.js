@@ -109,7 +109,7 @@ const App = ({
 
   const [dropdownItems, setDropdownItems] = useState([]);
   const dropdownItemsRef = useRef([]);
-  const [defaultDropdownItems, setDefaultDropdownItems] = useState([
+  const defaultDropdownItemsRef = useRef([
     <Dropdown.Item
       myname="whiteboard_0_selector"
       onClick={() => addElement("whiteboard_0")}
@@ -203,7 +203,9 @@ const App = ({
     });
     window.gridElements = newGridElements;
 
-    const newDropdownItems = defaultDropdownItems.filter(element => {
+    console.log(name);
+    console.log(defaultDropdownItemsRef.current);
+    const newDropdownItems = defaultDropdownItemsRef.current.filter(element => {
       if (element != undefined && element.props.myname == name + "_selector") {
         return true;
       } else {
@@ -223,7 +225,7 @@ const App = ({
     var jsx = (
       <div
         class={"whiteboard"}
-        id={"whiteboard_".concat(whiteBoardNum)}
+        id={"whiteboard_" + whiteBoardNum}
         style={{ background: "#FFD5B8" }}
         key={whiteBoardNum}
         data-grid={{ x: 0, y: 8, w: 4, h: 4 }}
@@ -231,10 +233,8 @@ const App = ({
         <Whiteboard
           whiteboardChildList={whiteboardChildList}
           whiteboardCoordList={whiteboardCoordList}
-          id={"whiteboard_".concat(whiteBoardNum)}
-          removeElement={() =>
-            removeElement("whiteboard_".concat(whiteBoardNum))
-          }
+          id={"whiteboard_" + whiteBoardNum}
+          removeElement={() => removeElement("whiteboard_" + whiteBoardNum)}
           onRef={ref => whiteboardChildList.push(ref)}
           room={roomName + whiteBoardNum}
         />
@@ -244,6 +244,17 @@ const App = ({
     setWhiteBoardNum(whiteBoardNum + 1);
     whiteboardCoordList.push([0]);
     window.gridElements.push(jsx);
+
+    const newDropdownItem = (
+      <Dropdown.Item
+        myname={"whiteboard_" + whiteBoardNum + "_selector"}
+        onClick={() => addElement("whiteboard_" + whiteBoardNum)}
+      >
+        Private Whiteboard {whiteBoardNum}
+      </Dropdown.Item>
+    );
+
+    defaultDropdownItemsRef.current.push(newDropdownItem);
 
     const newState = stateCheck[0] + 1;
     setStateCheck([newState]);

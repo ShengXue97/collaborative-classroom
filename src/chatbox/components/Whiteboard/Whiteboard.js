@@ -23,8 +23,8 @@ export default class Whiteboard extends Component {
   constructor(props) {
     super(props);
     const str = "#whiteboard";
-    var tempWidth = 4 * 65 + "px";
-    var tempHeight = 4 * 160 + "px";
+    var tempWidth = 4 * 63.5 + "px";
+    var tempHeight = 4 * 148 + "px";
 
     this.state = {
       width: tempWidth,
