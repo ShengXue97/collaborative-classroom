@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "22cdd304dacd9652cfbce238011c00e9",
+    "revision": "a9618f1d5df2b41e9268be411aac68e3",
     "url": "/collaborative-classroom/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/collaborative-classroom/static/css/2.d2948499.chunk.css"
   },
   {
-    "revision": "f15e9bc6d04bc13d60e5",
+    "revision": "9f25b54a11450f5922bf",
     "url": "/collaborative-classroom/static/css/main.d6f9746b.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/collaborative-classroom/static/js/2.bec68ec7.chunk.js"
   },
   {
-    "revision": "f15e9bc6d04bc13d60e5",
-    "url": "/collaborative-classroom/static/js/main.af1dc23d.chunk.js"
+    "revision": "9f25b54a11450f5922bf",
+    "url": "/collaborative-classroom/static/js/main.208cb8cf.chunk.js"
   },
   {
     "revision": "c7d572845985d3d33e35",
