@@ -264,7 +264,8 @@ const App = ({
 
   const shareWhiteboard = recipent => {
     const author = localStorage.getItem("user");
-    const link = roomName + "1" + userName.replace("@", "").replace(".", "");
+    const link =
+      roomName + "1" + userName.replace("/@/g", "").replace("/./g", "");
     const message = {
       author: author,
       recipent: recipent,
@@ -444,19 +445,23 @@ const App = ({
   const modules = localStorage.getItem("modules");
   var buttonsJSX = null;
 
-  if (modules != null) {
-    var modules_json = JSON.parse(modules);
+  if (!!modules && modules != "") {
+    try {
+      var modules_json = JSON.parse(modules);
 
-    buttonsJSX = modules_json["m"].map((element, index) => {
-      return (
-        <AButton
-          name={modules_json["m"][index]}
-          onClick={() => customJoin(modules_json["m"][index])}
-        >
-          {modules_json["m"][index]}
-        </AButton>
-      );
-    });
+      buttonsJSX = modules_json["m"].map((element, index) => {
+        return (
+          <AButton
+            name={modules_json["m"][index]}
+            onClick={() => customJoin(modules_json["m"][index])}
+          >
+            {modules_json["m"][index]}
+          </AButton>
+        );
+      });
+    } catch (e) {
+      console.log("Error in modules");
+    }
   }
 
   const getJSX = () => {
@@ -490,7 +495,11 @@ const App = ({
         } else if (number == 2) {
           return (
             <div
-              room={roomName + "1" + userName.replace("@", "").replace(".", "")}
+              room={
+                roomName +
+                "1" +
+                userName.replace("/@/g", "").replace("/./g", "")
+              }
               class={"whiteboard"}
               publicName={"Private Whiteboard"}
               id={"whiteboard_1"}
@@ -506,7 +515,9 @@ const App = ({
                 removeElement={() => removeElement("whiteboard_1")}
                 onRef={ref => whiteboardChildList.push(ref)}
                 room={
-                  roomName + "1" + userName.replace("@", "").replace(".", "")
+                  roomName +
+                  "1" +
+                  userName.replace("/@/g", "").replace("/./g", "")
                 }
               />
             </div>
@@ -798,4 +809,3 @@ App.defaultProps = {
 
 const render = containerProps => <App {...containerProps} />;
 export default props => <AppContainer render={render} {...props} />;
-
