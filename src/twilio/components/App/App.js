@@ -11,7 +11,7 @@ import {
   Notification,
 } from "react-bulma-components";
 
-import Button from "@material-ui/core/Button";
+import { Button } from "@material-ui/core";
 
 import videoRoomPropType from "../../propTypes/videoRoom";
 import LocalBox from "../VideoRoom/LocalBox";
@@ -130,11 +130,9 @@ const App = ({
     });
 
     socket.on("roomData", ({ users }) => {
-      console.log(users);
       const userName = localStorage.getItem("user");
       const usersFiltered = users.filter((element, index) => {
         const otherUser = element.name;
-        console.log(userName, otherUser);
         if (userName != otherUser) {
           return true;
         } else {
@@ -142,7 +140,6 @@ const App = ({
         }
       });
 
-      console.log(usersFiltered);
       userListRef.current = usersFiltered.map((element, index) => {
         const otherUser = element.name;
         return (
@@ -152,7 +149,6 @@ const App = ({
         );
       });
 
-      console.log(userListRef.current);
       const newState = stateCheck[0] + 1;
       setStateCheck([newState]);
     });
@@ -200,7 +196,6 @@ const App = ({
       if (name.includes("whiteboard")) {
         const whiteboardId = elementToBeAdded.props.id;
         const roomId = elementToBeAdded.props.id.split("_")[1];
-        console.log(elementToBeAdded);
         elementToBeAdded = (
           <div
             room={elementToBeAdded.props.room}
@@ -225,10 +220,7 @@ const App = ({
             />
           </div>
         );
-        console.log(elementToBeAdded);
-        // elementToBeAdded.addWhiteboardChild();
       }
-      console.log(elementToBeAdded);
       setNoOfElements(noOfElements + 1);
       window.gridElements.push(elementToBeAdded);
     }
@@ -254,9 +246,6 @@ const App = ({
       }
     });
     window.gridElements = newGridElements;
-
-    console.log(name);
-    console.log(defaultDropdownItemsRef.current);
     const newDropdownItems = defaultDropdownItemsRef.current.filter(element => {
       if (element != undefined && element.props.myname == name + "_selector") {
         return true;
@@ -429,7 +418,6 @@ const App = ({
             </div>
           );
         } else if (number == 2) {
-          console.log(roomName, userName);
           return (
             <div
               room={roomName + "1" + userName.replace("@", "").replace(".", "")}
@@ -526,7 +514,7 @@ const App = ({
               disabled={!isScreenSharingSupported}
               color="info"
             >
-              {isScreenSharingEnabled ? "Stop sharing" : "Start sharing"}
+              {isScreenSharingEnabled ? "Unshare Screen" : "Share Screen"}
             </MDBBtn>
             <Dropdown>
               <Dropdown.Toggle variant="success" id="dropdown-basic">
@@ -598,8 +586,6 @@ const App = ({
             });
           }}
           onResizeStop={e => {
-            console.log(whiteboardChildList);
-            console.log(whiteboardCoordList);
             whiteboardChildList.map((whiteboardChild, index) => {
               if (
                 whiteboardChild == undefined ||
@@ -694,16 +680,7 @@ const App = ({
             flexDirection: "column",
             justifyContent: "center",
           }}
-        >
-          <Button
-            style={{ height: "100px" }}
-            variant="contained"
-            size="large"
-            color="primary"
-          >
-            Large
-          </Button>
-        </div>
+        ></div>
       </Columns>
     );
   }

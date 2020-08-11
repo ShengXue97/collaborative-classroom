@@ -35,6 +35,16 @@ export default class Whiteboard extends Component {
   componentDidMount() {
     this.props.onRef(this);
     this.resize(true);
+
+    var parentElement = document.getElementById(this.props.id);
+    var iframeElement = document.getElementById("iframe_" + this.props.id);
+
+    var tempWidth = getComputedStyle(parentElement).width.replace("px", "");
+    var tempHeight = getComputedStyle(parentElement).height.replace("px", "");
+    this.setState({
+      width: parseInt(tempWidth, 10) + "px",
+      height: parseInt(tempHeight, 10) - 35 + "px",
+    });
   }
 
   // componentWillUnmount() {
@@ -109,7 +119,7 @@ export default class Whiteboard extends Component {
               style="background: #FFF9AA;"
               width={this.state.width}
               height={this.state.height}
-              id="myId"
+              id={"iframe_" + this.props.id}
               className="myClassname"
               display="initial"
               position="relative"
