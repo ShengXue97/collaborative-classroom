@@ -149,24 +149,27 @@ const App = ({
 
     if (elementToBeAdded != null) {
       if (name.includes("whiteboard")) {
+        const whiteboardId = elementToBeAdded.props.id;
+        const roomId = elementToBeAdded.props.id.split("_")[1];
+
         elementToBeAdded = (
           <div
             class={"whiteboard"}
-            id={"whiteboard_0"}
+            id={whiteboardId}
             style={{ background: "#FFD5B8" }}
-            key="1"
+            key={roomId}
             data-grid={{ x: 0, y: 0, w: 4, h: 4 }}
           >
             <Whiteboard
               whiteboardChildList={whiteboardChildList}
               whiteboardCoordList={whiteboardCoordList}
-              id="whiteboard_0"
-              removeElement={() => removeElement("whiteboard_0")}
+              id={whiteboardId}
+              removeElement={() => removeElement(whiteboardId)}
               onRef={ref => {
                 whiteboardChildList.push(ref);
                 whiteboardCoordList.push(0);
               }}
-              room={roomName + "0"}
+              room={roomName + roomId}
             />
           </div>
         );
@@ -328,7 +331,7 @@ const App = ({
               class={"whiteboard"}
               id={"whiteboard_0"}
               style={{ background: "#FFD5B8" }}
-              key="1"
+              key="0"
               data-grid={{ x: 0, y: 0, w: 4, h: 4 }}
             >
               <Whiteboard
@@ -344,14 +347,19 @@ const App = ({
         } else if (number == 2) {
           return (
             <div
-              id="localBox"
+              class={"whiteboard"}
+              id={"whiteboard_1"}
               style={{ background: "#FFD5B8" }}
-              key="2"
-              data-grid={{ x: 4, y: 0, w: 4, h: 2 }}
+              key="1"
+              data-grid={{ x: 0, y: 4, w: 4, h: 4 }}
             >
-              <LocalBox
-                removeElement={() => removeElement("localBox")}
-                videoRoom={videoRoom}
+              <Whiteboard
+                whiteboardChildList={whiteboardChildList}
+                whiteboardCoordList={whiteboardCoordList}
+                id={"whiteboard_1"}
+                removeElement={() => removeElement("whiteboard_1")}
+                onRef={ref => whiteboardChildList.push(ref)}
+                room={roomName + "1"}
               />
             </div>
           );
@@ -383,19 +391,14 @@ const App = ({
         } else if (number == 5) {
           return (
             <div
-              class={"whiteboard"}
-              id={"whiteboard_1"}
+              id="localBox"
               style={{ background: "#FFD5B8" }}
               key="5"
-              data-grid={{ x: 0, y: 4, w: 4, h: 4 }}
+              data-grid={{ x: 4, y: 0, w: 4, h: 2 }}
             >
-              <Whiteboard
-                whiteboardChildList={whiteboardChildList}
-                whiteboardCoordList={whiteboardCoordList}
-                id={"whiteboard_1"}
-                removeElement={() => removeElement("whiteboard_1")}
-                onRef={ref => whiteboardChildList.push(ref)}
-                room={roomName + "1"}
+              <LocalBox
+                removeElement={() => removeElement("localBox")}
+                videoRoom={videoRoom}
               />
             </div>
           );
