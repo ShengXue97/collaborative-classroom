@@ -51,8 +51,13 @@ export default class Whiteboard extends Component {
     }
   }
 
-  componentWillUnmount() {
-    this.props.onRef(undefined);
+  // componentWillUnmount() {
+  //   this.props.onRef(undefined);
+  // }
+
+  addWhiteboardChild() {
+    this.props.whiteboardChildList.push(this);
+    this.props.whiteboardCoordList.push(this);
   }
 
   resize(snap) {

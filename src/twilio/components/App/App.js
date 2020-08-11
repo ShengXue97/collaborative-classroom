@@ -148,11 +148,13 @@ const App = ({
     });
 
     if (elementToBeAdded != null) {
+      if (name.includes("whiteboard")) {
+        // elementToBeAdded.addWhiteboardChild();
+      }
       setNoOfElements(noOfElements + 1);
       window.gridElements.push(elementToBeAdded);
     }
 
-    console.log(dropdownItemsRef.current);
     const newDropdownItems = dropdownItemsRef.current.map((element, index) => {
       if (element != undefined && element.props.myname != name + "_selector") {
         return element;
@@ -173,7 +175,6 @@ const App = ({
         newGridElements.push(e);
       }
     });
-    console.log(newGridElements);
     window.gridElements = newGridElements;
 
     const newDropdownItems = defaultDropdownItems.filter(element => {
@@ -188,7 +189,6 @@ const App = ({
       newDropdownItems,
     );
     setDropdownItems(dropdownItemsRef.current);
-    console.log(dropdownItems);
     const newState = stateCheck[0] + 1;
     setStateCheck([newState]);
   };
@@ -203,6 +203,8 @@ const App = ({
         data-grid={{ x: 0, y: 8, w: 4, h: 4 }}
       >
         <Whiteboard
+          whiteboardChildList={whiteboardChildList}
+          whiteboardCoordList={whiteboardCoordList}
           id={"whiteboard_".concat(whiteBoardNum)}
           removeElement={() =>
             removeElement("whiteboard_".concat(whiteBoardNum))
@@ -280,7 +282,6 @@ const App = ({
     var modules_json = JSON.parse(modules);
 
     buttonsJSX = modules_json["m"].map((element, index) => {
-      //console.log(element.name);
       return (
         <AButton
           name={modules_json["m"][index]}
@@ -308,6 +309,8 @@ const App = ({
               data-grid={{ x: 0, y: 0, w: 4, h: 4 }}
             >
               <Whiteboard
+                whiteboardChildList={whiteboardChildList}
+                whiteboardCoordList={whiteboardCoordList}
                 id="whiteboard_0"
                 removeElement={() => removeElement("whiteboard_0")}
                 onRef={ref => whiteboardChildList.push(ref)}
@@ -364,6 +367,8 @@ const App = ({
               data-grid={{ x: 0, y: 4, w: 4, h: 4 }}
             >
               <Whiteboard
+                whiteboardChildList={whiteboardChildList}
+                whiteboardCoordList={whiteboardCoordList}
                 id={"whiteboard_1"}
                 removeElement={() => removeElement("whiteboard_1")}
                 onRef={ref => whiteboardChildList.push(ref)}
@@ -377,7 +382,6 @@ const App = ({
       window.gridElements = defaultGrid;
     }
 
-    console.log(defaultGrid);
     const jsx = defaultGrid.map(e => {
       return e;
     });
@@ -448,11 +452,16 @@ const App = ({
           className="layout"
           onResize={e => {
             whiteboardChildList.map((whiteboardChild, index) => {
+              if (
+                whiteboardChild == undefined ||
+                whiteboardCoordList[index] == undefined
+              ) {
+                return;
+              }
               var element = document.querySelector(
                 "#".concat(whiteboardChild.props.id),
               );
               if (element != null) {
-                console.log("hi");
                 var tempWidth = getComputedStyle(element).width;
                 var tempHeight = getComputedStyle(element).height;
                 var tempCoords = {
@@ -470,6 +479,12 @@ const App = ({
           }}
           onResizeStop={e => {
             whiteboardChildList.map((whiteboardChild, index) => {
+              if (
+                whiteboardChild == undefined ||
+                whiteboardCoordList[index] == undefined
+              ) {
+                return;
+              }
               var element = document.querySelector(
                 "#".concat(whiteboardChild.props.id),
               );
