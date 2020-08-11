@@ -34,22 +34,7 @@ export default class Whiteboard extends Component {
 
   componentDidMount() {
     this.props.onRef(this);
-    console.log("Ee");
-
-    const str = "#whiteboard";
-
-    if (document.querySelector(str) != null) {
-      var tempWidth = getComputedStyle(
-        document.querySelector(str),
-      ).width.replace("px", "");
-      var tempHeight = getComputedStyle(
-        document.querySelector(str),
-      ).height.replace("px", "");
-      this.setState({
-        width: parseInt(tempWidth, 10) + "px",
-        height: parseInt(tempHeight, 10) - 35 + "px",
-      });
-    }
+    this.resize(true);
   }
 
   // componentWillUnmount() {

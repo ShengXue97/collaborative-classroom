@@ -105,7 +105,7 @@ const App = ({
 
   const [noOfElements, setNoOfElements] = useState(4);
 
-  const [whiteBoardNum, setWhiteBoardNum] = useState(2);
+  const [whiteBoardNum, setWhiteBoardNum] = useState(6);
 
   const [dropdownItems, setDropdownItems] = useState([]);
   const dropdownItemsRef = useRef([]);
@@ -225,7 +225,7 @@ const App = ({
         class={"whiteboard"}
         id={"whiteboard_".concat(whiteBoardNum)}
         style={{ background: "#FFD5B8" }}
-        key={noOfElements + 1}
+        key={whiteBoardNum}
         data-grid={{ x: 0, y: 8, w: 4, h: 4 }}
       >
         <Whiteboard
@@ -244,6 +244,9 @@ const App = ({
     setWhiteBoardNum(whiteBoardNum + 1);
     whiteboardCoordList.push([0]);
     window.gridElements.push(jsx);
+
+    const newState = stateCheck[0] + 1;
+    setStateCheck([newState]);
   };
 
   const myUser = localStorage.getItem("user");
