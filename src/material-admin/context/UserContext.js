@@ -108,7 +108,7 @@ function registerUser(
       setIsLoading(false);
     } else {
       fetch(
-        "https://collaborative-classroom-server.herokuapp.com/register?name=" +
+        "http://localhost:5000/register?name=" +
           name +
           "&login=" +
           login +
@@ -197,7 +197,7 @@ function loginUser(
     setIsLoading(false);
   } else if (!!login && !!password) {
     fetch(
-      "https://collaborative-classroom-server.herokuapp.com/login?login=" +
+      "http://localhost:5000/login?login=" +
         login +
         "&password=" +
         crypto
@@ -225,7 +225,7 @@ function loginUser(
           setIsLoading(false);
         } else {
           localStorage.setItem("user", login);
-
+          localStorage.setItem("modules", data);
           setTimeout(() => {
             localStorage.setItem("id_token", 1);
             setError(null);

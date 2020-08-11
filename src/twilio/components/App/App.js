@@ -328,46 +328,116 @@ const App = ({
 
   const updateRoom = roomName => {
     if (modules_json != null) {
-      if (modules_json.hasOwnProperty(roomName)) {
+      if (modules_json["m"].includes(roomName)) {
+        //detectadmin(myUser, roomName);
         localStorage.setItem("room", roomName);
+        onJoin();
       } else {
-        fetch(
-          "https://collaborative-classroom-server.herokuapp.com/getmodules?user=" +
-            myUser,
-          {
-            method: "GET",
-          },
-        )
-          .then(response => {
-            return response.text();
-          })
-          .then(data => {
-            if (data == "No modules yet!") {
-              var dataJSON = JSON.parse(' {"m": [] }');
-            } else {
-              var dataJSON = JSON.parse(data);
-            }
-            dataJSON["m"].push(roomName);
-            var newmods = JSON.stringify(dataJSON);
-            localStorage.setItem("modules", newmods);
-            fetch(
-              "https://collaborative-classroom-server.herokuapp.com/updatemodules?modules=" +
-                newmods +
-                "&user=" +
-                myUser,
-              {
-                method: "GET",
-              },
-            ).catch(error => {
-              alert("Error occured! ID 7");
+        var timing = prompt(
+          "You're the admin of this room. Please enter your start time",
+        );
+        var timing_end = prompt("Please enter your end time");
+        var timing_int = parseInt(timing, 10);
+        var timing_endint = parseInt(timing_end, 10);
+        if (timing_endint <= timing_int) {
+          alert("Not allowed!");
+        } else {
+          fetch(
+            "https://collaborative-classroom-server.herokuapp.com/getmodules?user=" +
+              myUser,
+            {
+              method: "GET",
+            },
+          )
+            .then(response => {
+              return response.text();
+            })
+            .then(data => {
+              if (data == "No modules yet!") {
+                var dataJSON = JSON.parse(' {"m": [] }');
+              } else {
+                var dataJSON = JSON.parse(data);
+              }
+              if (!dataJSON["m"].includes(roomName)) {
+                console.log(dataJSON["m"].includes(roomName));
+                dataJSON["m"].push(roomName);
+              }
+              var newmods = JSON.stringify(dataJSON);
+              localStorage.setItem("modules", newmods);
+              fetch(
+                "hhttps://collaborative-classroom-server.herokuapp.com/updatemodules?modules=" +
+                  newmods +
+                  "&user=" +
+                  myUser,
+                {
+                  method: "GET",
+                },
+              )
+                .then(data => {
+                  addadmin(myUser, roomName, timing, timing_end);
+                })
+                .catch(error => {
+                  alert("Error occured!");
+                });
+            })
+            .catch(error => {
+              alert("Error occured!");
             });
-          })
-          .catch(error => {
-            alert("Error occured! ID 8");
-          });
-
-        localStorage.setItem("room", roomName);
+          localStorage.setItem("room", roomName);
+          onJoin();
+        }
       }
+    }
+  };
+
+  const detectadmin = (user_name, room_name) => {
+    if (user_name != null) {
+      fetch(
+        "https://collaborative-classroom-server.herokuapp.com/getadmin?user=" +
+          user_name,
+        {
+          method: "GET",
+        },
+      )
+        .then(response => {
+          return response.text();
+        })
+        .then(data => {
+          if (data != "Not admin!") {
+            var current_list = data;
+            var json_clist = JSON.parse(current_list);
+            if (json_clist["a"].includes(room_name)) {
+              console.log("admin has logged in.");
+            }
+          }
+        })
+        .catch(error => {
+          alert("Error occured!");
+        });
+    }
+  };
+
+  const addadmin = (user_name, room_name, timing, timing2) => {
+    if (user_name != null) {
+      fetch(
+        "https://collaborative-classroom-server.herokuapp.com/registeradmins?roomname=" +
+          room_name +
+          "&user=" +
+          user_name +
+          "&timing=" +
+          timing +
+          "&timing2=" +
+          timing2,
+        {
+          method: "GET",
+        },
+      )
+        .then(response => {
+          return response.text();
+        })
+        .catch(error => {
+          alert("Error occured!");
+        });
     }
   };
 
@@ -632,7 +702,6 @@ const App = ({
               <Button
                 onClick={() => {
                   updateRoom(roomName);
-                  onJoin();
                 }}
                 loading={isJoining}
                 disabled={!canJoin}
@@ -729,3 +798,4 @@ App.defaultProps = {
 
 const render = containerProps => <App {...containerProps} />;
 export default props => <AppContainer render={render} {...props} />;
+
