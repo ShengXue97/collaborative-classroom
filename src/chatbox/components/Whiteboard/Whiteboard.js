@@ -91,9 +91,7 @@ export default class Whiteboard extends Component {
                     color: "white",
                   }}
                 >
-                  {this.props.id.split("_")[1] == 1
-                    ? "Class board"
-                    : "Private Board"}
+                  {this.props.publicName}
                 </p>
               </div>
               <div className="rightInnerContainer">

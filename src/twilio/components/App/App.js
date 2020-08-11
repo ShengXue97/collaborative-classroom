@@ -45,8 +45,10 @@ import {
 } from "mdbreact";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import TextField from "@material-ui/core/TextField";
+import socket from "../../../websocket";
 
 const ReactGridLayout = WidthProvider(RGL);
+const userName = localStorage.getItem("user");
 
 const isEquivalent = (a, b) => {
   // Create arrays of property names
@@ -109,18 +111,38 @@ const App = ({
 
   const [dropdownItems, setDropdownItems] = useState([]);
   const dropdownItemsRef = useRef([]);
+  const receivedWhiteboards = useRef([]);
+
+  useEffect(() => {
+    socket.on("newWhiteboard", message => {
+      console.log(message);
+      const author = message.message.author;
+      const recipent = message.message.recipent;
+      const link = message.message.link;
+      const userName = localStorage.getItem("user");
+      console.log(recipent, userName);
+      if (
+        recipent == userName &&
+        !receivedWhiteboards.current.includes(author)
+      ) {
+        receivedWhiteboards.current.push(author);
+        addWhiteBoard(author, link);
+      }
+    });
+  }, []);
+
   const defaultDropdownItemsRef = useRef([
     <Dropdown.Item
       myname="whiteboard_0_selector"
       onClick={() => addElement("whiteboard_0")}
     >
-      Private Whiteboard 1
+      Class Whiteboard
     </Dropdown.Item>,
     <Dropdown.Item
       myname="whiteboard_1_selector"
       onClick={() => addElement("whiteboard_1")}
     >
-      Class Whiteboard
+      Private Whiteboard
     </Dropdown.Item>,
     <Dropdown.Item
       myname="localBox_selector"
@@ -151,16 +173,19 @@ const App = ({
       if (name.includes("whiteboard")) {
         const whiteboardId = elementToBeAdded.props.id;
         const roomId = elementToBeAdded.props.id.split("_")[1];
-
+        console.log(elementToBeAdded);
         elementToBeAdded = (
           <div
+            room={elementToBeAdded.props.room}
             class={"whiteboard"}
+            publicName={elementToBeAdded.props.publicName}
             id={whiteboardId}
             style={{ background: "#FFD5B8" }}
             key={roomId}
             data-grid={{ x: 0, y: 0, w: 4, h: 4 }}
           >
             <Whiteboard
+              publicName={elementToBeAdded.props.publicName}
               whiteboardChildList={whiteboardChildList}
               whiteboardCoordList={whiteboardCoordList}
               id={whiteboardId}
@@ -169,7 +194,7 @@ const App = ({
                 whiteboardChildList.push(ref);
                 whiteboardCoordList.push(0);
               }}
-              room={roomName + roomId}
+              room={elementToBeAdded.props.room}
             />
           </div>
         );
@@ -221,22 +246,38 @@ const App = ({
     setStateCheck([newState]);
   };
 
-  const addWhiteBoard = () => {
+  const shareWhiteboard = () => {
+    const author = localStorage.getItem("user");
+    const recipent = "b@b.com";
+    const link = roomName + "1" + userName.replace("@", "").replace(".", "");
+    const message = {
+      author: author,
+      recipent: recipent,
+      link: link,
+    };
+    socket.emit("shareWhiteboard", message);
+  };
+
+  const addWhiteBoard = (author, link) => {
+    const whiteBoardName = author + "'s whiteboard";
     var jsx = (
       <div
+        room={link}
         class={"whiteboard"}
+        publicName={whiteBoardName}
         id={"whiteboard_" + whiteBoardNum}
         style={{ background: "#FFD5B8" }}
         key={whiteBoardNum}
         data-grid={{ x: 0, y: 8, w: 4, h: 4 }}
       >
         <Whiteboard
+          publicName={whiteBoardName}
           whiteboardChildList={whiteboardChildList}
           whiteboardCoordList={whiteboardCoordList}
           id={"whiteboard_" + whiteBoardNum}
           removeElement={() => removeElement("whiteboard_" + whiteBoardNum)}
           onRef={ref => whiteboardChildList.push(ref)}
-          room={roomName + whiteBoardNum}
+          room={link}
         />
       </div>
     );
@@ -250,7 +291,7 @@ const App = ({
         myname={"whiteboard_" + whiteBoardNum + "_selector"}
         onClick={() => addElement("whiteboard_" + whiteBoardNum)}
       >
-        Private Whiteboard {whiteBoardNum}
+        {whiteBoardName}
       </Dropdown.Item>
     );
 
@@ -342,13 +383,16 @@ const App = ({
         if (number == 1) {
           return (
             <div
+              room={roomName + "0"}
               class={"whiteboard"}
+              publicName={"Class Whiteboard"}
               id={"whiteboard_0"}
               style={{ background: "#FFD5B8" }}
               key="0"
               data-grid={{ x: 0, y: 0, w: 4, h: 4 }}
             >
               <Whiteboard
+                publicName={"Class Whiteboard"}
                 whiteboardChildList={whiteboardChildList}
                 whiteboardCoordList={whiteboardCoordList}
                 id="whiteboard_0"
@@ -359,21 +403,27 @@ const App = ({
             </div>
           );
         } else if (number == 2) {
+          console.log(roomName, userName);
           return (
             <div
+              room={roomName + "1" + userName.replace("@", "").replace(".", "")}
               class={"whiteboard"}
+              publicName={"Private Whiteboard"}
               id={"whiteboard_1"}
               style={{ background: "#FFD5B8" }}
               key="1"
               data-grid={{ x: 0, y: 4, w: 4, h: 4 }}
             >
               <Whiteboard
+                publicName={"Private Whiteboard"}
                 whiteboardChildList={whiteboardChildList}
                 whiteboardCoordList={whiteboardCoordList}
                 id={"whiteboard_1"}
                 removeElement={() => removeElement("whiteboard_1")}
                 onRef={ref => whiteboardChildList.push(ref)}
-                room={roomName + "1"}
+                room={
+                  roomName + "1" + userName.replace("@", "").replace(".", "")
+                }
               />
             </div>
           );
@@ -452,8 +502,8 @@ const App = ({
             >
               {isScreenSharingEnabled ? "Stop sharing" : "Start sharing"}
             </MDBBtn>
-            <MDBBtn onClick={() => addWhiteBoard()} color="info">
-              {"Add Whiteboard"}
+            <MDBBtn onClick={() => shareWhiteboard()} color="info">
+              {"Share Whiteboard"}
             </MDBBtn>
           </Form.Control>
           <FormControlLabel
