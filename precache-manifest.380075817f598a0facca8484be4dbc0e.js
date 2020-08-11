@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "636d73dce47cc88b63fee89d590c08d2",
+    "revision": "ebf3ff53b38ab1d95c5c20393fee9417",
     "url": "/collaborative-classroom/index.html"
   },
   {
@@ -8,28 +8,28 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/collaborative-classroom/static/css/2.d2948499.chunk.css"
   },
   {
-    "revision": "80a807eb436155b7b936",
-    "url": "/collaborative-classroom/static/css/main.63f413a4.chunk.css"
+    "revision": "cc0de084180401c74043",
+    "url": "/collaborative-classroom/static/css/main.ff00ab31.chunk.css"
   },
   {
     "revision": "f9f30c4c71818949a3c6",
     "url": "/collaborative-classroom/static/js/2.572e51b8.chunk.js"
   },
   {
-    "revision": "80a807eb436155b7b936",
-    "url": "/collaborative-classroom/static/js/main.dee7c9b3.chunk.js"
+    "revision": "cc0de084180401c74043",
+    "url": "/collaborative-classroom/static/js/main.36778000.chunk.js"
   },
   {
     "revision": "c7d572845985d3d33e35",
     "url": "/collaborative-classroom/static/js/runtime~main.0ab5c060.js"
   },
   {
-    "revision": "11911410dca2de148f30954eb2fd5eab",
-    "url": "/collaborative-classroom/static/media/arrow_left.11911410.svg"
+    "revision": "270f72df47e036d9cfa11f91f0a94a60",
+    "url": "/collaborative-classroom/static/media/arrow_left.270f72df.svg"
   },
   {
-    "revision": "8ef6a08cdc1154920165680a4edde771",
-    "url": "/collaborative-classroom/static/media/arrow_right.8ef6a08c.svg"
+    "revision": "d9ccc77c8240ad0dc2724cf333c0479e",
+    "url": "/collaborative-classroom/static/media/arrow_right.d9ccc77c.svg"
   },
   {
     "revision": "695a31606b1abb167b03fb1f6375831d",
