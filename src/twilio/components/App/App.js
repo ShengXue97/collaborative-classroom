@@ -112,15 +112,14 @@ const App = ({
   const [dropdownItems, setDropdownItems] = useState([]);
   const dropdownItemsRef = useRef([]);
   const receivedWhiteboards = useRef([]);
+  const userListRef = useRef([]);
 
   useEffect(() => {
     socket.on("newWhiteboard", message => {
-      console.log(message);
       const author = message.message.author;
       const recipent = message.message.recipent;
       const link = message.message.link;
       const userName = localStorage.getItem("user");
-      console.log(recipent, userName);
       if (
         recipent == userName &&
         !receivedWhiteboards.current.includes(author)
@@ -128,6 +127,34 @@ const App = ({
         receivedWhiteboards.current.push(author);
         addWhiteBoard(author, link);
       }
+    });
+
+    socket.on("roomData", ({ users }) => {
+      console.log(users);
+      const userName = localStorage.getItem("user");
+      const usersFiltered = users.filter((element, index) => {
+        const otherUser = element.name;
+        console.log(userName, otherUser);
+        if (userName != otherUser) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+
+      console.log(usersFiltered);
+      userListRef.current = usersFiltered.map((element, index) => {
+        const otherUser = element.name;
+        return (
+          <Dropdown.Item onClick={() => shareWhiteboard(otherUser)}>
+            {otherUser}
+          </Dropdown.Item>
+        );
+      });
+
+      console.log(userListRef.current);
+      const newState = stateCheck[0] + 1;
+      setStateCheck([newState]);
     });
   }, []);
 
@@ -246,9 +273,8 @@ const App = ({
     setStateCheck([newState]);
   };
 
-  const shareWhiteboard = () => {
+  const shareWhiteboard = recipent => {
     const author = localStorage.getItem("user");
-    const recipent = "b@b.com";
     const link = roomName + "1" + userName.replace("@", "").replace(".", "");
     const message = {
       author: author,
@@ -502,9 +528,13 @@ const App = ({
             >
               {isScreenSharingEnabled ? "Stop sharing" : "Start sharing"}
             </MDBBtn>
-            <MDBBtn onClick={() => shareWhiteboard()} color="info">
-              {"Share Whiteboard"}
-            </MDBBtn>
+            <Dropdown>
+              <Dropdown.Toggle variant="success" id="dropdown-basic">
+                Share Whiteboard
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu>{userListRef.current}</Dropdown.Menu>
+            </Dropdown>
           </Form.Control>
           <FormControlLabel
             control={
