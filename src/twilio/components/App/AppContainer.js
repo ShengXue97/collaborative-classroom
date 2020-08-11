@@ -80,7 +80,6 @@ class AppContainer extends PureComponent {
         insights: false,
       });
 
-      console.log(videoRoom);
 
       videoRoom.on("disconnected", () => {
         this.stopVideoTrack();

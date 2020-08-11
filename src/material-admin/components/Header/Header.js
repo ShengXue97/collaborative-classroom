@@ -232,7 +232,7 @@ export default function Header(props) {
 
   const onFailure = () => {
     signOutOwn(userDispatch, props.history);
-    console.log("Handle failure cases");
+    //console.log("Handle failure cases");
   };
 
   const { signOut } = useGoogleLogout({
@@ -393,11 +393,6 @@ export default function Header(props) {
                 props.toggleModal();
                 props.updateRecipentBox(message.name);
                 props.updateMessageBox("");
-                console.log(
-                  message.name,
-                  message.message,
-                  message.internalTime,
-                );
                 setAsRead(message.name, message.message, message.internalTime);
                 removeMessage(message.internalCount);
               }}
