@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PropTypes, { string } from "prop-types";
 import { Link } from "react-router-dom";
 import "react-bulma-components/dist/react-bulma-components.min.css";
@@ -101,67 +101,49 @@ const App = ({
   const [init, setInit] = useState(0);
   const [whiteboardChildList, setWhiteboardChildList] = useState([]);
   const [whiteboardCoordList, setWhiteboardCoordList] = useState([0, 0]);
+  const [stateCheck, setStateCheck] = useState([0]);
 
   const [noOfElements, setNoOfElements] = useState(4);
 
   const [whiteBoardNum, setWhiteBoardNum] = useState(2);
 
-  const [whiteboardActiveList, setWhiteboardActiveList] = useState([
-    true,
-    true,
+  const [dropdownItems, setDropdownItems] = useState([]);
+  const dropdownItemsRef = useRef([]);
+  const [defaultDropdownItems, setDefaultDropdownItems] = useState([
+    <Dropdown.Item
+      myname="whiteboard_0_selector"
+      onClick={() => addElement("whiteboard_0")}
+    >
+      Private Whiteboard 1
+    </Dropdown.Item>,
+    <Dropdown.Item
+      myname="whiteboard_1_selector"
+      onClick={() => addElement("whiteboard_1")}
+    >
+      Class Whiteboard
+    </Dropdown.Item>,
+    <Dropdown.Item
+      myname="localBox_selector"
+      onClick={() => addElement("localBox")}
+    >
+      Local Video
+    </Dropdown.Item>,
+    <Dropdown.Item
+      myname="remoteBox_selector"
+      onClick={() => addElement("remoteBox")}
+    >
+      Remote Video
+    </Dropdown.Item>,
+    <Dropdown.Item myname="chat_selector" onClick={() => addElement("chat")}>
+      Chatbox
+    </Dropdown.Item>,
   ]);
-  const [localBoxActive, setLocalBoxActive] = useState(true);
-  const [remoteBoxActive, setRemoteBoxActive] = useState(true);
-  const [chatActive, setChatActive] = useState(true);
-
-  const dummyfunct = (param1, param2) => {
-    return;
-  };
-
-  const checkElement = name => {
-    var isDelete = false;
-    if (name.includes("whiteboard")) {
-      console.log(name);
-      var whiteBoardNum = name.split("_")[1];
-      if (
-        whiteboardActiveList.length - 1 >= whiteBoardNum &&
-        whiteboardActiveList[whiteBoardNum]
-      ) {
-        console.log("hi");
-        isDelete = true;
-      }
-    } else if (name == "localBox" && localBoxActive) {
-      isDelete = true;
-    } else if (name == "remoteBosx" && remoteBoxActive) {
-      isDelete = true;
-    } else if (name == "chat" && chatActive) {
-      isDelete = true;
-    }
-
-    if (isDelete) {
-      removeElement(name);
-    } else {
-      addElement(name);
-    }
-  };
 
   const addElement = name => {
     var elementToBeAdded = null;
     window.defaultGridElements.map(e => {
       if (name == e.props.id) {
         elementToBeAdded = e;
-        console.log(name);
-        if (name.includes("whiteboard")) {
-          var whiteBoardNum = name.split("_")[1];
-          console.log(whiteBoardNum);
-          whiteboardActiveList[whiteBoardNum] = true;
-        } else if (name == "localBox") {
-          setLocalBoxActive(true);
-        } else if (name == "remoteBox") {
-          setRemoteBoxActive(true);
-        } else if (name == "chat") {
-          setChatActive(true);
-        }
       }
     });
 
@@ -169,28 +151,46 @@ const App = ({
       setNoOfElements(noOfElements + 1);
       window.gridElements.push(elementToBeAdded);
     }
+
+    console.log(dropdownItemsRef.current);
+    const newDropdownItems = dropdownItemsRef.current.map((element, index) => {
+      if (element != undefined && element.props.myname != name + "_selector") {
+        return element;
+      }
+    });
+
+    setDropdownItems(newDropdownItems);
+    dropdownItemsRef.current = newDropdownItems;
+
+    const newState = stateCheck[0] + 1;
+    setStateCheck([newState]);
   };
 
   const removeElement = name => {
     const newGridElements = [];
     window.gridElements.map(e => {
-      if (name == e.props.id) {
-        if (name.includes("whiteboard")) {
-          var whiteBoardNum = name.split("_")[1];
-          console.log(whiteBoardNum);
-          whiteboardActiveList[whiteBoardNum] = false;
-        } else if (name == "localBox") {
-          setLocalBoxActive(false);
-        } else if (name == "remoteBox") {
-          setRemoteBoxActive(false);
-        } else if (name == "chat") {
-          setChatActive(false);
-        }
-      } else {
+      if (name != e.props.id) {
         newGridElements.push(e);
       }
     });
+    console.log(newGridElements);
     window.gridElements = newGridElements;
+
+    const newDropdownItems = defaultDropdownItems.filter(element => {
+      if (element != undefined && element.props.myname == name + "_selector") {
+        return true;
+      } else {
+        return false;
+      }
+    });
+
+    dropdownItemsRef.current = dropdownItemsRef.current.concat(
+      newDropdownItems,
+    );
+    setDropdownItems(dropdownItemsRef.current);
+    console.log(dropdownItems);
+    const newState = stateCheck[0] + 1;
+    setStateCheck([newState]);
   };
 
   const addWhiteBoard = () => {
@@ -215,7 +215,6 @@ const App = ({
     setNoOfElements(noOfElements + 1);
     setWhiteBoardNum(whiteBoardNum + 1);
     whiteboardCoordList.push([0]);
-    whiteboardActiveList.push(true);
     window.gridElements.push(jsx);
   };
 
@@ -378,6 +377,7 @@ const App = ({
       window.gridElements = defaultGrid;
     }
 
+    console.log(defaultGrid);
     const jsx = defaultGrid.map(e => {
       return e;
     });
@@ -396,38 +396,7 @@ const App = ({
                 Tools
               </Dropdown.Toggle>
 
-              <Dropdown.Menu>
-                <Dropdown.Item
-                  active={whiteboardActiveList}
-                  onClick={() => checkElement("whiteboard_0")}
-                >
-                  Private Whiteboard
-                </Dropdown.Item>
-                <Dropdown.Item
-                  active={whiteboardActiveList}
-                  onClick={() => checkElement("whiteboard_1")}
-                >
-                  Class Whiteboard
-                </Dropdown.Item>
-                <Dropdown.Item
-                  active={localBoxActive}
-                  onClick={() => checkElement("localBox")}
-                >
-                  Local Video
-                </Dropdown.Item>
-                <Dropdown.Item
-                  active={remoteBoxActive}
-                  onClick={() => checkElement("remoteBox")}
-                >
-                  Remote Video
-                </Dropdown.Item>
-                <Dropdown.Item
-                  active={chatActive}
-                  onClick={() => checkElement("chat")}
-                >
-                  Chatbox
-                </Dropdown.Item>
-              </Dropdown.Menu>
+              <Dropdown.Menu id="dropdown-menu">{dropdownItems}</Dropdown.Menu>
             </Dropdown>
           </Form.Control>
 
