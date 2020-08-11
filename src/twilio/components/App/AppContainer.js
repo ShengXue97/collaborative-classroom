@@ -8,7 +8,7 @@ import { getToken } from "../../api";
 
 import io from "socket.io-client";
 let socket;
-const ENDPOINT = "https://collaborative-classroom-server.herokuapp.com/";
+const ENDPOINT = "http://localhost:5000";
 
 class AppContainer extends PureComponent {
   static propTypes = {

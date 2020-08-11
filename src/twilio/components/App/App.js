@@ -23,6 +23,7 @@ import MaterialTable from "material-table";
 
 import AppContainer from "./AppContainer";
 import Chat from "../../../chatbox/components/Chat/Chat.js";
+import Quiz from "../../../quizbox/components/Quiz/Quiz.js";
 import Whiteboard from "../../../chatbox/components/Whiteboard/Whiteboard.js";
 
 import "react-resizable/css/styles.css";
@@ -98,7 +99,7 @@ const App = ({
   onVideoCheckedChange,
 }) => {
   let content = null;
-  const numbers = [1, 2, 3, 4, 5];
+  const numbers = [1, 2, 3, 4, 5, 6];
 
   const [init, setInit] = useState(0);
   const [whiteboardChildList, setWhiteboardChildList] = useState([]);
@@ -182,6 +183,9 @@ const App = ({
     <Dropdown.Item myname="chat_selector" onClick={() => addElement("chat")}>
       Chatbox
     </Dropdown.Item>,
+      <Dropdown.Item myname="quiz_selector" onClick={() => addElement("quiz")}>
+        Quiz
+      </Dropdown.Item>,
   ]);
 
   const addElement = name => {
@@ -393,7 +397,7 @@ const App = ({
     var defaultGrid = window.gridElements;
     if (init == 0) {
       setInit(1);
-      setNoOfElements(5);
+      setNoOfElements(6);
       defaultGrid = numbers.map(number => {
         if (number == 1) {
           return (
@@ -480,8 +484,19 @@ const App = ({
               />
             </div>
           );
+        }  else if (number == 6) {
+          return (
+            <div
+              id="quiz"
+              style={{ background: "#FFD5B8" }}
+              key="6"
+              data-grid={{ x: 8, y: 0, w: 4, h: 6 }}
+            >
+              <Quiz removeElement={() => removeElement("quiz")}></Quiz>
+            </div>
+          );
         }
-      });
+      })
       window.defaultGridElements = defaultGrid;
       window.gridElements = defaultGrid;
     }

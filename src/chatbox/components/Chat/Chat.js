@@ -12,13 +12,14 @@ import socket from "../../../websocket";
 
 const Chat = ({ removeElement }) => {
   const name = localStorage.getItem("user");
-  const room = localStorage.getItem("room");
+  const room = localStorage.getItem("room") + " chatroom";
 
   const [users, setUsers] = useState("");
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
+    console.log()
     socket.emit("join", { name, room }, error => {
       if (error) {
         alert(error);
@@ -31,6 +32,7 @@ const Chat = ({ removeElement }) => {
     });
 
     socket.on("roomData", ({ users }) => {
+      console.log("hi");
       setUsers(users);
     });
   }, []);
