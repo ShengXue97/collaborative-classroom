@@ -517,7 +517,7 @@ const App = ({
               {isScreenSharingEnabled ? "Unshare Screen" : "Share Screen"}
             </MDBBtn>
             <Dropdown>
-              <Dropdown.Toggle variant="success" id="dropdown-basic">
+              <Dropdown.Toggle variant="warning" id="dropdown-basic">
                 Share Whiteboard
               </Dropdown.Toggle>
 
