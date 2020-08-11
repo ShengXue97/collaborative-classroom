@@ -23,8 +23,8 @@ export default class Whiteboard extends Component {
   constructor(props) {
     super(props);
     const str = "#whiteboard";
-    var tempWidth = 4 * 65 + "px";
-    var tempHeight = 4 * 160 + "px";
+    var tempWidth = 4 * 63.5 + "px";
+    var tempHeight = 4 * 148 + "px";
 
     this.state = {
       width: tempWidth,
@@ -34,25 +34,26 @@ export default class Whiteboard extends Component {
 
   componentDidMount() {
     this.props.onRef(this);
+    this.resize(true);
 
-    const str = "#whiteboard";
+    var parentElement = document.getElementById(this.props.id);
+    var iframeElement = document.getElementById("iframe_" + this.props.id);
 
-    if (document.querySelector(str) != null) {
-      var tempWidth = getComputedStyle(
-        document.querySelector(str),
-      ).width.replace("px", "");
-      var tempHeight = getComputedStyle(
-        document.querySelector(str),
-      ).height.replace("px", "");
-      this.setState({
-        width: parseInt(tempWidth, 10) + "px",
-        height: parseInt(tempHeight, 10) - 35 + "px",
-      });
-    }
+    var tempWidth = getComputedStyle(parentElement).width.replace("px", "");
+    var tempHeight = getComputedStyle(parentElement).height.replace("px", "");
+    this.setState({
+      width: parseInt(tempWidth, 10) + "px",
+      height: parseInt(tempHeight, 10) - 35 + "px",
+    });
   }
 
-  componentWillUnmount() {
-    this.props.onRef(undefined);
+  // componentWillUnmount() {
+  //   this.props.onRef(undefined);
+  // }
+
+  addWhiteboardChild() {
+    this.props.whiteboardChildList.push(this);
+    this.props.whiteboardCoordList.push(this);
   }
 
   resize(snap) {
@@ -100,9 +101,7 @@ export default class Whiteboard extends Component {
                     color: "white",
                   }}
                 >
-                  {this.props.id.split("_")[1] == 1
-                    ? "Class board"
-                    : "Private Board"}
+                  {this.props.publicName}
                 </p>
               </div>
               <div className="rightInnerContainer">
@@ -120,7 +119,7 @@ export default class Whiteboard extends Component {
               style="background: #FFF9AA;"
               width={this.state.width}
               height={this.state.height}
-              id="myId"
+              id={"iframe_" + this.props.id}
               className="myClassname"
               display="initial"
               position="relative"

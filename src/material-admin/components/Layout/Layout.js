@@ -43,7 +43,6 @@ function Layout(props) {
 
   const addSmallMessage = smallMessage => {
     smallMessages.current.push(smallMessage);
-    console.log(smallMessages.current);
   };
 
   const removeSmallMessage = smallMessagesNew => {
@@ -54,7 +53,6 @@ function Layout(props) {
     var newSmallMessages = [];
 
     smallMessages.current.map((element, index) => {
-      console.log(element.name, recipent);
       if (element.name != recipent) {
         newSmallMessages.push(element);
       }

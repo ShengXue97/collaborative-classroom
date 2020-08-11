@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PropTypes, { string } from "prop-types";
 import { Link } from "react-router-dom";
 import "react-bulma-components/dist/react-bulma-components.min.css";
@@ -11,7 +11,7 @@ import {
   Notification,
 } from "react-bulma-components";
 
-import Button from "@material-ui/core/Button";
+import { Button } from "@material-ui/core";
 
 import videoRoomPropType from "../../propTypes/videoRoom";
 import LocalBox from "../VideoRoom/LocalBox";
@@ -45,8 +45,10 @@ import {
 } from "mdbreact";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import TextField from "@material-ui/core/TextField";
+import socket from "../../../websocket";
 
 const ReactGridLayout = WidthProvider(RGL);
+const userName = localStorage.getItem("user");
 
 const isEquivalent = (a, b) => {
   // Create arrays of property names
@@ -101,126 +103,217 @@ const App = ({
   const [init, setInit] = useState(0);
   const [whiteboardChildList, setWhiteboardChildList] = useState([]);
   const [whiteboardCoordList, setWhiteboardCoordList] = useState([0, 0]);
-  const [whiteboardChildList, setWhiteboardChildList] = useState([]);
+  const [stateCheck, setStateCheck] = useState([0]);
+
   const [noOfElements, setNoOfElements] = useState(4);
 
-  const [whiteBoardNum, setWhiteBoardNum] = useState(2);
+  const [whiteBoardNum, setWhiteBoardNum] = useState(6);
 
-  const [whiteboardActiveList, setWhiteboardActiveList] = useState([
-    true,
-    true,
-  ]);
-  const [whiteboardRefresh, setWhiteboardRefresh] = useState(true);
+  const [dropdownItems, setDropdownItems] = useState([]);
+  const dropdownItemsRef = useRef([]);
+  const receivedWhiteboards = useRef([]);
+  const userListRef = useRef([]);
 
-  const [localBoxActive, setLocalBoxActive] = useState(true);
-  const [remoteBoxActive, setRemoteBoxActive] = useState(true);
-  const [chatActive, setChatActive] = useState(true);
-
-  const dummyfunct = (param1, param2) => {
-    return;
-  };
-
-  const checkElement = name => {
-    var isDelete = false;
-    if (name.includes("whiteboard")) {
-      console.log(name);
-      var whiteBoardNum = name.split("_")[1];
+  useEffect(() => {
+    socket.on("newWhiteboard", message => {
+      const author = message.message.author;
+      const recipent = message.message.recipent;
+      const link = message.message.link;
+      const userName = localStorage.getItem("user");
       if (
-        whiteboardActiveList.length - 1 >= whiteBoardNum &&
-        whiteboardActiveList[whiteBoardNum]
+        recipent == userName &&
+        !receivedWhiteboards.current.includes(author)
       ) {
-        console.log("hi");
-        isDelete = true;
+        receivedWhiteboards.current.push(author);
+        addWhiteBoard(author, link);
       }
-    } else if (name == "localBox" && localBoxActive) {
-      isDelete = true;
-    } else if (name == "remoteBosx" && remoteBoxActive) {
-      isDelete = true;
-    } else if (name == "chat" && chatActive) {
-      isDelete = true;
-    }
+    });
 
-    if (isDelete) {
-      removeElement(name);
-    } else {
-      addElement(name);
-    }
-  };
+    socket.on("roomData", ({ users }) => {
+      const userName = localStorage.getItem("user");
+      const usersFiltered = users.filter((element, index) => {
+        const otherUser = element.name;
+        if (userName != otherUser) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+
+      userListRef.current = usersFiltered.map((element, index) => {
+        const otherUser = element.name;
+        return (
+          <Dropdown.Item onClick={() => shareWhiteboard(otherUser)}>
+            {otherUser}
+          </Dropdown.Item>
+        );
+      });
+
+      const newState = stateCheck[0] + 1;
+      setStateCheck([newState]);
+    });
+  }, []);
+
+  const defaultDropdownItemsRef = useRef([
+    <Dropdown.Item
+      myname="whiteboard_0_selector"
+      onClick={() => addElement("whiteboard_0")}
+    >
+      Class Whiteboard
+    </Dropdown.Item>,
+    <Dropdown.Item
+      myname="whiteboard_1_selector"
+      onClick={() => addElement("whiteboard_1")}
+    >
+      Private Whiteboard
+    </Dropdown.Item>,
+    <Dropdown.Item
+      myname="localBox_selector"
+      onClick={() => addElement("localBox")}
+    >
+      Local Video
+    </Dropdown.Item>,
+    <Dropdown.Item
+      myname="remoteBox_selector"
+      onClick={() => addElement("remoteBox")}
+    >
+      Remote Video
+    </Dropdown.Item>,
+    <Dropdown.Item myname="chat_selector" onClick={() => addElement("chat")}>
+      Chatbox
+    </Dropdown.Item>,
+  ]);
 
   const addElement = name => {
     var elementToBeAdded = null;
     window.defaultGridElements.map(e => {
       if (name == e.props.id) {
         elementToBeAdded = e;
-        console.log(name);
-        if (name.includes("whiteboard")) {
-          var whiteBoardNum = name.split("_")[1];
-          console.log(whiteBoardNum);
-          whiteboardActiveList[whiteBoardNum] = true;
-          setWhiteboardRefresh(!whiteboardRefresh);
-        } else if (name == "localBox") {
-          setLocalBoxActive(true);
-        } else if (name == "remoteBox") {
-          setRemoteBoxActive(true);
-        } else if (name == "chat") {
-          setChatActive(true);
-        }
       }
     });
 
     if (elementToBeAdded != null) {
+      if (name.includes("whiteboard")) {
+        const whiteboardId = elementToBeAdded.props.id;
+        const roomId = elementToBeAdded.props.id.split("_")[1];
+        elementToBeAdded = (
+          <div
+            room={elementToBeAdded.props.room}
+            class={"whiteboard"}
+            publicName={elementToBeAdded.props.publicName}
+            id={whiteboardId}
+            style={{ background: "#FFD5B8" }}
+            key={roomId}
+            data-grid={{ x: 0, y: 0, w: 4, h: 4 }}
+          >
+            <Whiteboard
+              publicName={elementToBeAdded.props.publicName}
+              whiteboardChildList={whiteboardChildList}
+              whiteboardCoordList={whiteboardCoordList}
+              id={whiteboardId}
+              removeElement={() => removeElement(whiteboardId)}
+              onRef={ref => {
+                whiteboardChildList.push(ref);
+                whiteboardCoordList.push(0);
+              }}
+              room={elementToBeAdded.props.room}
+            />
+          </div>
+        );
+      }
       setNoOfElements(noOfElements + 1);
       window.gridElements.push(elementToBeAdded);
     }
+
+    const newDropdownItems = dropdownItemsRef.current.map((element, index) => {
+      if (element != undefined && element.props.myname != name + "_selector") {
+        return element;
+      }
+    });
+
+    setDropdownItems(newDropdownItems);
+    dropdownItemsRef.current = newDropdownItems;
+
+    const newState = stateCheck[0] + 1;
+    setStateCheck([newState]);
   };
 
   const removeElement = name => {
     const newGridElements = [];
     window.gridElements.map(e => {
-      if (name == e.props.id) {
-        if (name.includes("whiteboard")) {
-          var whiteBoardNum = name.split("_")[1];
-          console.log(whiteBoardNum);
-          whiteboardActiveList[whiteBoardNum] = false;
-          setWhiteboardRefresh(!whiteboardRefresh);
-        } else if (name == "localBox") {
-          setLocalBoxActive(false);
-        } else if (name == "remoteBox") {
-          setRemoteBoxActive(false);
-        } else if (name == "chat") {
-          setChatActive(false);
-        }
-      } else {
+      if (name != e.props.id) {
         newGridElements.push(e);
       }
     });
     window.gridElements = newGridElements;
+    const newDropdownItems = defaultDropdownItemsRef.current.filter(element => {
+      if (element != undefined && element.props.myname == name + "_selector") {
+        return true;
+      } else {
+        return false;
+      }
+    });
+
+    dropdownItemsRef.current = dropdownItemsRef.current.concat(
+      newDropdownItems,
+    );
+    setDropdownItems(dropdownItemsRef.current);
+    const newState = stateCheck[0] + 1;
+    setStateCheck([newState]);
   };
 
-  const addWhiteBoard = () => {
+  const shareWhiteboard = recipent => {
+    const author = localStorage.getItem("user");
+    const link = roomName + "1" + userName.replace("@", "").replace(".", "");
+    const message = {
+      author: author,
+      recipent: recipent,
+      link: link,
+    };
+    socket.emit("shareWhiteboard", message);
+  };
+
+  const addWhiteBoard = (author, link) => {
+    const whiteBoardName = author + "'s whiteboard";
     var jsx = (
       <div
+        room={link}
         class={"whiteboard"}
-        id={"whiteboard_".concat(whiteBoardNum)}
+        publicName={whiteBoardName}
+        id={"whiteboard_" + whiteBoardNum}
         style={{ background: "#FFD5B8" }}
-        key={noOfElements + 1}
+        key={whiteBoardNum}
         data-grid={{ x: 0, y: 8, w: 4, h: 4 }}
       >
         <Whiteboard
-          id={"whiteboard_".concat(whiteBoardNum)}
-          removeElement={() =>
-            removeElement("whiteboard_".concat(whiteBoardNum))
-          }
+          publicName={whiteBoardName}
+          whiteboardChildList={whiteboardChildList}
+          whiteboardCoordList={whiteboardCoordList}
+          id={"whiteboard_" + whiteBoardNum}
+          removeElement={() => removeElement("whiteboard_" + whiteBoardNum)}
           onRef={ref => whiteboardChildList.push(ref)}
-          room={roomName + whiteBoardNum}
+          room={link}
         />
       </div>
     );
     setNoOfElements(noOfElements + 1);
     setWhiteBoardNum(whiteBoardNum + 1);
     whiteboardCoordList.push([0]);
-    whiteboardActiveList.push(true);
     window.gridElements.push(jsx);
+
+    const newDropdownItem = (
+      <Dropdown.Item
+        myname={"whiteboard_" + whiteBoardNum + "_selector"}
+        onClick={() => addElement("whiteboard_" + whiteBoardNum)}
+      >
+        {whiteBoardName}
+      </Dropdown.Item>
+    );
+
+    defaultDropdownItemsRef.current.push(newDropdownItem);
+
+    const newState = stateCheck[0] + 1;
+    setStateCheck([newState]);
   };
 
   const myUser = localStorage.getItem("user");
@@ -266,11 +359,11 @@ const App = ({
                 method: "GET",
               },
             ).catch(error => {
-              alert("Error occured!");
+              alert("Error occured! ID 7");
             });
           })
           .catch(error => {
-            alert("Error occured!");
+            alert("Error occured! ID 8");
           });
 
         localStorage.setItem("room", roomName);
@@ -285,7 +378,6 @@ const App = ({
     var modules_json = JSON.parse(modules);
 
     buttonsJSX = modules_json["m"].map((element, index) => {
-      //console.log(element.name);
       return (
         <AButton
           name={modules_json["m"][index]}
@@ -306,13 +398,18 @@ const App = ({
         if (number == 1) {
           return (
             <div
+              room={roomName + "0"}
               class={"whiteboard"}
+              publicName={"Class Whiteboard"}
               id={"whiteboard_0"}
               style={{ background: "#FFD5B8" }}
-              key="1"
+              key="0"
               data-grid={{ x: 0, y: 0, w: 4, h: 4 }}
             >
               <Whiteboard
+                publicName={"Class Whiteboard"}
+                whiteboardChildList={whiteboardChildList}
+                whiteboardCoordList={whiteboardCoordList}
                 id="whiteboard_0"
                 removeElement={() => removeElement("whiteboard_0")}
                 onRef={ref => whiteboardChildList.push(ref)}
@@ -323,14 +420,24 @@ const App = ({
         } else if (number == 2) {
           return (
             <div
-              id="localBox"
+              room={roomName + "1" + userName.replace("@", "").replace(".", "")}
+              class={"whiteboard"}
+              publicName={"Private Whiteboard"}
+              id={"whiteboard_1"}
               style={{ background: "#FFD5B8" }}
-              key="2"
-              data-grid={{ x: 4, y: 0, w: 4, h: 2 }}
+              key="1"
+              data-grid={{ x: 0, y: 4, w: 4, h: 4 }}
             >
-              <LocalBox
-                removeElement={() => removeElement("localBox")}
-                videoRoom={videoRoom}
+              <Whiteboard
+                publicName={"Private Whiteboard"}
+                whiteboardChildList={whiteboardChildList}
+                whiteboardCoordList={whiteboardCoordList}
+                id={"whiteboard_1"}
+                removeElement={() => removeElement("whiteboard_1")}
+                onRef={ref => whiteboardChildList.push(ref)}
+                room={
+                  roomName + "1" + userName.replace("@", "").replace(".", "")
+                }
               />
             </div>
           );
@@ -362,17 +469,14 @@ const App = ({
         } else if (number == 5) {
           return (
             <div
-              class={"whiteboard"}
-              id={"whiteboard_1"}
+              id="localBox"
               style={{ background: "#FFD5B8" }}
               key="5"
-              data-grid={{ x: 0, y: 4, w: 4, h: 4 }}
+              data-grid={{ x: 4, y: 0, w: 4, h: 2 }}
             >
-              <Whiteboard
-                id={"whiteboard_1"}
-                removeElement={() => removeElement("whiteboard_1")}
-                onRef={ref => whiteboardChildList.push(ref)}
-                room={roomName + "1"}
+              <LocalBox
+                removeElement={() => removeElement("localBox")}
+                videoRoom={videoRoom}
               />
             </div>
           );
@@ -400,38 +504,7 @@ const App = ({
                 Tools
               </Dropdown.Toggle>
 
-              <Dropdown.Menu>
-                <Dropdown.Item
-                  active={whiteboardActiveList}
-                  onClick={() => checkElement("whiteboard_0")}
-                >
-                  Private Whiteboard
-                </Dropdown.Item>
-                <Dropdown.Item
-                  active={whiteboardActiveList}
-                  onClick={() => checkElement("whiteboard_1")}
-                >
-                  Class Whiteboard
-                </Dropdown.Item>
-                <Dropdown.Item
-                  active={localBoxActive}
-                  onClick={() => checkElement("localBox")}
-                >
-                  Local Video
-                </Dropdown.Item>
-                <Dropdown.Item
-                  active={remoteBoxActive}
-                  onClick={() => checkElement("remoteBox")}
-                >
-                  Remote Video
-                </Dropdown.Item>
-                <Dropdown.Item
-                  active={chatActive}
-                  onClick={() => checkElement("chat")}
-                >
-                  Chatbox
-                </Dropdown.Item>
-              </Dropdown.Menu>
+              <Dropdown.Menu id="dropdown-menu">{dropdownItems}</Dropdown.Menu>
             </Dropdown>
           </Form.Control>
 
@@ -441,11 +514,15 @@ const App = ({
               disabled={!isScreenSharingSupported}
               color="info"
             >
-              {isScreenSharingEnabled ? "Stop sharing" : "Start sharing"}
+              {isScreenSharingEnabled ? "Unshare Screen" : "Share Screen"}
             </MDBBtn>
-            <MDBBtn onClick={() => addWhiteBoard()} color="info">
-              {"Add Whiteboard"}
-            </MDBBtn>
+            <Dropdown>
+              <Dropdown.Toggle variant="warning" id="dropdown-basic">
+                Share Whiteboard
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu>{userListRef.current}</Dropdown.Menu>
+            </Dropdown>
           </Form.Control>
           <FormControlLabel
             control={
@@ -483,11 +560,16 @@ const App = ({
           className="layout"
           onResize={e => {
             whiteboardChildList.map((whiteboardChild, index) => {
+              if (
+                whiteboardChild == undefined ||
+                whiteboardCoordList[index] == undefined
+              ) {
+                return;
+              }
               var element = document.querySelector(
                 "#".concat(whiteboardChild.props.id),
               );
               if (element != null) {
-                console.log("hi");
                 var tempWidth = getComputedStyle(element).width;
                 var tempHeight = getComputedStyle(element).height;
                 var tempCoords = {
@@ -505,6 +587,12 @@ const App = ({
           }}
           onResizeStop={e => {
             whiteboardChildList.map((whiteboardChild, index) => {
+              if (
+                whiteboardChild == undefined ||
+                whiteboardCoordList[index] == undefined
+              ) {
+                return;
+              }
               var element = document.querySelector(
                 "#".concat(whiteboardChild.props.id),
               );
@@ -592,16 +680,7 @@ const App = ({
             flexDirection: "column",
             justifyContent: "center",
           }}
-        >
-          <Button
-            style={{ height: "100px" }}
-            variant="contained"
-            size="large"
-            color="primary"
-          >
-            Large
-          </Button>
-        </div>
+        ></div>
       </Columns>
     );
   }

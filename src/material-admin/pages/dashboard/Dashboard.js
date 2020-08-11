@@ -36,7 +36,6 @@ export default function Dashboard(props) {
   }, []);
 
   useEffect(() => {
-    console.log(roomData);
   }, [roomData]);
 
   const mustReload = localStorage.getItem("mustReload");
