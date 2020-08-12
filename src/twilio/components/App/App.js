@@ -340,13 +340,9 @@ const App = ({
       if (modules_json.hasOwnProperty(roomName)) {
         localStorage.setItem("room", roomName);
       } else {
-        fetch(
-          "https://collaborative-classroom-server.herokuapp.com/getmodules?user=" +
-            myUser,
-          {
-            method: "GET",
-          },
-        )
+        fetch(weburl + "/getmodules?user=" + myUser, {
+          method: "GET",
+        })
           .then(response => {
             return response.text();
           })
@@ -360,10 +356,7 @@ const App = ({
             var newmods = JSON.stringify(dataJSON);
             localStorage.setItem("modules", newmods);
             fetch(
-              "https://collaborative-classroom-server.herokuapp.com/updatemodules?modules=" +
-                newmods +
-                "&user=" +
-                myUser,
+              weburl + "/updatemodules?modules=" + newmods + "&user=" + myUser,
               {
                 method: "GET",
               },

@@ -18,5 +18,5 @@ if (isLocalhost) {
 }
 
 //Overrides on top stuff
-weburl = localServer;
+weburl = onlineServer;
 export default weburl;

@@ -61,7 +61,7 @@ export default function NewConversation(props) {
     }
 
     fetch(
-      "http://localhost:5000/sendmessage?author=" +
+      weburl + "/sendmessage?author=" +
         author +
         "&recipent=" +
         props.recipentBox +
