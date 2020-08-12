@@ -1,0 +1,29 @@
+.conversation-list-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.conversation-list-item:hover {
+  background: #eeeef1;
+  cursor: pointer;
+}
+
+.conversation-list-item:active {
+  background: grey;
+  cursor: pointer;
+}
+
+.conversation-title {
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: none;
+  margin: 0;
+}
+
+.conversation-snippet {
+  font-size: 14px;
+  color: #ddcecd;
+  text-transform: none;
+  margin: 0;
+}
