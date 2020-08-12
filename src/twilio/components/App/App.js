@@ -503,7 +503,7 @@ const App = ({
   const modules = localStorage.getItem("modules");
   var buttonsJSX = null;
 
-  if (modules != null) {
+  if (!!modules && modules != "") {
     var modules_json = JSON.parse(modules);
 
     buttonsJSX = modules_json["m"].map((element, index) => {
