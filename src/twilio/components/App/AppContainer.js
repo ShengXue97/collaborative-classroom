@@ -7,8 +7,9 @@ import { isEmpty, first } from "lodash";
 import { getToken } from "../../api";
 
 import io from "socket.io-client";
+import weburl from "../../../weburl"
 let socket;
-const ENDPOINT = "https://collaborative-classroom-server.herokuapp.com/";
+const ENDPOINT = weburl + "/";
 
 class AppContainer extends PureComponent {
   static propTypes = {

@@ -1,6 +1,6 @@
 import { string } from "prop-types";
 import React from "react";
-
+import weburl from "../../weburl";
 var UserStateContext = React.createContext();
 var UserDispatchContext = React.createContext();
 var crypto = require("crypto");
@@ -108,7 +108,8 @@ function registerUser(
       setIsLoading(false);
     } else {
       fetch(
-        "https://collaborative-classroom-server.herokuapp.com/register?name=" +
+        weburl +
+          "/register?name=" +
           name +
           "&login=" +
           login +
@@ -148,7 +149,7 @@ function registerUser(
           }
         })
         .catch(error => {
-          alert("Error occured! ID 2");
+          alert("Error occured! ID 2. Is the server running? >:(");
           console.log(error);
         });
     }
@@ -197,7 +198,8 @@ function loginUser(
     setIsLoading(false);
   } else if (!!login && !!password) {
     fetch(
-      "https://collaborative-classroom-server.herokuapp.com/login?login=" +
+      weburl +
+        "/login?login=" +
         login +
         "&password=" +
         crypto
@@ -237,7 +239,7 @@ function loginUser(
         }
       })
       .catch(error => {
-        alert("Error occured! ID 3");
+        alert("Error occured! ID 3. Is the server running? >:(");
         console.log(error);
       });
   } else {

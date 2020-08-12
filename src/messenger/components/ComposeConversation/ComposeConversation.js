@@ -12,7 +12,6 @@ import {
   Grid,
   CircularProgress,
   Typography,
-  Button,
   Tabs,
   Tab,
   TextField,
@@ -22,7 +21,7 @@ import {
 import socket from "../../../websocket";
 import IconButton from "@material-ui/core/IconButton";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
-
+import weburl from "../../../weburl";
 class ComposeConversation extends Component {
   constructor(props) {
     super(props);
@@ -71,10 +70,9 @@ class ComposeConversation extends Component {
       groupname: groupname,
     };
 
-    console.log(newMessage);
-
     fetch(
-      "https://collaborative-classroom-server.herokuapp.com/sendmessage?author=" +
+      weburl +
+        "/sendmessage?author=" +
         author +
         "&recipent=" +
         recipent +
@@ -103,7 +101,7 @@ class ComposeConversation extends Component {
   render() {
     return (
       <MDBContainer>
-        <Button onClick={this.toggle}>Compose</Button>
+        <MDBBtn onClick={this.toggle}>Compose</MDBBtn>
 
         <MDBModal
           side

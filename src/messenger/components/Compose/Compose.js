@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Compose.css";
 import socket from "../../../websocket";
-
+import weburl from "../../../weburl";
 export default function Compose(props) {
   const [activeConversation, setActiveConversation] = useState("");
 
@@ -31,7 +31,8 @@ export default function Compose(props) {
     }
 
     fetch(
-      "https://collaborative-classroom-server.herokuapp.com/sendmessage?author=" +
+      weburl +
+        "/sendmessage?author=" +
         author +
         "&recipent=" +
         recipent +

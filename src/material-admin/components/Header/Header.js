@@ -39,7 +39,7 @@ import { useUserDispatch, signOutOwn } from "../../context/UserContext";
 import { useGoogleLogout } from "react-google-login";
 
 import socket from "../../../websocket";
-
+import weburl from "../../../weburl";
 import NewConversation from "../../../messenger/components/NewConversation/NewConversation";
 import NotfSound from "./notf-sound.ogg";
 import UIfx from "uifx";
@@ -137,7 +137,8 @@ export default function Header(props) {
     const recipent = localStorage.getItem("user");
     //Tell server that I read all of these
     fetch(
-      "https://collaborative-classroom-server.herokuapp.com/setasreadsingle?author=" +
+      weburl +
+        "/setasreadsingle?author=" +
         author +
         "&recipent=" +
         recipent +
@@ -162,10 +163,7 @@ export default function Header(props) {
     var count = 0;
 
     fetch(
-      "https://collaborative-classroom-server.herokuapp.com/singlechat?recipent=" +
-        user +
-        "&minTimestamp=" +
-        minTimestamp,
+      weburl + "/singlechat?recipent=" + user + "&minTimestamp=" + minTimestamp,
       {
         method: "GET",
       },
@@ -303,7 +301,7 @@ export default function Header(props) {
           Collaborative Classroom
         </Typography>
         <div className={classes.grow} />
-        <div
+        {/* <div
           className={classNames(classes.search, {
             [classes.searchFocused]: isSearchOpen,
           })}
@@ -323,8 +321,8 @@ export default function Header(props) {
               input: classes.inputInput,
             }}
           />
-        </div>
-        <IconButton
+        </div> */}
+        {/* <IconButton
           color="inherit"
           aria-haspopup="true"
           aria-controls="mail-menu"
@@ -340,7 +338,7 @@ export default function Header(props) {
           >
             <NotificationsIcon classes={{ root: classes.headerIcon }} />
           </Badge>
-        </IconButton>
+        </IconButton> */}
         <IconButton
           color="inherit"
           aria-haspopup="true"
@@ -429,7 +427,7 @@ export default function Header(props) {
             modal={props.modal}
           />
         </Menu>
-        <Menu
+        {/* <Menu
           id="notifications-menu"
           open={Boolean(notificationsMenu)}
           anchorEl={notificationsMenu}
@@ -446,7 +444,7 @@ export default function Header(props) {
               <Notification {...notification} typographyVariant="inherit" />
             </MenuItem>
           ))}
-        </Menu>
+        </Menu> */}
         <Menu
           id="profile-menu"
           open={Boolean(profileMenu)}
@@ -461,7 +459,7 @@ export default function Header(props) {
               {userName}
             </Typography>
           </div>
-          <MenuItem
+          {/* <MenuItem
             className={classNames(
               classes.profileMenuItem,
               classes.headerMenuItem,
@@ -484,7 +482,7 @@ export default function Header(props) {
             )}
           >
             <AccountIcon className={classes.profileMenuIcon} /> Messages
-          </MenuItem>
+          </MenuItem> */}
           <div className={classes.profileMenuUser}>{content}</div>
         </Menu>
       </Toolbar>

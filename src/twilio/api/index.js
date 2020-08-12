@@ -1,9 +1,9 @@
 import axios from "axios";
+import weburl from "../../weburl";
 
 export const getToken = async user =>
-  axios.get("https://collaborative-classroom-server.herokuapp.com/token", {
+  axios.get(weburl + "/token", {
     params: {
       user,
     },
   });
-  

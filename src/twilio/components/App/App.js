@@ -35,7 +35,7 @@ import "./App.css";
 import Dropdown from "react-bootstrap/Dropdown";
 import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-
+import Spinner from "react-bootstrap/Spinner";
 import {
   MDBBtn,
   MDBDropdown,
@@ -120,6 +120,7 @@ const App = ({
       const recipent = message.message.recipent;
       const link = message.message.link;
       const userName = localStorage.getItem("user");
+      console.log(link);
       if (
         recipent == userName &&
         !receivedWhiteboards.current.includes(author)
@@ -264,8 +265,15 @@ const App = ({
 
   const shareWhiteboard = recipent => {
     const author = localStorage.getItem("user");
+    const room = localStorage.getItem("room");
     const link =
-      roomName + "1" + userName.replace("/@/g", "").replace("/./g", "");
+      room +
+      "1" +
+      author
+        .replace("@", "")
+        .replace(".", "")
+        .replace(".", "");
+    console.log(link);
     const message = {
       author: author,
       recipent: recipent,
@@ -329,139 +337,65 @@ const App = ({
 
   const updateRoom = roomName => {
     if (modules_json != null) {
-      if (modules_json["m"].includes(roomName)) {
-        //detectadmin(myUser, roomName);
+      if (modules_json.hasOwnProperty(roomName)) {
         localStorage.setItem("room", roomName);
-        onJoin();
       } else {
-        var timing = prompt(
-          "You're the admin of this room. Please enter your start time",
-        );
-        var timing_end = prompt("Please enter your end time");
-        var timing_int = parseInt(timing, 10);
-        var timing_endint = parseInt(timing_end, 10);
-        if (timing_endint <= timing_int) {
-          alert("Not allowed!");
-        } else {
-          fetch(
-            "https://collaborative-classroom-server.herokuapp.com/getmodules?user=" +
-              myUser,
-            {
-              method: "GET",
-            },
-          )
-            .then(response => {
-              return response.text();
-            })
-            .then(data => {
-              if (data == "No modules yet!") {
-                var dataJSON = JSON.parse(' {"m": [] }');
-              } else {
-                var dataJSON = JSON.parse(data);
-              }
-              if (!dataJSON["m"].includes(roomName)) {
-                console.log(dataJSON["m"].includes(roomName));
-                dataJSON["m"].push(roomName);
-              }
-              var newmods = JSON.stringify(dataJSON);
-              localStorage.setItem("modules", newmods);
-              fetch(
-                "hhttps://collaborative-classroom-server.herokuapp.com/updatemodules?modules=" +
-                  newmods +
-                  "&user=" +
-                  myUser,
-                {
-                  method: "GET",
-                },
-              )
-                .then(data => {
-                  addadmin(myUser, roomName, timing, timing_end);
-                })
-                .catch(error => {
-                  alert("Error occured!");
-                });
-            })
-            .catch(error => {
-              alert("Error occured!");
-            });
-          localStorage.setItem("room", roomName);
-          onJoin();
-        }
-      }
-    }
-  };
-
-  const detectadmin = (user_name, room_name) => {
-    if (user_name != null) {
-      fetch(
-        "https://collaborative-classroom-server.herokuapp.com/getadmin?user=" +
-          user_name,
-        {
-          method: "GET",
-        },
-      )
-        .then(response => {
-          return response.text();
-        })
-        .then(data => {
-          if (data != "Not admin!") {
-            var current_list = data;
-            var json_clist = JSON.parse(current_list);
-            if (json_clist["a"].includes(room_name)) {
-              console.log("admin has logged in.");
+        fetch(
+          "https://collaborative-classroom-server.herokuapp.com/getmodules?user=" +
+            myUser,
+          {
+            method: "GET",
+          },
+        )
+          .then(response => {
+            return response.text();
+          })
+          .then(data => {
+            if (data == "No modules yet!") {
+              var dataJSON = JSON.parse(' {"m": [] }');
+            } else {
+              var dataJSON = JSON.parse(data);
             }
-          }
-        })
-        .catch(error => {
-          alert("Error occured!");
-        });
-    }
-  };
+            dataJSON["m"].push(roomName);
+            var newmods = JSON.stringify(dataJSON);
+            localStorage.setItem("modules", newmods);
+            fetch(
+              "https://collaborative-classroom-server.herokuapp.com/updatemodules?modules=" +
+                newmods +
+                "&user=" +
+                myUser,
+              {
+                method: "GET",
+              },
+            ).catch(error => {
+              alert("Error occured! ID 7");
+            });
+          })
+          .catch(error => {
+            alert("Error occured! ID 8");
+          });
 
-  const addadmin = (user_name, room_name, timing, timing2) => {
-    if (user_name != null) {
-      fetch(
-        "https://collaborative-classroom-server.herokuapp.com/registeradmins?roomname=" +
-          room_name +
-          "&user=" +
-          user_name +
-          "&timing=" +
-          timing +
-          "&timing2=" +
-          timing2,
-        {
-          method: "GET",
-        },
-      )
-        .then(response => {
-          return response.text();
-        })
-        .catch(error => {
-          alert("Error occured!");
-        });
+        localStorage.setItem("room", roomName);
+      }
     }
   };
 
   const modules = localStorage.getItem("modules");
   var buttonsJSX = null;
 
-  if (!!modules && modules != "") {
-    try {
-      var modules_json = JSON.parse(modules);
+  if (modules != null) {
+    var modules_json = JSON.parse(modules);
 
-      buttonsJSX = modules_json["m"].map((element, index) => {
-        return (
-          <AButton
-            name={modules_json["m"][index]}
-            onClick={() => customJoin(modules_json["m"][index])}
-          >
-            {modules_json["m"][index]}
-          </AButton>
-        );
-      });
-    } catch (e) {
-      console.log("Error in modules");
-    }
+    buttonsJSX = modules_json["m"].map((element, index) => {
+      return (
+        <AButton
+          name={modules_json["m"][index]}
+          onClick={() => customJoin(modules_json["m"][index])}
+        >
+          {modules_json["m"][index]}
+        </AButton>
+      );
+    });
   }
 
   const getJSX = () => {
@@ -493,12 +427,23 @@ const App = ({
             </div>
           );
         } else if (number == 2) {
+          console.log(
+            roomName +
+              "1" +
+              userName
+                .replace("@", "")
+                .replace(".", "")
+                .replace(".", ""),
+          );
           return (
             <div
               room={
                 roomName +
                 "1" +
-                userName.replace("/@/g", "").replace("/./g", "")
+                userName
+                  .replace("@", "")
+                  .replace(".", "")
+                  .replace(".", "")
               }
               class={"whiteboard"}
               publicName={"Private Whiteboard"}
@@ -517,7 +462,10 @@ const App = ({
                 room={
                   roomName +
                   "1" +
-                  userName.replace("/@/g", "").replace("/./g", "")
+                  userName
+                    .replace("@", "")
+                    .replace(".", "")
+                    .replace(".", "")
                 }
               />
             </div>
@@ -710,16 +658,17 @@ const App = ({
 
           <Form.Field kind="group" align="centered">
             <Form.Control>
-              <Button
+              <AButton
                 onClick={() => {
                   updateRoom(roomName);
+                  onJoin();
                 }}
                 loading={isJoining}
                 disabled={!canJoin}
                 color="primary"
               >
                 Join
-              </Button>
+              </AButton>
             </Form.Control>
           </Form.Field>
           <Form.Field kind="group" align="centered">

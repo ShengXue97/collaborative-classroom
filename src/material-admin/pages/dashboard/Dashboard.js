@@ -35,8 +35,7 @@ export default function Dashboard(props) {
     socket.emit("init", { user }, error => {});
   }, []);
 
-  useEffect(() => {
-  }, [roomData]);
+  useEffect(() => {}, [roomData]);
 
   const mustReload = localStorage.getItem("mustReload");
   if (mustReload != null && mustReload == 1) {
@@ -58,7 +57,7 @@ export default function Dashboard(props) {
 
   return (
     <>
-      <PageTitle title="Dashboard" button="Room List" />
+      <PageTitle title="Dashboard" />
       {content}
 
       <App />

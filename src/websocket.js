@@ -1,3 +1,4 @@
 import io from "socket.io-client";
-let socket = io("https://collaborative-classroom-server.herokuapp.com/");
+import weburl from "./weburl";
+let socket = io(weburl + "/");
 export default socket;

@@ -61,7 +61,7 @@ export default function NewConversation(props) {
     }
 
     fetch(
-      "https://collaborative-classroom-server.herokuapp.com/sendmessage?author=" +
+      "http://localhost:5000/sendmessage?author=" +
         author +
         "&recipent=" +
         props.recipentBox +
@@ -77,7 +77,6 @@ export default function NewConversation(props) {
     )
       .then(response => {})
       .then(data => {
-        console.log(data);
         socket.emit(
           "publishMessage",
           id,

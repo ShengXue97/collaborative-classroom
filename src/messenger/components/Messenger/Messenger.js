@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import ConversationList from "../ConversationList/ConversationList.js";
 import MessageList from "../MessageList/MessageList.js";
 import "./Messenger.css";
-
+import weburl from "../../../weburl";
 
 function useInterval(callback, delay) {
   const savedCallback = useRef();
@@ -101,15 +101,9 @@ export default function Messenger(props) {
     //Tell server that I read all of these
     const author = selectedUser;
     const recipent = localStorage.getItem("user");
-    fetch(
-      "https://collaborative-classroom-server.herokuapp.com/setasread?author=" +
-        author +
-        "&recipent=" +
-        recipent,
-      {
-        method: "GET",
-      },
-    ).catch(error => {
+    fetch(weburl + "/setasread?author=" + author + "&recipent=" + recipent, {
+      method: "GET",
+    }).catch(error => {
       alert("Error occured! ID 5");
       console.log(error);
     });
@@ -127,10 +121,7 @@ export default function Messenger(props) {
     var count = 0;
 
     fetch(
-      "https://collaborative-classroom-server.herokuapp.com/singlechat?recipent=" +
-        user +
-        "&minTimestamp=" +
-        minTimestamp,
+      weburl + "/singlechat?recipent=" + user + "&minTimestamp=" + minTimestamp,
       {
         method: "GET",
       },
