@@ -16,7 +16,7 @@
     "express": "^4.17.1",
     "font-awesome": "^4.7.0",
     "iframe-resizer-react": "^1.0.4",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.21",
     "material-table": "^1.68.0",
     "mdbreact": "^4.27.0",
     "moment": "^2.23.0",
