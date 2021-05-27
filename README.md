@@ -1,106 +1,42 @@
-# React Material Admin — Material-UI Dashboard Template
+# Collaborative Classroom
 
-Built with [React](https://facebook.github.io/react/), [Material-UI](https://material-ui.com), [React Router](https://reacttraining.com/react-router/).
-**No jQuery and Bootstrap!**
+## What it does
+While there exists many apps that allow for some form of online collaboration, they fall short when it comes to creating an ideal online classroom environment. This app aims to provide TAs and students with all the features they would need to conduct a conducive classroom. Some notable features include a real-time whiteboard, real-time quiz conducting feature, and a personal messaging system.
 
-**This version uses React 16.8.6, React Router v5, MaterialUI v4, built with React Hooks and React Context (No Redux)**
+## How I built it
+This website is with React as the frontend, with a NodeJS backend server.
 
-[Demo](https://flatlogic.com/admin-dashboards/react-material-admin/demo). Use any credentials to log in.
+### Whiteboard:
+Consists of a classroom whiteboard and a private board.
+Allows two-way communication between students, such as collaboration between student and teacher, or in group discussion.
+Zoom does not have two-way Whiteboard and sharing feature, while Microsoft Teams allows screen sharing but no whiteboard sharing.
+Whiteboard sharing allows for innovative teaching.
+Video/Audio sharing:
+Allows for video and audio streaming as well as screen sharing. 2.Facilitates communication and encourages student participation. Allows for 2 way interaction between student and teacher.
 
-[![image](https://user-images.githubusercontent.com/24964748/55800639-df780300-5adc-11e9-84b7-7c2437088516.png)](https://flatlogic.com/admin-dashboards/react-material-admin/demo)
+### Real time quiz maker/ taker:
+Allows the teacher to effectively test the knowledge of the students in real-time, to reinforce learning 2.The quiz feature is split into 2 components:
+A quiz maker for the teacher to create quizzes and view the results of the students in real-time.
+A quiz taker and score system for students to answer questions in real time, and keeps track of their results.
+Real-time messaging both in room and privately
+Room messaging allows instant communication between teachers and students in the same tutorial room
+Private messaging allows the users to communicate even if they are not in the same tutorial room. There is also an unread messages support, which allows the users to track messages quickly.
+Unlike Luminus quizes, Collaborative Classroom allows for interactive evaluation and discussion of answers.
 
-## Full Version
+## Challenges I ran into
+Bugs. Lots of nasty bugs. As this application involves persistent data in the database as well as real-time communication between users, it tends to be vulnerable to bugs.
 
-This is a limited version of [**Full React Material Admin**](https://flatlogic.com/templates/react-material-admin-full/demo) with more components, pages and theme support.
+Moreover, we gained further insight into software development and the challenges of implementing a real-time service. Through this experience, we have become more aware of the possible pitfalls and common bugs in developing our server, and will be able to better lookout for them when writing code in future.
 
-## Features
+## Accomplishments that I'm proud of
+We believe that we have become better software developers through this experience. This website consists of many libraries weaved together in an innovative way. This includes the video/screen sharing, realtime-whiteboard, react grid layout, and socket programming. We are proud that we have managed to bring these libraries together into a single working product for both students and teachers.
 
-- React (**16.8.6**)
-- React Hooks
-- React Context
-- **No jQuery and Bootstrap!**
-- Mobile friendly layout (responsive)
-- Create-react-app under the hood
-- React Router v5
-- Material-UI v4
-- Modular Architecture
-- CSS-in-JS styles
-- Webpack build
-- Stylish, clean, responsive layout
-- Authentication
+## What I learned
+We have become more familiar with web development and how bugs could have been avoided with better coding practices.
 
-## Pages
+Why websites are down sometimes. An accident push to the production server can cause the public website to be down!
 
-We have implemented some basic pages, so you can see our template in action.
+## What's next for Collaborative Classroom
+NUS Should take us up on the idea, as this provides a conducive environment for students to work together just like in real tutorial rooms.
 
-- Dashboard
-- Typography
-- Tables
-- Notifications
-- Charts
-- Icons
-- Maps
-- Login
-- Error
-
-## Quick Start
-
-#### 1. Get the latest version
-
-You can start by cloning the latest version of React Dashboard on your
-local machine by running:
-
-```shell
-$ git clone https://github.com/flatlogic/react-material-admin.git MyApp
-$ cd MyApp
-```
-
-#### 2. Run `yarn install`
-
-This will install both run-time project dependencies and developer tools listed
-in [package.json](package.json) file.
-
-#### 3. Run `yarn start`
-
-Runs the app in the development mode.
-
-Open http://localhost:3000 to view it in the browser. Whenever you modify any of the source files inside the `/src` folder,
-the module bundler ([Webpack](http://webpack.github.io/)) will recompile the
-app on the fly and refresh all the connected browsers.
-
-#### 4. Run `yarn build`
-
-Builds the app for production to the build folder.
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.
-Your app is ready to be deployed!
-
-## Support
-
-For any additional information please refer to [Flatlogic homepage](https://flatlogic.com).
-
-## How can I support developers?
-
-- Star our GitHub repo :star:
-- [Tweet about it](https://twitter.com/intent/tweet?text=Amazing%20dashboard%20built%20with%20NodeJS,%20React%20and%20Bootstrap!&url=https://github.com/flatlogic/react-material-template&via=flatlogic).
-- Create pull requests, submit bugs, suggest new features or documentation updates :wrench:
-- Follow [@flatlogic on Twitter](https://twitter.com/flatlogic).
-- Subscribe to Flatlogic newsletter at [flatlogic.com](https://flatlogic.com/)
-- Like our page on [Facebook](https://www.facebook.com/flatlogic/) :thumbsup:
-
-## More from Flatlogic
-
-- [React Native Starter](https://github.com/flatlogic/react-native-starter) - 🚀 A powerful react native starter template that bootstraps development of your mobile application
-- [Sing App](https://github.com/flatlogic/sing-app) - 💥 Free and open-source admin dashboard template built with Bootstrap 4
-- [Awesome Bootstrap Checkboxes & Radios](https://github.com/flatlogic/awesome-bootstrap-checkbox) - ✅ Pure css way to make inputs look prettier
-- [React Dashboard](https://github.com/flatlogic/react-dashboard) - 🔥 React Dashboard - isomorphic admin dashboard template with GraphQL
-- [Light Blue Dashboard](https://github.com/flatlogic/light-blue-dashboard) - 💦 Free and open-source admin dashboard template built with Bootstrap
-
-## Premium themes
-
-Looking for premium themes and templates? Check out more [admin dashboard templates at flatlogic.com](https://flatlogic.com/admin-dashboards).
-
-## License
-
-[MIT](https://github.com/flatlogic/react-material-dashboard/blob/master/LICENSE.txt).
+In addition, other universities and schools in general could use our app. Try it out Education is fun!
